@@ -3,28 +3,28 @@ import { Droplet, Leaf, ListCheck, MapIcon, Package } from 'lucide-react';
 export const ROUTES = [
   {
     title: 'Pulverizaciones',
-    url: '/dashboard',
+    url: '/panel',
     icon: Droplet,
     isActive: true,
   },
   {
     title: 'Productos',
-    url: '/dashboard/productos',
+    url: '/panel/productos',
     icon: Package,
   },
   {
     title: 'Tratamientos',
-    url: '/dashboard/tratamientos',
+    url: '/panel/tratamientos',
     icon: ListCheck,
   },
   {
     title: 'Cultivos',
-    url: '/dashboard/cultivos',
+    url: '/panel/cultivos',
     icon: Leaf,
   },
   {
     title: 'Campos',
-    url: '/dashboard/campos',
+    url: '/panel/campos',
     icon: MapIcon,
   },
 ];
