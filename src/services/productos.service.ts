@@ -30,6 +30,22 @@ export const addProducto = async (payload: Producto) => {
   return data as Producto;
 };
 
+export const editProducto = async (payload: Producto) => {
+  const PATH = `${API_URL}/v1/productos`;
+  const OPTIONS: RequestInit = {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+    headers: { 'Content-Type': 'application/json' },
+  };
+
+  const res = await fetch(PATH, OPTIONS);
+  const data: Producto | Error = await res.json();
+
+  if (!res.ok) throw new Error((data as Error)?.message);
+
+  return data as Producto;
+};
+
 export const deleteProducto = async (id: UUID) => {
   const PATH = `${API_URL}/v1/productos`;
   const OPTIONS: RequestInit = {

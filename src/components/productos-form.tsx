@@ -7,28 +7,43 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
+import { addProducto, editProducto } from '@/services/productos.service';
 
 import { Button } from './ui/button';
 import { Check } from 'lucide-react';
 import { Input } from './ui/input';
 import { ReloadIcon } from '@radix-ui/react-icons';
-import { addProducto } from '@/services/productos.service';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
+import { useState } from 'react';
 
 const UNIDADES = Object.entries(UNIDAD).map(([key, value]) => ({
   label: value,
   value: key,
 }));
 
-export default function AddProductoForm() {
+export default function AddOrEditProductoForm({
+  isEdit,
+  data,
+}: {
+  isEdit?: boolean;
+  data?: Producto;
+}) {
   const {
     register,
     control,
     handleSubmit,
-    formState: { isSubmitting, isSubmitSuccessful },
-  } = useForm<Producto>();
+    formState: { isSubmitting },
+  } = useForm<Producto>({
+    defaultValues: isEdit
+      ? { nombre: data?.nombre, cantidad: data?.cantidad, unidad: data?.unidad }
+      : undefined,
+  });
+
+  const [isSubmitSuccessful, setIsSubmitSuccessful] = useState<
+    boolean | undefined
+  >(undefined);
 
   const onInvalidSubmit = (errors) => {
     if (errors.nombre)
@@ -42,13 +57,21 @@ export default function AddProductoForm() {
     try {
       const PAYLOAD: Producto = {
         ...values,
+        id: data?.id,
         cantidad: parseInt(values.cantidad.toString()),
         unidad: values.unidad.toUpperCase() as UNIDAD,
       };
-      await addProducto(PAYLOAD);
+      if (!isEdit) await addProducto(PAYLOAD);
+      else await editProducto(PAYLOAD);
       await revalidate('productos');
 
-      toast.success('Producto agregado con éxito.');
+      setIsSubmitSuccessful(true);
+
+      toast.success(
+        !isEdit
+          ? 'Producto agregado con éxito.'
+          : 'Producto modificado con éxito.',
+      );
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
     }
@@ -87,7 +110,7 @@ export default function AddProductoForm() {
             required: { value: true, message: 'La unidad es requerida' },
           }}
           render={({ field }) => (
-            <Select onValueChange={field.onChange}>
+            <Select onValueChange={field.onChange} defaultValue={data?.unidad}>
               <SelectTrigger className='col-span-3 text-sm'>
                 <SelectValue placeholder='Unidad' />
               </SelectTrigger>
@@ -112,10 +135,14 @@ export default function AddProductoForm() {
             Completado <Check />
           </>
         ) : !isSubmitting ? (
-          'Agregar'
+          !isEdit ? (
+            'Agregar'
+          ) : (
+            'Modificar'
+          )
         ) : (
           <>
-            Agregando
+            Procesando
             <ReloadIcon className='animate-spin' />
           </>
         )}

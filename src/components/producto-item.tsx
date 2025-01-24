@@ -1,10 +1,11 @@
 'use client';
 
+import {
+  AddOrEditProductoDialog,
+  DeleteProductoDialog,
+} from './productos-dialog';
 import { Card, CardContent } from './ui/card';
 
-import { Button } from './ui/button';
-import { DeleteProductoDialog } from './productos-dialog';
-import { PackageOpen } from 'lucide-react';
 import { Producto } from '@/types/productos.types';
 import { UUID } from 'crypto';
 
@@ -24,9 +25,7 @@ export default function ProductoItem({ data }: Props) {
             </p>
           </div>
           <aside className='producto-settings space-x-4'>
-            <Button size={'icon'} variant={'outline'}>
-              <PackageOpen />
-            </Button>
+            <AddOrEditProductoDialog isEdit data={data} />
             <DeleteProductoDialog id={data.id as UUID} />
           </aside>
         </CardContent>

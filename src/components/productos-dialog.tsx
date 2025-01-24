@@ -10,32 +10,47 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from './ui/drawer';
-import { PackagePlus, PackageXIcon } from 'lucide-react';
+import { PackageOpen, PackagePlus, PackageXIcon } from 'lucide-react';
 
-import AddProductoForm from './productos-form';
+import AddOrEditProductoForm from './productos-form';
 import { Button } from './ui/button';
+import { Producto } from '@/types/productos.types';
 import { UUID } from 'crypto';
 import { deleteProducto } from '@/services/productos.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 
-export const AddProductoDialog = () => {
+export const AddOrEditProductoDialog = ({
+  isEdit,
+  data,
+}: {
+  isEdit?: boolean;
+  data?: Producto;
+}) => {
   return (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button>
-          Agregar
-          <PackagePlus />
-        </Button>
+        {!isEdit ? (
+          <Button>
+            Agregar
+            <PackagePlus />
+          </Button>
+        ) : (
+          <Button size={'icon'} variant={'outline'}>
+            <PackageOpen />
+          </Button>
+        )}
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Nuevo producto</DrawerTitle>
+          <DrawerTitle>
+            {!isEdit ? 'Nuevo producto' : 'Modificar producto'}
+          </DrawerTitle>
           <DrawerDescription>
             Completa con las caracteristicas del producto
           </DrawerDescription>
         </DrawerHeader>
-        <AddProductoForm />
+        <AddOrEditProductoForm isEdit={isEdit} data={data} />
         <DrawerFooter className='pt-2'>
           <DrawerClose asChild>
             <Button variant={'outline'}>Cerrar</Button>

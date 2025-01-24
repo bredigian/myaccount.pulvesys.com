@@ -1,4 +1,4 @@
-import { AddProductoDialog } from '@/components/productos-dialog';
+import { AddOrEditProductoDialog } from '@/components/productos-dialog';
 import { Input } from '@/components/ui/input';
 import ProductosContainer from '@/components/productos-container';
 import { Search } from 'lucide-react';
@@ -13,7 +13,7 @@ export default function Productos() {
           <Search className='absolute pl-2 opacity-50' />
           <Input placeholder='Buscar' className='pl-7' />
         </div>
-        <AddProductoDialog />
+        <AddOrEditProductoDialog />
       </aside>
       <Suspense>
         <ProductosContainer />
