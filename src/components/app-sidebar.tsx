@@ -17,7 +17,7 @@ import Link from 'next/link';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { ROUTES } from '@/routes';
-import logo from '../../public/logo.webp';
+import logo from '../../public/logo_dalle.webp';
 
 const USER = {
   name: 'Matías Rodríguez',
@@ -36,12 +36,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <Image
                   src={logo}
                   alt='Logo del Sistema de Ordenes de Pulverización'
-                  className='size-20'
+                  className='size-9 rounded-md'
                 />
                 <div className='grid flex-1 text-left text-sm leading-tight'>
-                  <span className='font-semibold'>
-                    Sistema de Ordenes de Pulverización
-                  </span>
+                  <span className='font-semibold'>PulveSys</span>
                 </div>
               </Link>
             </SidebarMenuButton>
