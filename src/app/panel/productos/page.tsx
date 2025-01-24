@@ -1,9 +1,7 @@
-import { PackagePlus, Search } from 'lucide-react';
-
-import AddProductoDialog from '@/components/productos-dialog';
-import { Button } from '@/components/ui/button';
+import { AddProductoDialog } from '@/components/productos-dialog';
 import { Input } from '@/components/ui/input';
 import ProductosContainer from '@/components/productos-container';
+import { Search } from 'lucide-react';
 import { Suspense } from 'react';
 
 export default function Productos() {

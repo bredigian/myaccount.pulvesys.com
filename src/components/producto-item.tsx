@@ -1,10 +1,12 @@
 'use client';
 
 import { Card, CardContent } from './ui/card';
-import { PackageOpen, PackageXIcon } from 'lucide-react';
 
 import { Button } from './ui/button';
+import { DeleteProductoDialog } from './productos-dialog';
+import { PackageOpen } from 'lucide-react';
 import { Producto } from '@/types/productos.types';
+import { UUID } from 'crypto';
 
 interface Props {
   data: Producto;
@@ -25,9 +27,7 @@ export default function ProductoItem({ data }: Props) {
             <Button size={'icon'} variant={'outline'}>
               <PackageOpen />
             </Button>
-            <Button size={'icon'} variant={'destructive'}>
-              <PackageXIcon />
-            </Button>
+            <DeleteProductoDialog id={data.id as UUID} />
           </aside>
         </CardContent>
       </Card>
