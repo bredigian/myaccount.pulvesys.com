@@ -14,6 +14,7 @@ interface Props {
   enable?: boolean;
   size?: string;
   customCenter?: boolean;
+  centerByEdit?: LatLngExpression;
 }
 
 export default function Map({
@@ -23,6 +24,7 @@ export default function Map({
   enable,
   size,
   customCenter,
+  centerByEdit,
 }: Props) {
   const AddMarker = () => {
     useMapEvents({
@@ -39,12 +41,13 @@ export default function Map({
     return null;
   };
 
-  const CENTER = customCenter
-    ? [
-        lotes[0]?.Coordinada[0]?.lat ?? -37.31587,
-        lotes[0]?.Coordinada[0]?.lng ?? -59.98368,
-      ]
-    : [-37.31587, -59.98368];
+  const CENTER =
+    (centerByEdit ?? customCenter)
+      ? [
+          lotes[0]?.Coordinada[0]?.lat ?? -37.31587,
+          lotes[0]?.Coordinada[0]?.lng ?? -59.98368,
+        ]
+      : [-37.31587, -59.98368];
 
   console.log(lotes);
 

@@ -5,6 +5,7 @@ import { addCampo, editCampo } from '@/services/campos.service';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
+import { LatLngExpression } from 'leaflet';
 import Map from './map';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
@@ -77,7 +78,9 @@ export default function AddOrEditCampoForm({
 
   const [enable, setEnable] = useState(false);
 
-  const [lotes, setLotes] = useState<Lote[]>([]);
+  const [lotes, setLotes] = useState<Lote[]>(
+    !isEdit ? [] : (data?.Lote as Lote[]),
+  );
   const addLote = (lote: Lote) => setLotes((prev) => [...prev, lote]);
 
   const [lote, setLote] = useState<Lote>({
@@ -176,6 +179,14 @@ export default function AddOrEditCampoForm({
           actualLote={lote}
           handleLote={handleLote as () => void}
           enable={enable}
+          centerByEdit={
+            isEdit
+              ? ([
+                  data?.Lote[0]?.Coordinada[0]?.lat,
+                  data?.Lote[0]?.Coordinada[0]?.lng,
+                ] as LatLngExpression)
+              : undefined
+          }
         />
         <ul className='flex items-center gap-2'>
           {lotes.length === 0 ? (
