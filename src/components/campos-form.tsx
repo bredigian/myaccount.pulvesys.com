@@ -41,7 +41,7 @@ export default function AddOrEditCampoForm({
         className: `mt-6`,
         position: 'top-center',
       });
-    if (errors.hectareas)
+    else if (errors.hectareas)
       toast.error(errors.hectareas.message, {
         className: `mt-6`,
         position: 'top-center',
@@ -49,10 +49,18 @@ export default function AddOrEditCampoForm({
   };
   const onSubmit = async (values: Campo) => {
     try {
+      if (lotes.length === 0) {
+        toast.error('No se añadieron lotes', {
+          className: 'mt-6',
+          position: 'top-center',
+        });
+        return;
+      }
       const PAYLOAD: Campo = {
         ...values,
         id: data?.id,
         hectareas: parseInt(values.hectareas.toString()),
+        lotes,
       };
       if (!isEdit) await addCampo(PAYLOAD);
       else await editCampo(PAYLOAD);
