@@ -11,6 +11,7 @@ import { ReloadIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
+import { useDebouncedCallback } from 'use-debounce';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 
@@ -92,6 +93,14 @@ export default function AddOrEditCampoForm({
     console.log(point);
     setLote((prev) => ({ ...prev, zona: [...prev.zona, point] }));
   };
+
+  const handleLoteName = (value: string) => {
+    setLote((prev) => ({ ...prev, nombre: value }));
+  };
+
+  const handleLoteColor = useDebouncedCallback((value: string) => {
+    setLote((prev) => ({ ...prev, color: value }));
+  }, 300);
 
   return (
     <form
@@ -213,18 +222,14 @@ export default function AddOrEditCampoForm({
             placeholder='Nombre del lote'
             className='col-span-4 text-sm'
             disabled={!lote.nombre && !enable}
-            onChange={(e) =>
-              setLote((prev) => ({ ...prev, nombre: e.target.value }))
-            }
+            onChange={(e) => handleLoteName(e.target.value)}
             value={lote.nombre as string}
           />
           <Input
             type='color'
             placeholder='color'
             className='col-span-2'
-            onChange={(e) =>
-              setLote((prev) => ({ ...prev, color: e.target.value }))
-            }
+            onChange={(e) => handleLoteColor(e.target.value)}
             value={lote.color as string}
           />
         </div>
