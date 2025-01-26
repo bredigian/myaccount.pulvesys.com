@@ -51,7 +51,7 @@ export default function Map({
   return (
     <MapContainer
       className={cn(
-        'relative overflow-hidden rounded-lg',
+        'relative z-10 overflow-hidden rounded-lg',
         size || '!h-[40dvh]',
       )}
       center={CENTER as LatLngExpression}
