@@ -28,6 +28,20 @@ export default function CampoItem({ data }: Props) {
             </aside>
           </div>
           <Map lotes={data.Lote as Lote[]} size='!h-[25dvh]' customCenter />
+          <ul className='flex items-center gap-2'>
+            {data.Lote?.map((lote) => (
+              <li
+                key={`badge-${lote.nombre}`}
+                style={{
+                  backgroundColor: `${lote.color as string}50`,
+                  borderColor: lote.color as string,
+                }}
+                className='rounded-md border-2 px-3 py-1 text-xs font-semibold'
+              >
+                {lote.nombre}
+              </li>
+            ))}
+          </ul>
         </CardContent>
       </Card>
     </li>
