@@ -44,7 +44,7 @@ export const AddOrEditCampoDialog = ({
           </Button>
         )}
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent className='z-[9999]'>
         <DrawerHeader>
           <DrawerTitle>
             {!isEdit ? 'Nuevo campo' : 'Modificar campo'}

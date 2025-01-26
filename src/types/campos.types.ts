@@ -4,6 +4,7 @@ export interface Lote {
   id?: UUID;
   nombre: string | null;
   zona: Coordinada[];
+  Coordinada?: Coordinada[];
   color: string | null;
   campo_id?: UUID;
 }
@@ -18,5 +19,5 @@ export interface Campo {
   id?: UUID;
   nombre: string;
   hectareas: number;
-  lotes?: Lote[];
+  Lote?: Lote[];
 }

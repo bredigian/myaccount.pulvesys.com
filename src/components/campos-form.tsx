@@ -2,7 +2,6 @@ import { Campo, Coordinada, Lote } from '@/types/campos.types';
 import { Check, Eraser, MapPinPlusInside } from 'lucide-react';
 import { addCampo, editCampo } from '@/services/campos.service';
 
-import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -60,7 +59,7 @@ export default function AddOrEditCampoForm({
         ...values,
         id: data?.id,
         hectareas: parseInt(values.hectareas.toString()),
-        lotes,
+        Lote: lotes,
       };
       if (!isEdit) await addCampo(PAYLOAD);
       else await editCampo(PAYLOAD);
@@ -175,7 +174,7 @@ export default function AddOrEditCampoForm({
         <Map
           lotes={lotes}
           actualLote={lote}
-          handleLote={handleLote}
+          handleLote={handleLote as () => void}
           enable={enable}
         />
         <ul className='flex items-center gap-2'>
@@ -184,7 +183,7 @@ export default function AddOrEditCampoForm({
               Sin lotes
             </li>
           ) : (
-            lotes.map((lote) => (
+            lotes?.map((lote) => (
               <li
                 key={`badge-${lote.nombre}`}
                 style={{
