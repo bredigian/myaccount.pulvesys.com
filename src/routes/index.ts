@@ -1,10 +1,10 @@
-import { Droplet, Leaf, ListCheck, MapIcon, Package } from 'lucide-react';
+import { Droplets, Leaf, ListCheck, MapIcon, Package } from 'lucide-react';
 
 export const ROUTES = [
   {
     title: 'Pulverizaciones',
     url: '/panel',
-    icon: Droplet,
+    icon: Droplets,
     isActive: true,
   },
   {

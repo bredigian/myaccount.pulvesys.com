@@ -15,6 +15,8 @@ interface Props {
   size?: string;
   customCenter?: boolean;
   centerByEdit?: LatLngExpression;
+  className?: string;
+  customZoom?: number;
 }
 
 export default function Map({
@@ -25,6 +27,8 @@ export default function Map({
   size,
   customCenter,
   centerByEdit,
+  className,
+  customZoom,
 }: Props) {
   const AddMarker = () => {
     useMapEvents({
@@ -49,16 +53,15 @@ export default function Map({
         ]
       : [-37.31587, -59.98368];
 
-  console.log(lotes);
-
   return (
     <MapContainer
       className={cn(
         'relative z-10 overflow-hidden rounded-lg',
         size || '!h-[40dvh]',
+        className,
       )}
       center={CENTER as LatLngExpression}
-      zoom={15}
+      zoom={customZoom ?? 15}
       scrollWheelZoom={false}
     >
       <TileLayer
