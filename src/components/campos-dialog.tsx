@@ -19,7 +19,7 @@ import { UUID } from 'crypto';
 import { deleteCampo } from '@/services/campos.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
-import { useState } from 'react';
+import { useDialog } from '@/hooks/use-dialog';
 
 export const AddOrEditCampoDialog = ({
   isEdit,
@@ -40,8 +40,7 @@ export const AddOrEditCampoDialog = ({
   className?: string;
   onlyIcon?: boolean;
 }) => {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(!open);
+  const { open, setOpen, handleOpen } = useDialog();
 
   return (
     <Drawer open={open} onOpenChange={setOpen} dismissible={false}>

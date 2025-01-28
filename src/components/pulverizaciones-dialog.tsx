@@ -14,11 +14,10 @@ import {
 import AddOrEditPulverizacionForm from './pulverizaciones-form';
 import { Button } from './ui/button';
 import { Droplet } from 'lucide-react';
-import { useState } from 'react';
+import { useDialog } from '@/hooks/use-dialog';
 
 export const AddOrEditPulverizacionDialog = () => {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(!open);
+  const { open, setOpen, handleOpen } = useDialog();
 
   return (
     <Drawer dismissible={false} open={open} onOpenChange={setOpen}>

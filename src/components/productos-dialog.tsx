@@ -19,6 +19,8 @@ import { UUID } from 'crypto';
 import { deleteProducto } from '@/services/productos.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
+import { useDialog } from '@/hooks/use-dialog';
+import { useState } from 'react';
 
 export const AddOrEditProductoDialog = ({
   isEdit,
@@ -27,8 +29,10 @@ export const AddOrEditProductoDialog = ({
   isEdit?: boolean;
   data?: Producto;
 }) => {
+  const { open, setOpen, handleOpen } = useDialog();
+
   return (
-    <Drawer>
+    <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         {!isEdit ? (
           <Button>
@@ -50,7 +54,11 @@ export const AddOrEditProductoDialog = ({
             Completa con las caracteristicas del producto
           </DrawerDescription>
         </DrawerHeader>
-        <AddOrEditProductoForm isEdit={isEdit} data={data} />
+        <AddOrEditProductoForm
+          isEdit={isEdit}
+          data={data}
+          handleOpen={handleOpen}
+        />
         <DrawerFooter className='pt-2'>
           <DrawerClose asChild>
             <Button variant={'outline'}>Cerrar</Button>

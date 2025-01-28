@@ -19,6 +19,7 @@ import { UUID } from 'crypto';
 import { deleteCultivo } from '@/services/cultivos.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
+import { useDialog } from '@/hooks/use-dialog';
 
 export const AddOrEditCultivoDialog = ({
   isEdit,
@@ -27,8 +28,10 @@ export const AddOrEditCultivoDialog = ({
   isEdit?: boolean;
   data?: Cultivo;
 }) => {
+  const { open, setOpen, handleOpen } = useDialog();
+
   return (
-    <Drawer>
+    <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         {!isEdit ? (
           <Button>
@@ -50,7 +53,11 @@ export const AddOrEditCultivoDialog = ({
             Completa con las caracteristicas del cultivo
           </DrawerDescription>
         </DrawerHeader>
-        <AddOrEditCultivoForm isEdit={isEdit} data={data} />
+        <AddOrEditCultivoForm
+          isEdit={isEdit}
+          data={data}
+          handleOpen={handleOpen}
+        />
         <DrawerFooter className='pt-2'>
           <DrawerClose asChild>
             <Button variant={'outline'}>Cerrar</Button>

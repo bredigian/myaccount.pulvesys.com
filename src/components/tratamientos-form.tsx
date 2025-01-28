@@ -19,9 +19,11 @@ import { useState } from 'react';
 export default function AddOrEditTratamientoForm({
   isEdit,
   data,
+  handleOpen,
 }: {
   isEdit?: boolean;
   data?: Tratamiento;
+  handleOpen: () => void;
 }) {
   const {
     register,
@@ -53,12 +55,7 @@ export default function AddOrEditTratamientoForm({
       await getTratamientos();
 
       setIsSubmitSuccessful(true);
-
-      toast.success(
-        !isEdit
-          ? 'Tipo de tratamiento agregado con éxito.'
-          : 'Tipo de tratamiento modificado con éxito.',
-      );
+      setTimeout(() => handleOpen(), 1000);
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
     }
@@ -83,7 +80,10 @@ export default function AddOrEditTratamientoForm({
       <Button
         disabled={isSubmitting || isSubmitSuccessful}
         type='submit'
-        className={cn('w-full', isSubmitSuccessful && 'bg-green-700')}
+        className={cn(
+          'w-full disabled:opacity-100',
+          isSubmitSuccessful && 'bg-green-700',
+        )}
       >
         {isSubmitSuccessful ? (
           <>

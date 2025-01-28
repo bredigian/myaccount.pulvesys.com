@@ -19,6 +19,7 @@ import { UUID } from 'crypto';
 import { deleteTratamiento } from '@/services/tratamientos.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
+import { useDialog } from '@/hooks/use-dialog';
 
 export const AddOrEditTratamientoDialog = ({
   isEdit,
@@ -27,8 +28,10 @@ export const AddOrEditTratamientoDialog = ({
   isEdit?: boolean;
   data?: Tratamiento;
 }) => {
+  const { open, setOpen, handleOpen } = useDialog();
+
   return (
-    <Drawer>
+    <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         {!isEdit ? (
           <Button>
@@ -52,7 +55,11 @@ export const AddOrEditTratamientoDialog = ({
             Completa con las caracteristicas del tratamiento
           </DrawerDescription>
         </DrawerHeader>
-        <AddOrEditTratamientoForm isEdit={isEdit} data={data} />
+        <AddOrEditTratamientoForm
+          isEdit={isEdit}
+          data={data}
+          handleOpen={handleOpen}
+        />
         <DrawerFooter className='pt-2'>
           <DrawerClose asChild>
             <Button variant={'outline'}>Cerrar</Button>

@@ -15,9 +15,11 @@ import { useState } from 'react';
 export default function AddOrEditCultivoForm({
   isEdit,
   data,
+  handleOpen,
 }: {
   isEdit?: boolean;
   data?: Cultivo;
+  handleOpen: () => void;
 }) {
   const {
     register,
@@ -49,12 +51,7 @@ export default function AddOrEditCultivoForm({
       await getCultivos();
 
       setIsSubmitSuccessful(true);
-
-      toast.success(
-        !isEdit
-          ? 'Cultivo agregado con éxito.'
-          : 'Cultivo modificado con éxito.',
-      );
+      setTimeout(() => handleOpen(), 1000);
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
     }
@@ -79,7 +76,10 @@ export default function AddOrEditCultivoForm({
       <Button
         disabled={isSubmitting || isSubmitSuccessful}
         type='submit'
-        className={cn('w-full', isSubmitSuccessful && 'bg-green-700')}
+        className={cn(
+          'w-full disabled:opacity-100',
+          isSubmitSuccessful && 'bg-green-700',
+        )}
       >
         {isSubmitSuccessful ? (
           <>

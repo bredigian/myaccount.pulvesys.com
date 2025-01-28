@@ -27,9 +27,11 @@ const UNIDADES = Object.entries(UNIDAD).map(([key, value]) => ({
 export default function AddOrEditProductoForm({
   isEdit,
   data,
+  handleOpen,
 }: {
   isEdit?: boolean;
   data?: Producto;
+  handleOpen: () => void;
 }) {
   const {
     register,
@@ -70,12 +72,7 @@ export default function AddOrEditProductoForm({
       await getProductos();
 
       setIsSubmitSuccessful(true);
-
-      toast.success(
-        !isEdit
-          ? 'Producto agregado con éxito.'
-          : 'Producto modificado con éxito.',
-      );
+      setTimeout(() => handleOpen(), 1000);
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
     }
@@ -132,7 +129,10 @@ export default function AddOrEditProductoForm({
       <Button
         disabled={isSubmitting || isSubmitSuccessful}
         type='submit'
-        className={cn('w-full', isSubmitSuccessful && 'bg-green-700')}
+        className={cn(
+          'w-full disabled:opacity-100',
+          isSubmitSuccessful && 'bg-green-700',
+        )}
       >
         {isSubmitSuccessful ? (
           <>
