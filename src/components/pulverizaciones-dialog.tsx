@@ -18,6 +18,7 @@ import { useState } from 'react';
 
 export const AddOrEditPulverizacionDialog = () => {
   const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(!open);
 
   return (
     <Drawer dismissible={false} open={open} onOpenChange={setOpen}>
@@ -34,7 +35,7 @@ export const AddOrEditPulverizacionDialog = () => {
             Completa con lo requerido para la pulverización
           </DrawerDescription>
         </DrawerHeader>
-        <AddOrEditPulverizacionForm />
+        <AddOrEditPulverizacionForm handleOpen={handleOpen} />
         <DrawerFooter className='pt-2'>
           <DrawerClose asChild>
             <Button variant={'outline'} onClick={() => setOpen(false)}>

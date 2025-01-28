@@ -18,9 +18,11 @@ import { useState } from 'react';
 export default function AddOrEditCampoForm({
   isEdit,
   data,
+  handleOpen,
 }: {
   isEdit?: boolean;
   data?: Campo;
+  handleOpen: () => void;
 }) {
   const {
     register,
@@ -68,10 +70,7 @@ export default function AddOrEditCampoForm({
       await revalidate('campos');
 
       setIsSubmitSuccessful(true);
-
-      toast.success(
-        !isEdit ? 'Campo agregado con éxito.' : 'Campo modificado con éxito.',
-      );
+      setTimeout(() => handleOpen(), 1000);
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
     }
@@ -241,7 +240,10 @@ export default function AddOrEditCampoForm({
       <Button
         disabled={isSubmitting || isSubmitSuccessful}
         type='submit'
-        className={cn('w-full', isSubmitSuccessful && 'bg-green-700')}
+        className={cn(
+          'w-full disabled:opacity-100',
+          isSubmitSuccessful && 'bg-green-700',
+        )}
         form='form-add-campos'
       >
         {isSubmitSuccessful ? (

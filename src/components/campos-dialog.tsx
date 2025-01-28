@@ -41,6 +41,7 @@ export const AddOrEditCampoDialog = ({
   onlyIcon?: boolean;
 }) => {
   const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(!open);
 
   return (
     <Drawer open={open} onOpenChange={setOpen} dismissible={false}>
@@ -69,7 +70,11 @@ export const AddOrEditCampoDialog = ({
             Completa con las caracteristicas del campo
           </DrawerDescription>
         </DrawerHeader>
-        <AddOrEditCampoForm isEdit={isEdit} data={data} />
+        <AddOrEditCampoForm
+          isEdit={isEdit}
+          data={data}
+          handleOpen={handleOpen}
+        />
         <DrawerFooter className='pt-2'>
           <DrawerClose asChild>
             <Button variant={'outline'} onClick={() => setOpen(false)}>

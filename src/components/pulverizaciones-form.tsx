@@ -30,7 +30,11 @@ import { toast } from 'sonner';
 import { useControllerAplicaciones } from '@/hooks/use-productos';
 import { useDataStore } from '@/store/data.store';
 
-export default function AddOrEditPulverizacionForm() {
+interface Props {
+  handleOpen: () => void;
+}
+
+export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
   const {
     getData,
     loading,
@@ -73,7 +77,7 @@ export default function AddOrEditPulverizacionForm() {
     boolean | undefined
   >(undefined);
 
-  const onInvalidSubmit = (errors) => {
+  const onInvalidSubmit = (errors: any) => {
     if (errors?.fecha)
       toast.error(errors.fecha.message, {
         position: 'top-center',
@@ -128,7 +132,7 @@ export default function AddOrEditPulverizacionForm() {
       await revalidate('pulverizaciones');
 
       setIsSubmitSuccessful(true);
-      toast.success('Pulverzación creada con éxito.');
+      setTimeout(() => handleOpen(), 1000);
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
     }
@@ -395,7 +399,10 @@ export default function AddOrEditPulverizacionForm() {
       <Button
         disabled={isSubmitting || isSubmitSuccessful}
         type='submit'
-        className={cn('col-span-full', isSubmitSuccessful && 'bg-green-700')}
+        className={cn(
+          'col-span-full disabled:opacity-100',
+          isSubmitSuccessful && 'bg-green-700',
+        )}
         form='form-add-pulverizacion'
       >
         {isSubmitSuccessful ? (
