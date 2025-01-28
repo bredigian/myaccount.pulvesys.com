@@ -33,7 +33,7 @@ export const PulverizacionesContainer = async () => {
                 </p>
               </CardTitle>
               <CardContent className='flex items-center justify-between px-0 py-0 pt-2'>
-                <ul className='flex items-center gap-2'>
+                <ul className='flex flex-wrap items-center gap-2'>
                   {pulverizacion.detalle.lotes.map((lote) => {
                     const loteData = pulverizacion.detalle.campo?.Lote?.find(
                       (item) => item.nombre === lote,
