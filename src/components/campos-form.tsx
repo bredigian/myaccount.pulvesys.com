@@ -104,8 +104,12 @@ export default function AddOrEditCampoForm({
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
+      onSubmit={(e) => {
+        e.stopPropagation();
+        handleSubmit(onSubmit, onInvalidSubmit)(e);
+      }}
       className='space-y-4 px-4'
+      id='form-add-campos'
     >
       <Input
         {...register('nombre', {
@@ -191,8 +195,8 @@ export default function AddOrEditCampoForm({
           centerByEdit={
             isEdit
               ? ([
-                  data?.Lote[0]?.Coordinada[0]?.lat,
-                  data?.Lote[0]?.Coordinada[0]?.lng,
+                  data?.Lote?.[0]?.Coordinada?.[0]?.lat,
+                  data?.Lote?.[0]?.Coordinada?.[0]?.lng,
                 ] as LatLngExpression)
               : undefined
           }
@@ -238,6 +242,7 @@ export default function AddOrEditCampoForm({
         disabled={isSubmitting || isSubmitSuccessful}
         type='submit'
         className={cn('w-full', isSubmitSuccessful && 'bg-green-700')}
+        form='form-add-campos'
       >
         {isSubmitSuccessful ? (
           <>

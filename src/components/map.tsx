@@ -23,7 +23,7 @@ interface Props {
   centerByEdit?: LatLngExpression;
   className?: string;
   customZoom?: number;
-  selectedCampo: Campo;
+  selectedCampo?: Campo;
 }
 
 const MapFlyTo = ({ selectedCampo }: { selectedCampo: Campo }) => {
@@ -78,47 +78,40 @@ export default function Map({
       : [-37.31587, -59.98368];
 
   return (
-    <div
-      className={className}
-      onTouchStart={(e) => e.isPropagationStopped}
-      onClick={(e) => e.stopPropagation()}
-      onMouseEnter={() => console.log('entering')}
-      onMouseDown={(e) => e.isPropagationStopped}
+    <MapContainer
+      id='map'
+      className={cn(
+        'pointer-events-auto relative z-10 h-full w-full overflow-hidden rounded-lg',
+        size || '!h-[40dvh]',
+        className,
+      )}
+      center={CENTER as LatLngExpression}
+      zoom={customZoom ?? 15}
+      scrollWheelZoom={false}
     >
-      <MapContainer
-        id='map'
-        className={cn(
-          'pointer-events-auto relative z-10 h-full w-full overflow-hidden rounded-lg',
-          size || '!h-[40dvh]',
-        )}
-        center={CENTER as LatLngExpression}
-        zoom={customZoom ?? 15}
-        scrollWheelZoom={false}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.esri.com">Esri</a> &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
-          url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+      <TileLayer
+        attribution='&copy; <a href="https://www.esri.com">Esri</a> &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
+        url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+      />
+      {selectedCampo && <MapFlyTo selectedCampo={selectedCampo} />}
+      {actualLote && (
+        <Polygon
+          key={`actual-${actualLote.nombre}`}
+          positions={actualLote.zona}
         />
-        <MapFlyTo selectedCampo={selectedCampo} />
-        {actualLote && (
+      )}
+
+      {lotes.length > 0 &&
+        lotes?.map((lote) => (
           <Polygon
-            key={`actual-${actualLote.nombre}`}
-            positions={actualLote.zona}
+            key={lote.nombre}
+            eventHandlers={{ click: (e) => console.log(e) }}
+            positions={(lote.Coordinada as Coordinada[]) ?? lote.zona}
+            color={lote.color as string}
           />
-        )}
+        ))}
 
-        {lotes.length > 0 &&
-          lotes?.map((lote) => (
-            <Polygon
-              key={lote.nombre}
-              eventHandlers={{ click: (e) => console.log(e) }}
-              positions={(lote.Coordinada as Coordinada[]) ?? lote.zona}
-              color={lote.color as string}
-            />
-          ))}
-
-        <AddMarker />
-      </MapContainer>
-    </div>
+      <AddMarker />
+    </MapContainer>
   );
 }

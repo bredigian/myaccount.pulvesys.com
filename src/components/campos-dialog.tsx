@@ -24,9 +24,21 @@ import { useState } from 'react';
 export const AddOrEditCampoDialog = ({
   isEdit,
   data,
+  variant,
+  className,
+  onlyIcon,
 }: {
   isEdit?: boolean;
   data?: Campo;
+  variant?:
+    | 'link'
+    | 'default'
+    | 'destructive'
+    | 'outline'
+    | 'secondary'
+    | 'ghost';
+  className?: string;
+  onlyIcon?: boolean;
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -34,8 +46,12 @@ export const AddOrEditCampoDialog = ({
     <Drawer open={open} onOpenChange={setOpen} dismissible={false}>
       <DrawerTrigger asChild>
         {!isEdit ? (
-          <Button>
-            Agregar
+          <Button
+            variant={variant ?? 'default'}
+            className={className}
+            size={!onlyIcon ? 'default' : 'icon'}
+          >
+            {!onlyIcon && 'Agregar'}
             <MapPinPlus />
           </Button>
         ) : (

@@ -13,6 +13,7 @@ import {
 } from './ui/select';
 import { useEffect, useState } from 'react';
 
+import { AddOrEditCampoDialog } from './campos-dialog';
 import { Button } from './ui/button';
 import { Calendar } from './ui/calendar';
 import { Input } from './ui/input';
@@ -147,6 +148,7 @@ export default function AddOrEditPulverizacionForm() {
     <form
       onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
       className='grid grid-cols-10 gap-4 px-4'
+      id='form-add-pulverizacion'
     >
       <Popover>
         <PopoverTrigger asChild>
@@ -199,10 +201,10 @@ export default function AddOrEditPulverizacionForm() {
             }}
             {...field}
           >
-            <SelectTrigger className='col-span-6'>
+            <SelectTrigger className='col-span-4'>
               <SelectValue placeholder='Campo' />
             </SelectTrigger>
-            <SelectContent className='col-span-6'>
+            <SelectContent className='col-span-4'>
               {campos?.map((campo) => {
                 return (
                   <SelectItem key={campo.id} value={campo.id as string}>
@@ -214,6 +216,7 @@ export default function AddOrEditPulverizacionForm() {
           </Select>
         )}
       />
+      <AddOrEditCampoDialog onlyIcon className='col-span-2' />
       <Input
         {...register('detalle.hectareas', {
           required: {
@@ -393,6 +396,7 @@ export default function AddOrEditPulverizacionForm() {
         disabled={isSubmitting || isSubmitSuccessful}
         type='submit'
         className={cn('col-span-full', isSubmitSuccessful && 'bg-green-700')}
+        form='form-add-pulverizacion'
       >
         {isSubmitSuccessful ? (
           <>
