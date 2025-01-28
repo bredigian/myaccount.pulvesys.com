@@ -1,16 +1,9 @@
 'use client';
 
-import {
-  ArrowDown,
-  Check,
-  ChevronDown,
-  PackageMinus,
-  PackagePlus,
-} from 'lucide-react';
 import { Campo, Lote } from '@/types/campos.types';
+import { Check, ChevronDown, PackageMinus, PackagePlus } from 'lucide-react';
 import { Controller, useForm } from 'react-hook-form';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Producto, UNIDAD } from '@/types/productos.types';
 import {
   Select,
   SelectContent,
@@ -18,37 +11,43 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
+import { useEffect, useState } from 'react';
 
 import { Button } from './ui/button';
 import { Calendar } from './ui/calendar';
-import { Cultivo } from '@/types/cultivos.types';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import Map from './map';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
-import { Tratamiento } from '@/types/tratamientos.types';
+import { UNIDAD } from '@/types/productos.types';
 import { UUID } from 'crypto';
 import { addPulverizacion } from '@/services/pulverizaciones.service';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useControllerAplicaciones } from '@/hooks/use-productos';
-import { useState } from 'react';
+import { useDataStore } from '@/store/data.store';
 
-interface Props {
-  campos: Campo[];
-  productos: Producto[];
-  cultivos: Cultivo[];
-  tratamientos: Tratamiento[];
-}
+export default function AddOrEditPulverizacionForm() {
+  const {
+    getData,
+    loading,
+    error,
+    campos,
+    cultivos,
+    productos,
+    tratamientos,
+    isAlreadyFetching,
+  } = useDataStore();
 
-export default function AddOrEditPulverizacionForm({
-  campos,
-  productos,
-  cultivos,
-  tratamientos,
-}: Props) {
+  useEffect(() => {
+    if (!isAlreadyFetching()) {
+      const fetchData = async () => await getData();
+      fetchData();
+    }
+  }, []);
+
   const {
     control,
     register,
@@ -56,6 +55,18 @@ export default function AddOrEditPulverizacionForm({
     formState: { isSubmitting },
     watch,
   } = useForm<Pulverizacion>({});
+
+  const [selectedCampo, setSelectedCampo] = useState<Campo>();
+  const [selectedLotes, setSelectedLotes] = useState<string[]>([]);
+
+  const {
+    aplicaciones,
+    addAplicacion,
+    areEmptySelectedProducts,
+    deleteAplicacion,
+    handleChangeAplicacionDosis,
+    handleChangeSelectValue,
+  } = useControllerAplicaciones();
 
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState<
     boolean | undefined
@@ -122,17 +133,15 @@ export default function AddOrEditPulverizacionForm({
     }
   };
 
-  const [selectedCampo, setSelectedCampo] = useState<Campo>();
-  const [selectedLotes, setSelectedLotes] = useState<string[]>([]);
+  if (loading)
+    return (
+      <div className='grid place-items-center py-6'>
+        <ReloadIcon className='size-6 animate-spin' />
+      </div>
+    );
 
-  const {
-    aplicaciones,
-    addAplicacion,
-    areEmptySelectedProducts,
-    deleteAplicacion,
-    handleChangeAplicacionDosis,
-    handleChangeSelectValue,
-  } = useControllerAplicaciones();
+  if (error)
+    return <p>Se produjo un error al obtener los datos del servidor</p>;
 
   return (
     <form
@@ -186,7 +195,7 @@ export default function AddOrEditPulverizacionForm({
           <Select
             onValueChange={(value) => {
               field.onChange(value);
-              setSelectedCampo(campos.find((campo) => campo.id === value));
+              setSelectedCampo(campos?.find((campo) => campo.id === value));
             }}
             {...field}
           >
@@ -194,7 +203,7 @@ export default function AddOrEditPulverizacionForm({
               <SelectValue placeholder='Campo' />
             </SelectTrigger>
             <SelectContent className='col-span-6'>
-              {campos.map((campo) => {
+              {campos?.map((campo) => {
                 return (
                   <SelectItem key={campo.id} value={campo.id as string}>
                     {campo.nombre} ({campo.hectareas}ha)
@@ -224,17 +233,9 @@ export default function AddOrEditPulverizacionForm({
       {selectedCampo && (
         <>
           <Label className='col-span-full flex items-center justify-between'>
-            <p>Seleccione los lotes a pulverizar</p>
-            <ArrowDown size={20} />
+            Seleccione los lotes a pulverizar
           </Label>
-          <Map
-            lotes={selectedCampo.Lote as Lote[]}
-            className='col-span-8'
-            size='!h-[20vh]'
-            customCenter
-            customZoom={14}
-          />
-          <ul className='col-span-2 space-y-2'>
+          <ul className='col-span-full flex flex-wrap items-center gap-2'>
             {(selectedCampo.Lote as Lote[]).map((lote) => (
               <li
                 key={`badge-${lote.nombre}`}
@@ -263,6 +264,14 @@ export default function AddOrEditPulverizacionForm({
               </li>
             ))}
           </ul>
+          <Map
+            selectedCampo={selectedCampo}
+            lotes={selectedCampo.Lote as Lote[]}
+            className='col-span-full'
+            size='!h-[20vh]'
+            customCenter
+            customZoom={15}
+          />
         </>
       )}
       <Controller
@@ -277,7 +286,7 @@ export default function AddOrEditPulverizacionForm({
               <SelectValue placeholder='Cultivo' />
             </SelectTrigger>
             <SelectContent className='col-span-4'>
-              {cultivos.map((cultivo) => {
+              {cultivos?.map((cultivo) => {
                 return (
                   <SelectItem key={cultivo.id} value={cultivo.id as string}>
                     {cultivo.nombre}
@@ -300,7 +309,7 @@ export default function AddOrEditPulverizacionForm({
               <SelectValue placeholder='Tipo de tratamiento' />
             </SelectTrigger>
             <SelectContent className='col-span-6'>
-              {tratamientos.map((tratamiento) => {
+              {tratamientos?.map((tratamiento) => {
                 return (
                   <SelectItem
                     key={tratamiento.id}
@@ -347,7 +356,7 @@ export default function AddOrEditPulverizacionForm({
                   <SelectValue placeholder='Producto' />
                 </SelectTrigger>
                 <SelectContent className='col-span-5'>
-                  {productos.map((producto) => {
+                  {productos?.map((producto) => {
                     return (
                       <SelectItem
                         key={producto.id}
@@ -370,7 +379,7 @@ export default function AddOrEditPulverizacionForm({
                 }
               />
               <span className='col-span-2 self-center text-sm font-semibold opacity-60'>
-                {productos.find(
+                {productos?.find(
                   (producto) => producto.id === aplicacion.producto_id,
                 )?.unidad === UNIDAD.LITROS
                   ? 'L/Ha'

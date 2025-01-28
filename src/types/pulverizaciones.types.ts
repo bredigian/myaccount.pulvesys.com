@@ -22,4 +22,5 @@ export interface Pulverizacion {
   detalle_id?: UUID;
   detalle: Detalle;
   productos: Aplicacion[];
+  Aplicacion?: Aplicacion[];
 }

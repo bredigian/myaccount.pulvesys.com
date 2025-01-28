@@ -10,42 +10,26 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from './ui/drawer';
-import { Droplet, Edit, Trash2 } from 'lucide-react';
 
 import AddOrEditPulverizacionForm from './pulverizaciones-form';
 import { Button } from './ui/button';
-import { Pulverizacion } from '@/types/pulverizaciones.types';
-import { UUID } from 'crypto';
-import { deleteCultivo } from '@/services/cultivos.service';
-import revalidate from '@/lib/actions';
-import { toast } from 'sonner';
+import { Droplet } from 'lucide-react';
+import { useState } from 'react';
 
-export const AddOrEditPulverizacionDialog = ({
-  isEdit,
-  data,
-}: {
-  isEdit?: boolean;
-  data?: Pulverizacion;
-}) => {
+export const AddOrEditPulverizacionDialog = () => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Drawer>
+    <Drawer dismissible={false} open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        {!isEdit ? (
-          <Button>
-            Crear
-            <Droplet />
-          </Button>
-        ) : (
-          <Button size={'icon'} variant={'outline'}>
-            <Edit />
-          </Button>
-        )}
+        <Button>
+          Crear
+          <Droplet />
+        </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>
-            {!isEdit ? 'Nueva pulverización' : 'Modificar pulverización'}
-          </DrawerTitle>
+          <DrawerTitle>Nueva pulverización</DrawerTitle>
           <DrawerDescription>
             Completa con lo requerido para la pulverización
           </DrawerDescription>
@@ -53,46 +37,9 @@ export const AddOrEditPulverizacionDialog = ({
         <AddOrEditPulverizacionForm />
         <DrawerFooter className='pt-2'>
           <DrawerClose asChild>
-            <Button variant={'outline'}>Cerrar</Button>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
-  );
-};
-
-export const DeleteCultivoDialog = ({ id }: { id: UUID }) => {
-  const handleDelete = async () => {
-    try {
-      await deleteCultivo(id);
-      await revalidate('cultivos');
-
-      toast.success('El cultivo fue eliminado.');
-    } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
-    }
-  };
-
-  return (
-    <Drawer>
-      <DrawerTrigger asChild>
-        <Button size={'icon'} variant={'destructive'}>
-          <Trash2 />
-        </Button>
-      </DrawerTrigger>
-      <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>¿Estás seguro?</DrawerTitle>
-          <DrawerDescription>
-            Esta acción no se puede deshacer
-          </DrawerDescription>
-        </DrawerHeader>
-        <DrawerFooter className=''>
-          <Button variant={'destructive'} onClick={handleDelete}>
-            Eliminar
-          </Button>
-          <DrawerClose asChild>
-            <Button variant={'outline'}>Cerrar</Button>
+            <Button variant={'outline'} onClick={() => setOpen(false)}>
+              Cerrar
+            </Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

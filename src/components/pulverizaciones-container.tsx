@@ -1,90 +1,118 @@
 import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from './ui/drawer';
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from './ui/card';
+import { Leaf, ListCheckIcon, Tag } from 'lucide-react';
 
-import AddOrEditPulverizacionForm from './pulverizaciones-form';
-import { Button } from './ui/button';
-import { Campo } from '@/types/campos.types';
-import { Cultivo } from '@/types/cultivos.types';
-import { Droplet } from 'lucide-react';
-import { Producto } from '@/types/productos.types';
-import { Tratamiento } from '@/types/tratamientos.types';
-import { getCampos } from '@/services/campos.service';
-import { getCultivos } from '@/services/cultivos.service';
-import { getProductos } from '@/services/productos.service';
+import { Badge } from './ui/badge';
+import { DateTime } from 'luxon';
+import { Lote } from '@/types/campos.types';
 import { getPulverizaciones } from '@/services/pulverizaciones.service';
-import { getTratamientos } from '@/services/tratamientos.service';
 
 export const PulverizacionesContainer = async () => {
   const data = await getPulverizaciones();
   if (data instanceof Error) return <p>{data?.message}</p>;
 
-  console.log(data);
-
   return (
-    <ul>
+    <ul className='space-y-4'>
       {data.map((pulverizacion) => (
-        <li key={pulverizacion.id}>{pulverizacion.fecha.toString()}</li>
+        <li key={pulverizacion.id}>
+          <Card>
+            <CardHeader>
+              <CardTitle className='flex items-center justify-between'>
+                {pulverizacion.detalle.campo?.nombre}
+                <p className='text-sm font-normal'>
+                  {DateTime.fromISO(
+                    pulverizacion.fecha as string,
+                  ).toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY, {
+                    locale: 'es-AR',
+                  })}
+                </p>
+              </CardTitle>
+              <CardContent className='flex items-center justify-between px-0 py-0 pt-2'>
+                <ul className='flex items-center gap-2'>
+                  {pulverizacion.detalle.lotes.map((lote) => {
+                    const loteData = pulverizacion.detalle.campo?.Lote?.find(
+                      (item) => item.nombre === lote,
+                    ) as Lote;
+
+                    return (
+                      <li
+                        key={`lote-${loteData.id}`}
+                        style={{
+                          backgroundColor: `${loteData.color as string}50`,
+                          borderColor: loteData.color as string,
+                        }}
+                        className='flex items-center gap-1 rounded-md border-2 px-3 py-1 text-xs font-semibold'
+                      >
+                        <Tag size={14} />
+                        {loteData.nombre}
+                      </li>
+                    );
+                  })}
+                </ul>
+                <Badge variant={'secondary'}>
+                  {pulverizacion.detalle.hectareas}ha/
+                  {pulverizacion.detalle.campo?.hectareas}ha
+                </Badge>
+              </CardContent>
+            </CardHeader>
+            <CardContent>
+              <div className='space-x-4'>
+                <Badge variant={'secondary'} className='space-x-1'>
+                  <Leaf size={14} />
+                  <h6>{pulverizacion.detalle.cultivo?.nombre}</h6>
+                </Badge>
+                <Badge variant={'secondary'} className='space-x-1'>
+                  <ListCheckIcon size={14} />
+                  <h6>{pulverizacion.detalle.tratamiento?.nombre}</h6>
+                </Badge>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <ul className='flex flex-wrap items-center gap-4'>
+                {pulverizacion.Aplicacion?.map((aplicacion) => (
+                  <li key={`pulverizacion-aplicacion__${aplicacion.id}`}>
+                    <Badge variant={'secondary'}>
+                      {aplicacion.producto?.nombre}
+                    </Badge>
+                  </li>
+                ))}
+              </ul>
+            </CardFooter>
+          </Card>
+        </li>
       ))}
     </ul>
   );
 };
-export const AddPulverizacionDialogContainer = async () => {
-  const campos = await getCampos();
-  const cultivos = await getCultivos();
-  const productos = await getProductos();
-  const tratamientos = await getTratamientos();
+// export const AddPulverizacionDialogContainer = async () => {
+//   const campos = await getCampos();
+//   const cultivos = await getCultivos();
+//   const productos = await getProductos();
+//   const tratamientos = await getTratamientos();
 
-  if (!campos || !cultivos || !productos || !tratamientos)
-    return (
-      <Button variant={'outline'} disabled>
-        Crear <Droplet />
-      </Button>
-    );
+//   if (
+//     campos instanceof Error ||
+//     cultivos instanceof Error ||
+//     productos instanceof Error ||
+//     tratamientos instanceof Error
+//   )
+//     return (
+//       <Button variant={'outline'} disabled>
+//         Crear <Droplet />
+//       </Button>
+//     );
 
-  return (
-    <Drawer dismissible={false}>
-      <DrawerTrigger asChild>
-        {/* {!isEdit ? ( */}
-        <Button>
-          Crear
-          <Droplet />
-        </Button>
-        {/* ) : ( */}
-        {/* <Button size={'icon'} variant={'outline'}>
-            <Edit />
-          </Button> */}
-        {/* )} */}
-      </DrawerTrigger>
-      <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>
-            {/* {!isEdit ? 'Nueva pulverización' : 'Modificar pulverización'} */}
-            Pulverizacion
-          </DrawerTitle>
-          <DrawerDescription>
-            Completa con lo requerido para la pulverización
-          </DrawerDescription>
-        </DrawerHeader>
-        <AddOrEditPulverizacionForm
-          campos={campos as Campo[]}
-          cultivos={cultivos as Cultivo[]}
-          productos={productos as Producto[]}
-          tratamientos={tratamientos as Tratamiento[]}
-        />
-        <DrawerFooter className='pt-2'>
-          <DrawerClose asChild>
-            <Button variant={'outline'}>Cerrar</Button>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
-  );
-};
+//   return (
+//     <AddOrEditPulverizacionDialog
+//       campos={campos}
+//       cultivos={cultivos}
+//       productos={productos}
+//       tratamientos={tratamientos}
+//     />
+//   );
+// };

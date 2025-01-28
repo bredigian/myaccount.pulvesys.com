@@ -1,11 +1,17 @@
 import 'leaflet/dist/leaflet.css';
 
-import { Coordinada, Lote } from '@/types/campos.types';
-import { MapContainer, Polygon, TileLayer, useMapEvents } from 'react-leaflet';
+import { Campo, Coordinada, Lote } from '@/types/campos.types';
+import {
+  MapContainer,
+  Polygon,
+  TileLayer,
+  useMap,
+  useMapEvents,
+} from 'react-leaflet';
 
 import { LatLngExpression } from 'leaflet';
-import React from 'react';
 import { cn } from '@/lib/utils';
+import { useEffect } from 'react';
 
 interface Props {
   lotes: Lote[];
@@ -17,7 +23,24 @@ interface Props {
   centerByEdit?: LatLngExpression;
   className?: string;
   customZoom?: number;
+  selectedCampo: Campo;
 }
+
+const MapFlyTo = ({ selectedCampo }: { selectedCampo: Campo }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (selectedCampo) {
+      const { lat, lng } = selectedCampo.Lote?.[0]
+        ?.Coordinada?.[0] as Coordinada;
+      map.flyTo([lat, lng], 14, {
+        duration: 1.5, // Duración de la animación en segundos
+      });
+    }
+  }, [selectedCampo, map]);
+
+  return null;
+};
 
 export default function Map({
   lotes,
@@ -29,6 +52,7 @@ export default function Map({
   centerByEdit,
   className,
   customZoom,
+  selectedCampo,
 }: Props) {
   const AddMarker = () => {
     useMapEvents({
@@ -48,44 +72,53 @@ export default function Map({
   const CENTER =
     (centerByEdit ?? customCenter)
       ? [
-          lotes[0]?.Coordinada[0]?.lat ?? -37.31587,
-          lotes[0]?.Coordinada[0]?.lng ?? -59.98368,
+          lotes[0]?.Coordinada?.[0]?.lat ?? -37.31587,
+          lotes[0]?.Coordinada?.[0]?.lng ?? -59.98368,
         ]
       : [-37.31587, -59.98368];
 
   return (
-    <MapContainer
-      className={cn(
-        'relative z-10 overflow-hidden rounded-lg',
-        size || '!h-[40dvh]',
-        className,
-      )}
-      center={CENTER as LatLngExpression}
-      zoom={customZoom ?? 15}
-      scrollWheelZoom={false}
+    <div
+      className={className}
+      onTouchStart={(e) => e.isPropagationStopped}
+      onClick={(e) => e.stopPropagation()}
+      onMouseEnter={() => console.log('entering')}
+      onMouseDown={(e) => e.isPropagationStopped}
     >
-      <TileLayer
-        attribution='&copy; <a href="https://www.esri.com">Esri</a> &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
-        url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-      />
-      {actualLote && (
-        <Polygon
-          key={`actual-${actualLote.nombre}`}
-          positions={actualLote.zona}
+      <MapContainer
+        id='map'
+        className={cn(
+          'pointer-events-auto relative z-10 h-full w-full overflow-hidden rounded-lg',
+          size || '!h-[40dvh]',
+        )}
+        center={CENTER as LatLngExpression}
+        zoom={customZoom ?? 15}
+        scrollWheelZoom={false}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.esri.com">Esri</a> &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'
+          url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
         />
-      )}
-
-      {lotes.length > 0 &&
-        lotes?.map((lote) => (
+        <MapFlyTo selectedCampo={selectedCampo} />
+        {actualLote && (
           <Polygon
-            key={lote.nombre}
-            eventHandlers={{ click: (e) => console.log(e) }}
-            positions={(lote.Coordinada as Coordinada[]) ?? lote.zona}
-            color={lote.color as string}
+            key={`actual-${actualLote.nombre}`}
+            positions={actualLote.zona}
           />
-        ))}
+        )}
 
-      <AddMarker />
-    </MapContainer>
+        {lotes.length > 0 &&
+          lotes?.map((lote) => (
+            <Polygon
+              key={lote.nombre}
+              eventHandlers={{ click: (e) => console.log(e) }}
+              positions={(lote.Coordinada as Coordinada[]) ?? lote.zona}
+              color={lote.color as string}
+            />
+          ))}
+
+        <AddMarker />
+      </MapContainer>
+    </div>
   );
 }
