@@ -12,6 +12,7 @@ import { Tratamiento } from '@/types/tratamientos.types';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
+import { useDataStore } from '@/store/data.store';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 
@@ -30,6 +31,8 @@ export default function AddOrEditTratamientoForm({
     defaultValues: isEdit ? { nombre: data?.nombre } : undefined,
   });
 
+  const { getTratamientos } = useDataStore();
+
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState<
     boolean | undefined
   >(undefined);
@@ -47,6 +50,7 @@ export default function AddOrEditTratamientoForm({
       if (!isEdit) await addTratamiento(PAYLOAD);
       else await editTratamiento(PAYLOAD);
       await revalidate('tratamientos');
+      await getTratamientos();
 
       setIsSubmitSuccessful(true);
 

@@ -8,6 +8,7 @@ import { ReloadIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
+import { useDataStore } from '@/store/data.store';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 
@@ -26,6 +27,8 @@ export default function AddOrEditCultivoForm({
     defaultValues: isEdit ? { nombre: data?.nombre } : undefined,
   });
 
+  const { getCultivos } = useDataStore();
+
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState<
     boolean | undefined
   >(undefined);
@@ -43,6 +46,7 @@ export default function AddOrEditCultivoForm({
       if (!isEdit) await addCultivo(PAYLOAD);
       else await editCultivo(PAYLOAD);
       await revalidate('cultivos');
+      await getCultivos();
 
       setIsSubmitSuccessful(true);
 

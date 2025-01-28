@@ -13,6 +13,11 @@ interface DataStore {
   productos: Producto[] | null;
   cultivos: Cultivo[] | null;
   tratamientos: Tratamiento[] | null;
+  getCampos: () => Promise<void>;
+  getProductos: () => Promise<void>;
+  getCultivos: () => Promise<void>;
+  getTratamientos: () => Promise<void>;
+
   getData: () => Promise<void>;
 
   loading: boolean | null;
@@ -39,6 +44,39 @@ export const useDataStore = create<DataStore>((set, get) => ({
     )
       return false;
     else return true;
+  },
+
+  getCampos: async () => {
+    const campos = await getCampos();
+    if (campos instanceof Error) {
+      set({ error: true });
+      return;
+    }
+    set({ campos });
+  },
+  getProductos: async () => {
+    const productos = await getProductos();
+    if (productos instanceof Error) {
+      set({ error: true });
+      return;
+    }
+    set({ productos });
+  },
+  getCultivos: async () => {
+    const cultivos = await getCultivos();
+    if (cultivos instanceof Error) {
+      set({ error: true });
+      return;
+    }
+    set({ cultivos });
+  },
+  getTratamientos: async () => {
+    const tratamientos = await getCampos();
+    if (tratamientos instanceof Error) {
+      set({ error: true });
+      return;
+    }
+    set({ tratamientos });
   },
 
   getData: async () => {

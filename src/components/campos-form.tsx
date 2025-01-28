@@ -11,6 +11,7 @@ import { ReloadIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
+import { useDataStore } from '@/store/data.store';
 import { useDebouncedCallback } from 'use-debounce';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
@@ -33,6 +34,8 @@ export default function AddOrEditCampoForm({
       ? { nombre: data?.nombre, hectareas: data?.hectareas }
       : undefined,
   });
+
+  const { getCampos } = useDataStore();
 
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState<
     boolean | undefined
@@ -68,6 +71,7 @@ export default function AddOrEditCampoForm({
       if (!isEdit) await addCampo(PAYLOAD);
       else await editCampo(PAYLOAD);
       await revalidate('campos');
+      await getCampos();
 
       setIsSubmitSuccessful(true);
       setTimeout(() => handleOpen(), 1000);

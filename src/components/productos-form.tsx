@@ -16,6 +16,7 @@ import { ReloadIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
+import { useDataStore } from '@/store/data.store';
 import { useState } from 'react';
 
 const UNIDADES = Object.entries(UNIDAD).map(([key, value]) => ({
@@ -41,6 +42,8 @@ export default function AddOrEditProductoForm({
       : undefined,
   });
 
+  const { getProductos } = useDataStore();
+
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState<
     boolean | undefined
   >(undefined);
@@ -64,6 +67,7 @@ export default function AddOrEditProductoForm({
       if (!isEdit) await addProducto(PAYLOAD);
       else await editProducto(PAYLOAD);
       await revalidate('productos');
+      await getProductos();
 
       setIsSubmitSuccessful(true);
 
