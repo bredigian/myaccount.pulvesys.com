@@ -3,12 +3,10 @@
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { ReactNode, useState } from 'react';
 import {
   SidebarInset,
   SidebarProvider,
@@ -16,7 +14,9 @@ import {
 } from '@/components/ui/sidebar';
 
 import { AppSidebar } from '@/components/app-sidebar';
+import Link from 'next/link';
 import { ROUTES } from '@/routes';
+import { ReactNode } from 'react';
 import { Separator } from '@/components/ui/separator';
 import { usePathname } from 'next/navigation';
 
@@ -26,12 +26,11 @@ interface Props {
 
 export default function Screen({ children }: Props) {
   const pathname = usePathname();
+  const isPulverizacionDetail = pathname === '/panel/pulverizacion';
   const HEADER_TITLE = ROUTES.find((route) => route.url === pathname);
 
-  const [open, setOpen] = useState(false);
-
   return (
-    <SidebarProvider open={open} onOpenChange={setOpen}>
+    <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
         <header className='flex h-16 shrink-0 items-center gap-2'>
@@ -41,12 +40,24 @@ export default function Screen({ children }: Props) {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className='hidden md:block'>
-                  <BreadcrumbLink href='#'>Administración</BreadcrumbLink>
+                  <Link href='/panel'>Administración</Link>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className='hidden md:block' />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{HEADER_TITLE?.title}</BreadcrumbPage>
-                </BreadcrumbItem>
+                {!isPulverizacionDetail ? (
+                  <BreadcrumbItem>
+                    <BreadcrumbPage>{HEADER_TITLE?.title}</BreadcrumbPage>
+                  </BreadcrumbItem>
+                ) : (
+                  <>
+                    <BreadcrumbItem className='hidden md:block'>
+                      <Link href='/panel'>Pulverizaciones</Link>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator className='hidden md:block' />
+                    <BreadcrumbItem>
+                      <BreadcrumbPage>Detalle</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </>
+                )}
               </BreadcrumbList>
             </Breadcrumb>
           </div>

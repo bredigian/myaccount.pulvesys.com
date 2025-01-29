@@ -10,3 +10,10 @@ export interface Aplicacion {
   producto?: Producto;
   dosis: number;
 }
+
+export interface AplicacionConConsumo extends Aplicacion {
+  valor_real?: number | null;
+  valor_teorico?: number;
+
+  consumo_id?: UUID;
+}

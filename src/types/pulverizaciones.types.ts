@@ -1,5 +1,6 @@
 import { Aplicacion } from './aplicaciones.types';
 import { Campo } from './campos.types';
+import { ConsumoProducto } from './productos.types';
 import { Cultivo } from './cultivos.types';
 import { Tratamiento } from './tratamientos.types';
 import { UUID } from 'crypto';
@@ -23,4 +24,8 @@ export interface Pulverizacion {
   detalle: Detalle;
   productos: Aplicacion[];
   Aplicacion?: Aplicacion[];
+  ConsumoProducto?: ConsumoProducto[];
+
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
 }

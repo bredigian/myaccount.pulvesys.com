@@ -11,3 +11,12 @@ export interface Producto {
   unidad: UNIDAD;
   cantidad: number;
 }
+
+export interface ConsumoProducto {
+  id?: UUID;
+  pulverizacion_id?: UUID;
+  producto_id?: UUID;
+  valor_teorico: number;
+  valor_real?: number;
+  valor_devolucion?: number;
+}

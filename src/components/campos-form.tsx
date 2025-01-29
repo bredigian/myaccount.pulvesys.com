@@ -92,10 +92,8 @@ export default function AddOrEditCampoForm({
     zona: [],
     color: '#000000',
   });
-  const handleLote = (point: Coordinada) => {
-    console.log(point);
+  const handleLote = (point: Coordinada) =>
     setLote((prev) => ({ ...prev, zona: [...prev.zona, point] }));
-  };
 
   const handleLoteName = (value: string) => {
     setLote((prev) => ({ ...prev, nombre: value }));
@@ -152,7 +150,6 @@ export default function AddOrEditCampoForm({
                     });
                     return;
                   }
-                  console.log(lote);
                   addLote(lote as Lote);
                   setLote({
                     nombre: '',

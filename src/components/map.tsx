@@ -1,3 +1,5 @@
+'use client';
+
 import 'leaflet/dist/leaflet.css';
 
 import { Campo, Coordinada, Lote } from '@/types/campos.types';
@@ -72,8 +74,8 @@ export default function Map({
   const CENTER =
     (centerByEdit ?? customCenter)
       ? [
-          lotes[0]?.Coordinada?.[0]?.lat ?? -37.31587,
-          lotes[0]?.Coordinada?.[0]?.lng ?? -59.98368,
+          lotes?.[0]?.Coordinada?.[0]?.lat ?? -37.31587,
+          lotes?.[0]?.Coordinada?.[0]?.lng ?? -59.98368,
         ]
       : [-37.31587, -59.98368];
 
@@ -105,7 +107,6 @@ export default function Map({
         lotes?.map((lote) => (
           <Polygon
             key={lote.nombre}
-            eventHandlers={{ click: (e) => console.log(e) }}
             positions={(lote.Coordinada as Coordinada[]) ?? lote.zona}
             color={lote.color as string}
           />
