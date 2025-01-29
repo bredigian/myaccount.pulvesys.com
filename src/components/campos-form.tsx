@@ -6,6 +6,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { LatLngExpression } from 'leaflet';
+import LoteItem from './lote-item';
 import Map from './map';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
@@ -208,16 +209,7 @@ export default function AddOrEditCampoForm({
             </li>
           ) : (
             lotes?.map((lote) => (
-              <li
-                key={`badge-${lote.nombre}`}
-                style={{
-                  backgroundColor: `${lote.color as string}50`,
-                  borderColor: lote.color as string,
-                }}
-                className='rounded-md border-2 px-3 py-1 text-xs font-semibold'
-              >
-                {lote.nombre}
-              </li>
+              <LoteItem key={`badge-${lote.id}`} lote={lote} />
             ))
           )}
         </ul>

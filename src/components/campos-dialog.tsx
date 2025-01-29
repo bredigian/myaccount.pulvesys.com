@@ -63,7 +63,7 @@ export const AddOrEditCampoDialog = ({
       <DrawerContent className='z-[9999]'>
         <DrawerHeader>
           <DrawerTitle>
-            {!isEdit ? 'Nuevo campo' : 'Modificar campo'}
+            {!isEdit ? 'Nueva ubicación' : 'Modificar ubicación'}
           </DrawerTitle>
           <DrawerDescription>
             Completa con las caracteristicas del campo

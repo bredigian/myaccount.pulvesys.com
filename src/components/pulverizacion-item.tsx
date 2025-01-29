@@ -5,6 +5,7 @@ import { Badge } from './ui/badge';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
 import { Lote } from '@/types/campos.types';
+import LoteItem from './lote-item';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 
 interface Props {
@@ -38,17 +39,7 @@ export default function PulverizacionItem({ pulverizacion }: Props) {
                   ) as Lote;
 
                   return (
-                    <li
-                      key={`lote-${loteData.id}`}
-                      style={{
-                        backgroundColor: `${loteData.color as string}50`,
-                        borderColor: loteData.color as string,
-                      }}
-                      className='flex items-center gap-1 rounded-md border-2 px-3 py-1 text-xs font-semibold'
-                    >
-                      <Tag size={14} />
-                      {loteData.nombre}
-                    </li>
+                    <LoteItem key={`lote-${loteData.id}`} lote={loteData} />
                   );
                 })}
               </ul>

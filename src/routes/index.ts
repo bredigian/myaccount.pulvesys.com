@@ -23,7 +23,7 @@ export const ROUTES = [
     icon: Leaf,
   },
   {
-    title: 'Campos',
+    title: 'Ubicaciones',
     url: '/panel/campos',
     icon: MapIcon,
   },

@@ -18,6 +18,7 @@ import { Button } from './ui/button';
 import { Calendar } from './ui/calendar';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
+import LoteItem from './lote-item';
 import Map from './map';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
@@ -206,7 +207,7 @@ export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
             {...field}
           >
             <SelectTrigger className='col-span-4'>
-              <SelectValue placeholder='Campo' />
+              <SelectValue placeholder='Ubicación' />
             </SelectTrigger>
             <SelectContent className='col-span-4'>
               {campos?.map((campo) => {
@@ -244,17 +245,9 @@ export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
           </Label>
           <ul className='col-span-full flex flex-wrap items-center gap-2'>
             {(selectedCampo.Lote as Lote[]).map((lote) => (
-              <li
+              <LoteItem
                 key={`badge-${lote.nombre}`}
-                style={{
-                  backgroundColor: selectedLotes.includes(lote.nombre as string)
-                    ? '#059f0050'
-                    : `${lote.color as string}50`,
-                  borderColor: selectedLotes.includes(lote.nombre as string)
-                    ? '#059f00'
-                    : (lote.color as string),
-                }}
-                className='rounded-md border-2 px-3 py-1 text-center text-xs font-semibold hover:cursor-pointer'
+                lote={lote}
                 onClick={() => {
                   if (!selectedLotes.includes(lote.nombre as string))
                     setSelectedLotes((prev) => [
@@ -266,9 +259,15 @@ export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
                       ...prev.filter((selected) => selected !== lote.nombre),
                     ]);
                 }}
-              >
-                {lote.nombre}
-              </li>
+                customStyle={{
+                  backgroundColor: selectedLotes.includes(lote.nombre as string)
+                    ? '#059f0050'
+                    : `${lote.color as string}50`,
+                  borderColor: selectedLotes.includes(lote.nombre as string)
+                    ? '#059f00'
+                    : (lote.color as string),
+                }}
+              />
             ))}
           </ul>
           <Map

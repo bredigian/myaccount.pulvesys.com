@@ -5,6 +5,7 @@ import { Campo, Lote } from '@/types/campos.types';
 import { Card, CardContent } from './ui/card';
 
 import { Badge } from './ui/badge';
+import LoteItem from './lote-item';
 import Map from './map';
 import { UUID } from 'crypto';
 
@@ -15,7 +16,7 @@ interface Props {
 export default function CampoItem({ data }: Props) {
   return (
     <li className='flex items-start justify-between'>
-      <Card className='hover:bg-sidebar-accent w-full duration-200 ease-in-out'>
+      <Card className='w-full duration-200 ease-in-out hover:bg-sidebar-accent'>
         <CardContent className='space-y-4'>
           <div className='flex items-start justify-between pt-6'>
             <div className='space-y-1'>
@@ -30,16 +31,7 @@ export default function CampoItem({ data }: Props) {
           <Map lotes={data.Lote as Lote[]} size='!h-[25dvh]' customCenter />
           <ul className='flex items-center gap-2'>
             {data.Lote?.map((lote) => (
-              <li
-                key={`badge-${lote.nombre}`}
-                style={{
-                  backgroundColor: `${lote.color as string}50`,
-                  borderColor: lote.color as string,
-                }}
-                className='rounded-md border-2 px-3 py-1 text-xs font-semibold'
-              >
-                {lote.nombre}
-              </li>
+              <LoteItem key={`lote-${lote.id}`} lote={lote} />
             ))}
           </ul>
         </CardContent>
