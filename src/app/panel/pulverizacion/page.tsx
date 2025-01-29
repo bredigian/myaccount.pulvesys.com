@@ -1,9 +1,10 @@
-import { Calendar, Layers, Leaf, ListCheckIcon, Tag } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
+  BackToPulverizacionesButton,
   EditConsumoProductoDialog,
   ShowPulverizacionInfoDialog,
 } from '@/components/pulverizacion-detail-dialog';
+import { Calendar, Layers, Leaf, ListCheckIcon, Tag } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { RedirectType, redirect } from 'next/navigation';
 import {
   Table,
@@ -43,7 +44,10 @@ export default async function PulverizacionDetail({ searchParams }: Props) {
     <main className='space-y-4 p-4 pt-0'>
       <div className='flex w-full items-center justify-between'>
         <h1 className='text-2xl font-semibold'>{data.detalle.campo?.nombre}</h1>
-        <ShowPulverizacionInfoDialog data={data} />
+        <aside className='flex items-center gap-2'>
+          <ShowPulverizacionInfoDialog data={data} />
+          <BackToPulverizacionesButton />
+        </aside>
       </div>
       <div className='flex items-center justify-between'>
         <Badge className='space-x-1'>

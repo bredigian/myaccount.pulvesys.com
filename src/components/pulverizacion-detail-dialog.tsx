@@ -1,5 +1,6 @@
 'use client';
 
+import { ArrowLeft, Info, PackageOpen } from 'lucide-react';
 import {
   Drawer,
   DrawerClose,
@@ -10,7 +11,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from './ui/drawer';
-import { Info, PackageOpen } from 'lucide-react';
 
 import { AplicacionConConsumo } from '@/types/aplicaciones.types';
 import { Button } from './ui/button';
@@ -18,6 +18,7 @@ import { DateTime } from 'luxon';
 import EditConsumoProductoForm from './pulverizacion-detail-form';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { useDialog } from '@/hooks/use-dialog';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   data?: Pulverizacion;
@@ -60,6 +61,16 @@ export const ShowPulverizacionInfoDialog = ({ data }: Props) => {
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
+  );
+};
+
+export const BackToPulverizacionesButton = () => {
+  const { back } = useRouter();
+
+  return (
+    <Button variant={'outline'} onClick={back}>
+      Volver <ArrowLeft />
+    </Button>
   );
 };
 
