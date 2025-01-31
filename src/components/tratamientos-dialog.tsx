@@ -20,6 +20,7 @@ import { UUID } from 'crypto';
 import { deleteTratamiento } from '@/services/tratamientos.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
+import { useDataStore } from '@/store/data.store';
 import { useDialog } from '@/hooks/use-dialog';
 import { useRouter } from 'next/navigation';
 
@@ -74,6 +75,7 @@ export const AddOrEditTratamientoDialog = ({
 
 export const DeleteTratamientoDialog = ({ id }: { id: UUID }) => {
   const { push } = useRouter();
+  const { getTratamientos } = useDataStore();
 
   const handleDelete = async () => {
     try {
@@ -87,6 +89,7 @@ export const DeleteTratamientoDialog = ({ id }: { id: UUID }) => {
 
       await deleteTratamiento(id, access_token);
       await revalidate('tratamientos');
+      await getTratamientos(access_token);
 
       toast.success('El tipo de tratamiento fue eliminado.');
     } catch (error) {

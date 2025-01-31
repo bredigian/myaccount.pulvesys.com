@@ -20,6 +20,7 @@ import { UUID } from 'crypto';
 import { deleteProducto } from '@/services/productos.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
+import { useDataStore } from '@/store/data.store';
 import { useDialog } from '@/hooks/use-dialog';
 import { useRouter } from 'next/navigation';
 
@@ -72,6 +73,7 @@ export const AddOrEditProductoDialog = ({
 
 export const DeleteProductoDialog = ({ id }: { id: UUID }) => {
   const { push } = useRouter();
+  const { getProductos } = useDataStore();
 
   const handleDelete = async () => {
     try {
@@ -85,6 +87,7 @@ export const DeleteProductoDialog = ({ id }: { id: UUID }) => {
 
       await deleteProducto(id, access_token);
       await revalidate('productos');
+      await getProductos(access_token);
 
       toast.success('El producto fue eliminado.');
     } catch (error) {

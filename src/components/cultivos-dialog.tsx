@@ -20,6 +20,7 @@ import { UUID } from 'crypto';
 import { deleteCultivo } from '@/services/cultivos.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
+import { useDataStore } from '@/store/data.store';
 import { useDialog } from '@/hooks/use-dialog';
 import { useRouter } from 'next/navigation';
 
@@ -72,6 +73,7 @@ export const AddOrEditCultivoDialog = ({
 
 export const DeleteCultivoDialog = ({ id }: { id: UUID }) => {
   const { push } = useRouter();
+  const { getCultivos } = useDataStore();
 
   const handleDelete = async () => {
     try {
@@ -84,6 +86,7 @@ export const DeleteCultivoDialog = ({ id }: { id: UUID }) => {
       }
       await deleteCultivo(id, access_token);
       await revalidate('cultivos');
+      await getCultivos(access_token);
 
       toast.success('El cultivo fue eliminado.');
     } catch (error) {
