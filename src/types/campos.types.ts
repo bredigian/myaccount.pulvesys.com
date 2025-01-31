@@ -3,6 +3,7 @@ import { UUID } from 'crypto';
 export interface Lote {
   id?: UUID;
   nombre: string | null;
+  hectareas: number | null;
   zona: Coordinada[];
   Coordinada?: Coordinada[];
   color: string | null;
@@ -18,6 +19,5 @@ export interface Coordinada {
 export interface Campo {
   id?: UUID;
   nombre: string;
-  hectareas: number;
   Lote?: Lote[];
 }

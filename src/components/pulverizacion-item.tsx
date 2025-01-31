@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Leaf, ListCheckIcon, Tag } from 'lucide-react';
+import { Leaf, ListCheckIcon } from 'lucide-react';
 
 import { Badge } from './ui/badge';
 import { DateTime } from 'luxon';
@@ -31,8 +31,8 @@ export default function PulverizacionItem({ pulverizacion }: Props) {
             </CardTitle>
           </CardHeader>
           <CardContent className='space-y-4'>
-            <div className='flex items-center justify-between'>
-              <ul className='flex flex-wrap items-center gap-2'>
+            <div className='flex items-start justify-between'>
+              <ul className='flex flex-wrap items-center justify-end gap-2'>
                 {pulverizacion.detalle.lotes.map((lote) => {
                   const loteData = pulverizacion.detalle.campo?.Lote?.find(
                     (item) => item.nombre === lote,
@@ -43,10 +43,6 @@ export default function PulverizacionItem({ pulverizacion }: Props) {
                   );
                 })}
               </ul>
-              <Badge variant={'secondary'}>
-                {pulverizacion.detalle.hectareas}ha/
-                {pulverizacion.detalle.campo?.hectareas}ha
-              </Badge>
             </div>
             <div className='space-x-4'>
               <Badge variant={'secondary'} className='space-x-1'>

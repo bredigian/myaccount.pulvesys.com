@@ -35,9 +35,7 @@ export default function AddOrEditCampoForm({
     handleSubmit,
     formState: { isSubmitting },
   } = useForm<Campo>({
-    defaultValues: isEdit
-      ? { nombre: data?.nombre, hectareas: data?.hectareas }
-      : undefined,
+    defaultValues: isEdit ? { nombre: data?.nombre } : undefined,
   });
 
   const { getCampos } = useDataStore();
@@ -70,7 +68,6 @@ export default function AddOrEditCampoForm({
       const PAYLOAD: Campo = {
         ...values,
         id: data?.id,
-        hectareas: parseInt(values.hectareas.toString()),
         Lote: lotes,
       };
 
@@ -103,6 +100,7 @@ export default function AddOrEditCampoForm({
 
   const [lote, setLote] = useState<Lote>({
     nombre: '',
+    hectareas: null,
     zona: [],
     color: '#000000',
   });
@@ -111,6 +109,10 @@ export default function AddOrEditCampoForm({
 
   const handleLoteName = (value: string) => {
     setLote((prev) => ({ ...prev, nombre: value }));
+  };
+
+  const handleLoteHectareas = (value: number) => {
+    setLote((prev) => ({ ...prev, hectareas: value }));
   };
 
   const handleLoteColor = useDebouncedCallback((value: string) => {
@@ -137,17 +139,7 @@ export default function AddOrEditCampoForm({
         placeholder='Nombre'
         className='text-sm'
       />
-      <Input
-        {...register('hectareas', {
-          required: { value: true, message: 'Las hectáreas son requeridas.' },
-          min: {
-            value: 1,
-            message: 'El valor mínimo es 1.',
-          },
-        })}
-        placeholder='Hectáreas'
-        className='text-sm'
-      />
+
       <div className='w-full space-y-4'>
         <div className='flex items-center justify-between'>
           <Label>Ubicación</Label>
@@ -162,11 +154,21 @@ export default function AddOrEditCampoForm({
                       className: `mt-6`,
                       position: 'top-center',
                     });
+
+                    return;
+                  } else if (!lote.hectareas) {
+                    toast.error('Las hectáreas son requeridas', {
+                      className: `mt-6`,
+                      position: 'top-center',
+                    });
+
                     return;
                   }
+
                   addLote(lote as Lote);
                   setLote({
                     nombre: '',
+                    hectareas: null,
                     zona: [],
                     color: lote.color as string,
                   });
@@ -226,13 +228,21 @@ export default function AddOrEditCampoForm({
             ))
           )}
         </ul>
-        <div className='grid grid-cols-6 gap-4'>
+        <div className='grid grid-cols-9 gap-4'>
           <Input
             placeholder='Nombre del lote'
             className='col-span-4 text-sm'
             disabled={!lote.nombre && !enable}
             onChange={(e) => handleLoteName(e.target.value)}
             value={lote.nombre as string}
+          />
+          <Input
+            placeholder='Hectáreas'
+            className='col-span-3 text-sm'
+            disabled={!lote.hectareas && !enable}
+            type='number'
+            onChange={(e) => handleLoteHectareas(Number(e.target.value))}
+            value={lote.hectareas?.toString()}
           />
           <Input
             type='color'
@@ -244,10 +254,11 @@ export default function AddOrEditCampoForm({
         </div>
       </div>
       <Button
-        disabled={isSubmitting || isSubmitSuccessful}
+        disabled={isSubmitting || isSubmitSuccessful || enable}
         type='submit'
         className={cn(
-          'w-full disabled:opacity-100',
+          'w-full',
+          !enable && 'disabled:opacity-100',
           isSubmitSuccessful && 'bg-green-700',
         )}
         form='form-add-campos'

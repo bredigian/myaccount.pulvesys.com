@@ -44,6 +44,10 @@ export default async function PulverizacionDetail({ searchParams }: Props) {
 
   if (data instanceof Error) return <p className='px-4'>{data.message}</p>;
 
+  const selectedHectareas = data.detalle.campo?.Lote?.filter((lote) =>
+    data.detalle.lotes.includes(lote.nombre as string),
+  ).reduce((acc, lote) => acc + (lote?.hectareas as number), 0);
+
   return (
     <main className='space-y-4 p-4 pt-0'>
       <div className='flex w-full items-center justify-between'>
@@ -84,7 +88,8 @@ export default async function PulverizacionDetail({ searchParams }: Props) {
                 )}
               >
                 <Tag size={14} />
-                {lote.nombre}
+                <span>{lote.nombre}</span>
+                <p>({lote.hectareas}ha)</p>
               </li>
             );
           })}
@@ -103,7 +108,7 @@ export default async function PulverizacionDetail({ searchParams }: Props) {
         <CardContent className='flex flex-wrap items-center gap-4'>
           <Badge variant={'secondary'} className='w-fit space-x-1'>
             <Layers size={14} />
-            <h6>{data.detalle.hectareas}ha</h6>
+            <h6>{selectedHectareas}ha</h6>
           </Badge>
           <Badge variant={'secondary'} className='w-fit space-x-1'>
             <Leaf size={14} />

@@ -133,7 +133,6 @@ export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
           cultivo: undefined,
           tratamiento: undefined,
           id: undefined,
-          hectareas: Number(values.detalle.hectareas),
           campo_id: values.detalle.campo?.id as UUID,
           cultivo_id: values.detalle.cultivo?.id as UUID,
           tratamiento_id: values.detalle.tratamiento?.id as UUID,
@@ -232,14 +231,18 @@ export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
             }}
             {...field}
           >
-            <SelectTrigger className='col-span-4'>
+            <SelectTrigger className='col-span-6'>
               <SelectValue placeholder='Ubicación' />
             </SelectTrigger>
-            <SelectContent className='col-span-4'>
+            <SelectContent className='col-span-6'>
               {campos?.map((campo) => {
+                const totalHectareas = campo.Lote?.reduce(
+                  (acc, lote) => acc + (lote?.hectareas as number),
+                  0,
+                );
                 return (
                   <SelectItem key={campo.id} value={campo.id as string}>
-                    {campo.nombre} ({campo.hectareas}ha)
+                    {campo.nombre} ({totalHectareas}ha)
                   </SelectItem>
                 );
               })}
@@ -247,23 +250,7 @@ export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
           </Select>
         )}
       />
-      <AddOrEditCampoDialog onlyIcon className='col-span-2' />
-      <Input
-        {...register('detalle.hectareas', {
-          required: {
-            value: true,
-            message: 'El nro. de hectáreas es necesario.',
-          },
-          max: {
-            value: selectedCampo?.hectareas ?? 999999,
-            message: 'El nro. excede la superficie del campo.',
-          },
-        })}
-        placeholder='Hectáreas'
-        className='col-span-4 text-sm'
-        type='number'
-        disabled={!selectedCampo}
-      />
+      <AddOrEditCampoDialog className='col-span-4' />
       {selectedCampo && (
         <>
           <Label className='col-span-full flex items-center justify-between'>

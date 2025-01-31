@@ -9,7 +9,6 @@ export interface Detalle {
   id?: UUID;
   campo_id: UUID;
   campo?: Campo;
-  hectareas: number;
   lotes: string[];
   cultivo_id: UUID;
   cultivo?: Cultivo;

@@ -14,6 +14,11 @@ interface Props {
 }
 
 export default function CampoItem({ data }: Props) {
+  const totalHectareas = data.Lote?.reduce(
+    (acc, lote) => acc + (lote?.hectareas as number),
+    0,
+  );
+
   return (
     <li className='flex items-start justify-between'>
       <Card className='w-full duration-200 ease-in-out hover:bg-sidebar-accent'>
@@ -21,7 +26,7 @@ export default function CampoItem({ data }: Props) {
           <div className='flex items-start justify-between pt-6'>
             <div className='space-y-1'>
               <h3 className='text-base font-semibold'>{data.nombre}</h3>
-              <Badge variant={'secondary'}>{data.hectareas}ha</Badge>
+              <Badge variant={'secondary'}>{totalHectareas}ha</Badge>
             </div>
             <aside className='producto-settings space-x-4'>
               <AddOrEditCampoDialog isEdit data={data} />

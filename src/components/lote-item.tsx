@@ -20,7 +20,8 @@ export default function LoteItem({ lote, customStyle, onClick }: Props) {
       onClick={onClick}
     >
       <Tag size={14} />
-      {lote.nombre}
+      <span>{lote.nombre}</span>
+      <p>({lote.hectareas}ha)</p>
     </li>
   );
 }
