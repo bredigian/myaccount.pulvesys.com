@@ -19,12 +19,6 @@ import { NavUser } from '@/components/nav-user';
 import { ROUTES } from '@/routes';
 import logo from '../../public/logo_dalle.webp';
 
-const USER = {
-  name: 'Matías Rodríguez',
-  email: 'matiasrodriguez@gmail.com',
-  avatar: 'MR',
-};
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar variant='inset' {...props}>
@@ -50,7 +44,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={ROUTES} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={USER} />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );

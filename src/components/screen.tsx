@@ -7,6 +7,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { ReactNode, useEffect } from 'react';
 import {
   SidebarInset,
   SidebarProvider,
@@ -16,18 +17,26 @@ import {
 import { AppSidebar } from '@/components/app-sidebar';
 import Link from 'next/link';
 import { ROUTES } from '@/routes';
-import { ReactNode } from 'react';
 import { Separator } from '@/components/ui/separator';
+import { Usuario } from '@/types/usuario.types';
 import { usePathname } from 'next/navigation';
+import { usuarioStore } from '@/store/usuario.store';
 
 interface Props {
+  userdata: Usuario;
   children: ReactNode;
 }
 
-export default function Screen({ children }: Props) {
+export default function Screen({ children, userdata }: Props) {
   const pathname = usePathname();
   const isPulverizacionDetail = pathname === '/panel/pulverizacion';
   const HEADER_TITLE = ROUTES.find((route) => route.url === pathname);
+
+  const { nombre_usuario, setUserdata } = usuarioStore();
+
+  useEffect(() => {
+    if (!nombre_usuario) if (userdata) setUserdata(userdata);
+  }, []);
 
   return (
     <SidebarProvider>
