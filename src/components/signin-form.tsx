@@ -1,16 +1,18 @@
 'use client';
 
-import { KeyRound, LogIn, User } from 'lucide-react';
+import { KeyRound, LogIn, ShieldCheck, User } from 'lucide-react';
 
 import { Button } from './ui/button';
 import Cookies from 'js-cookie';
 import { Input } from './ui/input';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { UsuarioToSignin } from '@/types/usuario.types';
+import { cn } from '@/lib/utils';
 import { signin } from '@/services/auth.service';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function SigninForm() {
   const {
@@ -19,7 +21,7 @@ export default function SigninForm() {
     formState: { isSubmitting },
   } = useForm<UsuarioToSignin>();
 
-  const { replace } = useRouter();
+  const { push } = useRouter();
 
   const onInvalidSubmit = async (errors: any) => {
     if (errors?.nombre_usuario)
@@ -28,14 +30,17 @@ export default function SigninForm() {
       toast.error(errors.contrasena?.message, { position: 'top-center' });
   };
 
+  const [success, setSuccess] = useState(false);
+
   const onSubmit = async (values: UsuarioToSignin) => {
     try {
-      const { access_token, expireIn, userdata } = await signin(values);
+      const { access_token, expireIn } = await signin(values);
       Cookies.set('access_token', access_token, {
         expires: new Date(expireIn),
       });
 
-      replace('/panel');
+      setSuccess(true);
+      push('/panel');
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
     }
@@ -74,8 +79,16 @@ export default function SigninForm() {
           className='peer pl-7 text-sm'
         />
       </div>
-      <Button type='submit' className='w-full' disabled={isSubmitting}>
-        {!isSubmitting ? (
+      <Button
+        type='submit'
+        className={cn('w-full disabled:opacity-100', success && 'bg-green-700')}
+        disabled={isSubmitting || success}
+      >
+        {success ? (
+          <>
+            Bienvenido <ShieldCheck />
+          </>
+        ) : !isSubmitting ? (
           <>
             Iniciar sesión <LogIn />
           </>

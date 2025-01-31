@@ -38,6 +38,7 @@ export default function LogoutDialog() {
 
       clearUserdata();
 
+      toast.success('La sesión ha sido cerrada');
       push('/');
     } catch (e) {
       if (e instanceof Error)

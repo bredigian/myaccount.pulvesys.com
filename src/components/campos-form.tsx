@@ -47,12 +47,10 @@ export default function AddOrEditCampoForm({
   const onInvalidSubmit = (errors) => {
     if (errors.nombre)
       toast.error(errors.nombre.message, {
-        className: `mt-6`,
         position: 'top-center',
       });
     else if (errors.hectareas)
       toast.error(errors.hectareas.message, {
-        className: `mt-6`,
         position: 'top-center',
       });
   };
@@ -60,7 +58,6 @@ export default function AddOrEditCampoForm({
     try {
       if (lotes.length === 0) {
         toast.error('No se añadieron lotes', {
-          className: 'mt-6',
           position: 'top-center',
         });
         return;

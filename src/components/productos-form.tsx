@@ -56,11 +56,11 @@ export default function AddOrEditProductoForm({
 
   const onInvalidSubmit = (errors) => {
     if (errors.nombre)
-      toast.error(errors.nombre.message, { className: 'mb-80' });
+      toast.error(errors.nombre.message, { className: 'mb-[312px]' });
     else if (errors.cantidad)
-      toast.error(errors.cantidad.message, { className: 'mb-80' });
+      toast.error(errors.cantidad.message, { className: 'mb-[312px]' });
     else if (errors.unidad)
-      toast.error(errors.unidad.message, { className: 'mb-80' });
+      toast.error(errors.unidad.message, { className: 'mb-[312px]' });
   };
   const onSubmit = async (values: Producto) => {
     try {
