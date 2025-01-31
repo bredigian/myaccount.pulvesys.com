@@ -400,7 +400,7 @@ export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
               <span className='col-span-2 self-center text-sm font-semibold opacity-60'>
                 {productos?.find(
                   (producto) => producto.id === aplicacion.producto_id,
-                )?.unidad === UNIDAD.LITROS
+                )?.unidad === UNIDAD.LITROS.toUpperCase()
                   ? 'L/Ha'
                   : 'g/Ha'}
               </span>
