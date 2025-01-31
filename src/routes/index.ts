@@ -1,4 +1,4 @@
-import { Droplets, Leaf, ListCheck, MapIcon, Package } from 'lucide-react';
+import { Droplets, Leaf, MapIcon, Package } from 'lucide-react';
 
 export const ROUTES = [
   {
@@ -13,13 +13,8 @@ export const ROUTES = [
     icon: Package,
   },
   {
-    title: 'Tratamientos',
-    url: '/panel/tratamientos',
-    icon: ListCheck,
-  },
-  {
-    title: 'Cultivos',
-    url: '/panel/cultivos',
+    title: 'Cultivos & Tratamientos',
+    url: '/panel/cultivos&tratamientos',
     icon: Leaf,
   },
   {
