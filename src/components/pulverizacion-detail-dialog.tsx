@@ -68,8 +68,8 @@ export const BackToPulverizacionesButton = () => {
   const { back } = useRouter();
 
   return (
-    <Button variant={'outline'} onClick={back}>
-      Volver <ArrowLeft />
+    <Button size={'icon'} variant={'outline'} onClick={back}>
+      <ArrowLeft />
     </Button>
   );
 };

@@ -19,6 +19,7 @@ import { AplicacionConConsumo } from '@/types/aplicaciones.types';
 import { Badge } from '@/components/ui/badge';
 import { ConsumoProducto } from '@/types/productos.types';
 import { DateTime } from 'luxon';
+import { DeletePulverizacionDialog } from '@/components/pulverizaciones-dialog';
 import { Lote } from '@/types/campos.types';
 import Map from '@/components/map';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
@@ -51,10 +52,15 @@ export default async function PulverizacionDetail({ searchParams }: Props) {
   return (
     <main className='space-y-4 p-4 pt-0'>
       <div className='flex w-full items-center justify-between'>
-        <h1 className='text-2xl font-semibold'>{data.detalle.campo?.nombre}</h1>
+        <div className='flex items-center gap-4'>
+          <BackToPulverizacionesButton />
+          <h1 className='text-2xl font-semibold'>
+            {data.detalle.campo?.nombre}
+          </h1>
+        </div>
         <aside className='flex items-center gap-2'>
           <ShowPulverizacionInfoDialog data={data} />
-          <BackToPulverizacionesButton />
+          <DeletePulverizacionDialog id={data.id as UUID} />
         </aside>
       </div>
       <div className='flex items-center justify-between'>

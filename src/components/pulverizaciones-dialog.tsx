@@ -10,11 +10,17 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from './ui/drawer';
+import { Droplet, Trash2 } from 'lucide-react';
 
 import AddOrEditPulverizacionForm from './pulverizaciones-form';
 import { Button } from './ui/button';
-import { Droplet } from 'lucide-react';
+import Cookies from 'js-cookie';
+import { UUID } from 'crypto';
+import { deletePulverizacion } from '@/services/pulverizaciones.service';
+import revalidate from '@/lib/actions';
+import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
+import { useRouter } from 'next/navigation';
 
 export const AddOrEditPulverizacionDialog = () => {
   const { open, setOpen, handleOpen } = useDialog();
@@ -40,6 +46,58 @@ export const AddOrEditPulverizacionDialog = () => {
             <Button variant={'outline'} onClick={() => setOpen(false)}>
               Cerrar
             </Button>
+          </DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+  );
+};
+
+export const DeletePulverizacionDialog = ({ id }: { id: UUID }) => {
+  const { push } = useRouter();
+
+  const handleDelete = async () => {
+    try {
+      const access_token = Cookies.get('access_token');
+      if (!access_token) {
+        toast.error('La sesión ha expirado', { position: 'top-center' });
+        push('/');
+
+        return;
+      }
+
+      await deletePulverizacion(id, access_token);
+      await revalidate('pulverizaciones');
+
+      toast.success('La pulverizacion fue eliminada.');
+
+      push('/');
+    } catch (error) {
+      if (error instanceof Error)
+        toast.error(error.message, { className: 'mb-[216px]' });
+    }
+  };
+
+  return (
+    <Drawer>
+      <DrawerTrigger asChild>
+        <Button variant={'destructive'} size={'icon'}>
+          <Trash2 />
+        </Button>
+      </DrawerTrigger>
+      <DrawerContent className='z-50'>
+        <DrawerHeader>
+          <DrawerTitle>¿Estás seguro?</DrawerTitle>
+          <DrawerDescription>
+            Esta acción no se puede deshacer
+          </DrawerDescription>
+        </DrawerHeader>
+        <DrawerFooter>
+          <Button variant={'destructive'} onClick={handleDelete}>
+            Eliminar
+          </Button>
+          <DrawerClose asChild>
+            <Button variant={'outline'}>Cerrar</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
