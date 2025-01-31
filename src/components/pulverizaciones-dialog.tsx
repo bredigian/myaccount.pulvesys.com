@@ -12,6 +12,7 @@ import {
 } from './ui/drawer';
 import { Droplet, Trash2 } from 'lucide-react';
 
+import { AddOrEditCampoDialog } from './campos-dialog';
 import AddOrEditPulverizacionForm from './pulverizaciones-form';
 import { Button } from './ui/button';
 import Cookies from 'js-cookie';
@@ -24,32 +25,47 @@ import { useRouter } from 'next/navigation';
 
 export const AddOrEditPulverizacionDialog = () => {
   const { open, setOpen, handleOpen } = useDialog();
+  const addCampoDialog = useDialog();
 
   return (
-    <Drawer dismissible={false} open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <Button>
-          Crear
-          <Droplet />
-        </Button>
-      </DrawerTrigger>
-      <DrawerContent>
-        <DrawerHeader>
-          <DrawerTitle>Nueva pulverización</DrawerTitle>
-          <DrawerDescription>
-            Completa con lo requerido para la pulverización
-          </DrawerDescription>
-        </DrawerHeader>
-        <AddOrEditPulverizacionForm handleOpen={handleOpen} />
-        <DrawerFooter className='pt-2'>
-          <DrawerClose asChild>
-            <Button variant={'outline'} onClick={() => setOpen(false)}>
-              Cerrar
-            </Button>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+    <>
+      <Drawer dismissible={false} open={open} onOpenChange={setOpen}>
+        <DrawerTrigger asChild>
+          <Button>
+            Crear
+            <Droplet />
+          </Button>
+        </DrawerTrigger>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Nueva pulverización</DrawerTitle>
+            <DrawerDescription>
+              Completa con lo requerido para la pulverización
+            </DrawerDescription>
+          </DrawerHeader>
+          <AddOrEditPulverizacionForm
+            handleOpen={handleOpen}
+            handleAddCampoDialog={() => {
+              handleOpen();
+              setTimeout(() => addCampoDialog.handleOpen(), 250);
+            }}
+          />
+          <DrawerFooter className='pt-2'>
+            <DrawerClose asChild>
+              <Button variant={'outline'} onClick={() => setOpen(false)}>
+                Cerrar
+              </Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+      <AddOrEditCampoDialog
+        hidden
+        customOpen={addCampoDialog.open}
+        customSetOpen={addCampoDialog.setOpen}
+        customHandleOpen={addCampoDialog.handleOpen}
+      />
+    </>
   );
 };
 

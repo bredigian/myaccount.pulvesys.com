@@ -198,31 +198,6 @@ export default function AddOrEditCampoForm({
             </Button>
           </aside>
         </div>
-        <Map
-          lotes={lotes}
-          actualLote={lote}
-          handleLote={handleLote as () => void}
-          enable={enable}
-          centerByEdit={
-            isEdit
-              ? ([
-                  data?.Lote?.[0]?.Coordinada?.[0]?.lat,
-                  data?.Lote?.[0]?.Coordinada?.[0]?.lng,
-                ] as LatLngExpression)
-              : undefined
-          }
-        />
-        <ul className='flex items-center gap-2'>
-          {lotes.length === 0 ? (
-            <li className='rounded-md border-2 border-gray-200 bg-gray-50/50 px-3 py-1 text-xs font-semibold'>
-              Sin lotes
-            </li>
-          ) : (
-            lotes?.map((lote, index) => (
-              <LoteItem key={`badge-${lote.nombre}-${index}`} lote={lote} />
-            ))
-          )}
-        </ul>
         <div className='grid grid-cols-9 gap-4'>
           <Input
             placeholder='Nombre del lote'
@@ -250,6 +225,31 @@ export default function AddOrEditCampoForm({
             value={lote.color as string}
           />
         </div>
+        <Map
+          lotes={lotes}
+          actualLote={lote}
+          handleLote={handleLote as () => void}
+          enable={enable}
+          centerByEdit={
+            isEdit
+              ? ([
+                  data?.Lote?.[0]?.Coordinada?.[0]?.lat,
+                  data?.Lote?.[0]?.Coordinada?.[0]?.lng,
+                ] as LatLngExpression)
+              : undefined
+          }
+        />
+        <ul className='flex items-center gap-2 overflow-x-auto'>
+          {lotes.length === 0 ? (
+            <li className='rounded-md border-2 border-gray-200 bg-gray-50/50 px-3 py-1 text-xs font-semibold'>
+              Sin lotes
+            </li>
+          ) : (
+            lotes?.map((lote, index) => (
+              <LoteItem key={`badge-${lote.nombre}-${index}`} lote={lote} />
+            ))
+          )}
+        </ul>
       </div>
       <Button
         disabled={isSubmitting || isSubmitSuccessful || enable}

@@ -1,7 +1,13 @@
 'use client';
 
 import { Campo, Lote } from '@/types/campos.types';
-import { Check, ChevronDown, PackageMinus, PackagePlus } from 'lucide-react';
+import {
+  Check,
+  ChevronDown,
+  MapPinPlus,
+  PackageMinus,
+  PackagePlus,
+} from 'lucide-react';
 import { Controller, useForm } from 'react-hook-form';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import {
@@ -13,7 +19,6 @@ import {
 } from './ui/select';
 import { useEffect, useState } from 'react';
 
-import { AddOrEditCampoDialog } from './campos-dialog';
 import { Button } from './ui/button';
 import { Calendar } from './ui/calendar';
 import Cookies from 'js-cookie';
@@ -36,9 +41,13 @@ import { useRouter } from 'next/navigation';
 
 interface Props {
   handleOpen: () => void;
+  handleAddCampoDialog: () => void;
 }
 
-export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
+export default function AddOrEditPulverizacionForm({
+  handleOpen,
+  handleAddCampoDialog,
+}: Props) {
   const { push } = useRouter();
 
   const {
@@ -254,7 +263,15 @@ export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
           </Select>
         )}
       />
-      <AddOrEditCampoDialog className='col-span-4' />
+      <Button
+        variant={'default'}
+        onClick={handleAddCampoDialog}
+        type='button'
+        className='col-span-4'
+      >
+        Agregar
+        <MapPinPlus />
+      </Button>
       {selectedCampo && (
         <>
           <Label className='col-span-full flex items-center justify-between'>
@@ -369,7 +386,7 @@ export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
             </Button>
           </aside>
         </div>
-        <ul className='max-h-48 space-y-4 overflow-auto'>
+        <ul className='max-h-36 space-y-4 overflow-auto'>
           {aplicaciones.map((aplicacion, index) => (
             <li key={`aplicacion-${index}`} className='grid grid-cols-10 gap-4'>
               <Select

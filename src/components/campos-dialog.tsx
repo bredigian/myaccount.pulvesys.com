@@ -1,5 +1,6 @@
 'use client';
 
+import { Dispatch, SetStateAction } from 'react';
 import {
   Drawer,
   DrawerClose,
@@ -30,6 +31,10 @@ export const AddOrEditCampoDialog = ({
   variant,
   className,
   onlyIcon,
+  hidden,
+  customOpen,
+  customSetOpen,
+  customHandleOpen,
 }: {
   isEdit?: boolean;
   data?: Campo;
@@ -42,27 +47,37 @@ export const AddOrEditCampoDialog = ({
     | 'ghost';
   className?: string;
   onlyIcon?: boolean;
+  hidden?: boolean;
+  customOpen?: boolean;
+  customSetOpen?: Dispatch<SetStateAction<boolean>>;
+  customHandleOpen?: () => void;
 }) => {
   const { open, setOpen, handleOpen } = useDialog();
 
   return (
-    <Drawer open={open} onOpenChange={setOpen} dismissible={false}>
-      <DrawerTrigger asChild>
-        {!isEdit ? (
-          <Button
-            variant={variant ?? 'default'}
-            className={className}
-            size={!onlyIcon ? 'default' : 'icon'}
-          >
-            {!onlyIcon && 'Agregar'}
-            <MapPinPlus />
-          </Button>
-        ) : (
-          <Button size={'icon'} variant={'outline'}>
-            <Edit />
-          </Button>
-        )}
-      </DrawerTrigger>
+    <Drawer
+      open={customOpen ?? open}
+      onOpenChange={customSetOpen ?? setOpen}
+      dismissible={false}
+    >
+      {!hidden && (
+        <DrawerTrigger asChild>
+          {!isEdit ? (
+            <Button
+              variant={variant ?? 'default'}
+              className={className}
+              size={!onlyIcon ? 'default' : 'icon'}
+            >
+              {!onlyIcon && 'Agregar'}
+              <MapPinPlus />
+            </Button>
+          ) : (
+            <Button size={'icon'} variant={'outline'}>
+              <Edit />
+            </Button>
+          )}
+        </DrawerTrigger>
+      )}
       <DrawerContent className='z-[9999]'>
         <DrawerHeader>
           <DrawerTitle>
@@ -75,11 +90,14 @@ export const AddOrEditCampoDialog = ({
         <AddOrEditCampoForm
           isEdit={isEdit}
           data={data}
-          handleOpen={handleOpen}
+          handleOpen={customHandleOpen ?? handleOpen}
         />
         <DrawerFooter className='pt-2'>
           <DrawerClose asChild>
-            <Button variant={'outline'} onClick={() => setOpen(false)}>
+            <Button
+              variant={'outline'}
+              onClick={customHandleOpen ?? handleOpen}
+            >
               Cerrar
             </Button>
           </DrawerClose>
