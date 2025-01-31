@@ -61,7 +61,7 @@ export default function AddOrEditCultivoForm({
       if (!isEdit) await addCultivo(PAYLOAD, access_token);
       else await editCultivo(PAYLOAD, access_token);
       await revalidate('cultivos');
-      await getCultivos();
+      await getCultivos(access_token);
 
       setIsSubmitSuccessful(true);
       setTimeout(() => handleOpen(), 1000);

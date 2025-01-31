@@ -65,7 +65,7 @@ export default function AddOrEditTratamientoForm({
       if (!isEdit) await addTratamiento(PAYLOAD, access_token);
       else await editTratamiento(PAYLOAD, access_token);
       await revalidate('tratamientos');
-      await getTratamientos();
+      await getTratamientos(access_token);
 
       setIsSubmitSuccessful(true);
       setTimeout(() => handleOpen(), 1000);

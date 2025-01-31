@@ -85,7 +85,7 @@ export default function AddOrEditCampoForm({
       if (!isEdit) await addCampo(PAYLOAD, access_token);
       else await editCampo(PAYLOAD, access_token);
       await revalidate('campos');
-      await getCampos();
+      await getCampos(access_token);
 
       setIsSubmitSuccessful(true);
       setTimeout(() => handleOpen(), 1000);

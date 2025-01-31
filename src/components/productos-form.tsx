@@ -82,7 +82,7 @@ export default function AddOrEditProductoForm({
       if (!isEdit) await addProducto(PAYLOAD, access_token);
       else await editProducto(PAYLOAD, access_token);
       await revalidate('productos');
-      await getProductos();
+      await getProductos(access_token);
 
       setIsSubmitSuccessful(true);
       setTimeout(() => handleOpen(), 1000);

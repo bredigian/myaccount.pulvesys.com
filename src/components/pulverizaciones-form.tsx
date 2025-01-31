@@ -53,7 +53,15 @@ export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
 
   useEffect(() => {
     if (!isAlreadyFetching()) {
-      const fetchData = async () => await getData();
+      const access_token = Cookies.get('access_token');
+      if (!access_token) {
+        toast.error('La sesión ha expirado.', { position: 'top-center' });
+        push('/');
+
+        return;
+      }
+
+      const fetchData = async () => await getData(access_token);
       fetchData();
     }
   }, []);
@@ -160,7 +168,11 @@ export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
     );
 
   if (error)
-    return <p>Se produjo un error al obtener los datos del servidor</p>;
+    return (
+      <p className='pb-4 text-center text-sm'>
+        Se produjo un error al obtener los datos del servidor
+      </p>
+    );
 
   return (
     <form

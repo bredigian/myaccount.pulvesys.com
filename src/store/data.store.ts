@@ -13,12 +13,12 @@ interface DataStore {
   productos: Producto[] | null;
   cultivos: Cultivo[] | null;
   tratamientos: Tratamiento[] | null;
-  getCampos: () => Promise<void>;
-  getProductos: () => Promise<void>;
-  getCultivos: () => Promise<void>;
-  getTratamientos: () => Promise<void>;
+  getCampos: (access_token: string) => Promise<void>;
+  getProductos: (access_token: string) => Promise<void>;
+  getCultivos: (access_token: string) => Promise<void>;
+  getTratamientos: (access_token: string) => Promise<void>;
 
-  getData: () => Promise<void>;
+  getData: (access_token: string) => Promise<void>;
 
   loading: boolean | null;
   error: boolean | null;
@@ -46,32 +46,32 @@ export const useDataStore = create<DataStore>((set, get) => ({
     else return true;
   },
 
-  getCampos: async () => {
-    const campos = await getCampos();
+  getCampos: async (access_token: string) => {
+    const campos = await getCampos(access_token);
     if (campos instanceof Error) {
       set({ error: true });
       return;
     }
     set({ campos });
   },
-  getProductos: async () => {
-    const productos = await getProductos();
+  getProductos: async (access_token: string) => {
+    const productos = await getProductos(access_token);
     if (productos instanceof Error) {
       set({ error: true });
       return;
     }
     set({ productos });
   },
-  getCultivos: async () => {
-    const cultivos = await getCultivos();
+  getCultivos: async (access_token: string) => {
+    const cultivos = await getCultivos(access_token);
     if (cultivos instanceof Error) {
       set({ error: true });
       return;
     }
     set({ cultivos });
   },
-  getTratamientos: async () => {
-    const tratamientos = await getCampos();
+  getTratamientos: async (access_token: string) => {
+    const tratamientos = await getTratamientos(access_token);
     if (tratamientos instanceof Error) {
       set({ error: true });
       return;
@@ -79,13 +79,13 @@ export const useDataStore = create<DataStore>((set, get) => ({
     set({ tratamientos });
   },
 
-  getData: async () => {
+  getData: async (access_token: string) => {
     set({ loading: true });
 
-    const campos = await getCampos();
-    const cultivos = await getCultivos();
-    const productos = await getProductos();
-    const tratamientos = await getTratamientos();
+    const campos = await getCampos(access_token);
+    const cultivos = await getCultivos(access_token);
+    const productos = await getProductos(access_token);
+    const tratamientos = await getTratamientos(access_token);
 
     if (
       campos instanceof Error ||
