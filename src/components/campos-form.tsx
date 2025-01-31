@@ -1,5 +1,5 @@
 import { Campo, Coordinada, Lote } from '@/types/campos.types';
-import { Check, Eraser, MapPinPlusInside } from 'lucide-react';
+import { Check, Eraser, Layers, MapPinPlusInside } from 'lucide-react';
 import { addCampo, editCampo } from '@/services/campos.service';
 
 import { Button } from './ui/button';
@@ -97,7 +97,7 @@ export default function AddOrEditCampoForm({
 
   const [lote, setLote] = useState<Lote>({
     nombre: '',
-    hectareas: null,
+    hectareas: 0,
     zona: [],
     color: '#000000',
   });
@@ -148,14 +148,12 @@ export default function AddOrEditCampoForm({
                 else {
                   if (!lote.nombre) {
                     toast.error('El nombre de lote es requerido', {
-                      className: `mt-6`,
                       position: 'top-center',
                     });
 
                     return;
-                  } else if (!lote.hectareas) {
+                  } else if (!lote.hectareas || lote.hectareas === 0) {
                     toast.error('Las hectáreas son requeridas', {
-                      className: `mt-6`,
                       position: 'top-center',
                     });
 
@@ -165,7 +163,7 @@ export default function AddOrEditCampoForm({
                   addLote(lote as Lote);
                   setLote({
                     nombre: '',
-                    hectareas: null,
+                    hectareas: 0,
                     zona: [],
                     color: lote.color as string,
                   });
@@ -220,8 +218,8 @@ export default function AddOrEditCampoForm({
               Sin lotes
             </li>
           ) : (
-            lotes?.map((lote) => (
-              <LoteItem key={`badge-${lote.id}`} lote={lote} />
+            lotes?.map((lote, index) => (
+              <LoteItem key={`badge-${lote.nombre}-${index}`} lote={lote} />
             ))
           )}
         </ul>
@@ -233,14 +231,17 @@ export default function AddOrEditCampoForm({
             onChange={(e) => handleLoteName(e.target.value)}
             value={lote.nombre as string}
           />
-          <Input
-            placeholder='Hectáreas'
-            className='col-span-3 text-sm'
-            disabled={!lote.hectareas && !enable}
-            type='number'
-            onChange={(e) => handleLoteHectareas(Number(e.target.value))}
-            value={lote.hectareas?.toString()}
-          />
+          <div className='group relative col-span-3 flex items-center'>
+            <Layers className='absolute pl-2 opacity-60 group-focus-within:opacity-100 peer-[:not(:placeholder-shown)]:opacity-100' />
+            <Input
+              placeholder='Hectáreas'
+              className='peer col-span-3 pl-8 text-sm'
+              disabled={!lote.hectareas && !enable}
+              type='number'
+              onChange={(e) => handleLoteHectareas(Number(e.target.value))}
+              value={lote.hectareas?.toString()}
+            />
+          </div>
           <Input
             type='color'
             placeholder='color'
