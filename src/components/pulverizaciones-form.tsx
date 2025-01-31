@@ -31,6 +31,7 @@ import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useControllerAplicaciones } from '@/hooks/use-productos';
 import { useDataStore } from '@/store/data.store';
+import { useDialog } from '@/hooks/use-dialog';
 import { useRouter } from 'next/navigation';
 
 interface Props {
@@ -73,6 +74,8 @@ export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
     formState: { isSubmitting },
     watch,
   } = useForm<Pulverizacion>({});
+
+  const calendarDialog = useDialog();
 
   const [selectedCampo, setSelectedCampo] = useState<Campo>();
   const [selectedLotes, setSelectedLotes] = useState<string[]>([]);
@@ -179,7 +182,7 @@ export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
       className='grid grid-cols-10 gap-4 px-4'
       id='form-add-pulverizacion'
     >
-      <Popover>
+      <Popover open={calendarDialog.open} onOpenChange={calendarDialog.setOpen}>
         <PopoverTrigger asChild>
           <Button
             type='button'
@@ -213,6 +216,7 @@ export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
                 mode='single'
                 selected={field.value as Date}
                 onSelect={field.onChange}
+                onDayClick={calendarDialog.handleOpen}
                 initialFocus={false}
               />
             </PopoverContent>
