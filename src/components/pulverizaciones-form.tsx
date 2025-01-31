@@ -326,13 +326,17 @@ export default function AddOrEditPulverizacionForm({
               <SelectValue placeholder='Cultivo' />
             </SelectTrigger>
             <SelectContent className='col-span-4'>
-              {cultivos?.map((cultivo) => {
-                return (
-                  <SelectItem key={cultivo.id} value={cultivo.id as string}>
-                    {cultivo.nombre}
-                  </SelectItem>
-                );
-              })}
+              {cultivos?.length === 0 ? (
+                <p className='px-4 py-2 text-sm'>No se encontraron cultivos</p>
+              ) : (
+                cultivos?.map((cultivo) => {
+                  return (
+                    <SelectItem key={cultivo.id} value={cultivo.id as string}>
+                      {cultivo.nombre}
+                    </SelectItem>
+                  );
+                })
+              )}
             </SelectContent>
           </Select>
         )}
@@ -349,16 +353,22 @@ export default function AddOrEditPulverizacionForm({
               <SelectValue placeholder='Tipo de tratamiento' />
             </SelectTrigger>
             <SelectContent className='col-span-6'>
-              {tratamientos?.map((tratamiento) => {
-                return (
-                  <SelectItem
-                    key={tratamiento.id}
-                    value={tratamiento.id as string}
-                  >
-                    {tratamiento.nombre}
-                  </SelectItem>
-                );
-              })}
+              {tratamientos?.length === 0 ? (
+                <p className='px-4 py-2 text-sm'>
+                  No se encontraron tratamientos
+                </p>
+              ) : (
+                tratamientos?.map((tratamiento) => {
+                  return (
+                    <SelectItem
+                      key={tratamiento.id}
+                      value={tratamiento.id as string}
+                    >
+                      {tratamiento.nombre}
+                    </SelectItem>
+                  );
+                })
+              )}
             </SelectContent>
           </Select>
         )}
@@ -396,16 +406,22 @@ export default function AddOrEditPulverizacionForm({
                   <SelectValue placeholder='Producto' />
                 </SelectTrigger>
                 <SelectContent className='col-span-5'>
-                  {productos?.map((producto) => {
-                    return (
-                      <SelectItem
-                        key={producto.id}
-                        value={producto.id as string}
-                      >
-                        {producto.nombre}
-                      </SelectItem>
-                    );
-                  })}
+                  {productos?.length === 0 ? (
+                    <p className='px-4 py-2 text-sm'>
+                      No se encontraron productos
+                    </p>
+                  ) : (
+                    productos?.map((producto) => {
+                      return (
+                        <SelectItem
+                          key={producto.id}
+                          value={producto.id as string}
+                        >
+                          {producto.nombre}
+                        </SelectItem>
+                      );
+                    })
+                  )}
                 </SelectContent>
               </Select>
               <Input
