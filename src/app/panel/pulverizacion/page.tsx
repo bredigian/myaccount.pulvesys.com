@@ -161,10 +161,10 @@ export default async function PulverizacionDetail({ searchParams }: Props) {
                           {consumo.valor_teorico.toFixed(2)}
                         </TableCell>
                         <TableCell>
-                          {consumo.valor_real ?? 'Sin espec.'}
+                          {consumo.valor_real?.toFixed(2) ?? 'Sin espec.'}
                         </TableCell>
                         <TableCell>
-                          {consumo.valor_devolucion ?? 'Sin espec.'}
+                          {consumo.valor_devolucion?.toFixed(2) ?? 'Sin espec.'}
                         </TableCell>
                       </TableRow>
                     </TableBody>

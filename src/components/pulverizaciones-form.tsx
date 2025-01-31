@@ -228,6 +228,7 @@ export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
             onValueChange={(value) => {
               field.onChange(value);
               setSelectedCampo(campos?.find((campo) => campo.id === value));
+              setSelectedLotes([]);
             }}
             {...field}
           >
