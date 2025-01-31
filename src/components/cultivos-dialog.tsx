@@ -14,12 +14,14 @@ import { Edit, PlusSquare, Trash2 } from 'lucide-react';
 
 import AddOrEditCultivoForm from './cultivos-form';
 import { Button } from './ui/button';
+import Cookies from 'js-cookie';
 import { Cultivo } from '@/types/cultivos.types';
 import { UUID } from 'crypto';
 import { deleteCultivo } from '@/services/cultivos.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
+import { useRouter } from 'next/navigation';
 
 export const AddOrEditCultivoDialog = ({
   isEdit,
@@ -69,9 +71,18 @@ export const AddOrEditCultivoDialog = ({
 };
 
 export const DeleteCultivoDialog = ({ id }: { id: UUID }) => {
+  const { push } = useRouter();
+
   const handleDelete = async () => {
     try {
-      await deleteCultivo(id);
+      const access_token = Cookies.get('access_token');
+      if (!access_token) {
+        toast.error('La sesión ha expirado', { position: 'top-center' });
+        push('/');
+
+        return;
+      }
+      await deleteCultivo(id, access_token);
       await revalidate('cultivos');
 
       toast.success('El cultivo fue eliminado.');

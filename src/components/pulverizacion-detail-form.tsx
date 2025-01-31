@@ -3,6 +3,7 @@ import { ArrowRight, Check } from 'lucide-react';
 import { AplicacionConConsumo } from '@/types/aplicaciones.types';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
+import Cookies from 'js-cookie';
 import { Input } from './ui/input';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { UUID } from 'crypto';
@@ -11,6 +12,7 @@ import { editAplicacionConsumo } from '@/services/pulverizaciones.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface Props {
@@ -22,6 +24,8 @@ export default function EditConsumoProductoForm({
   defaultValues,
   handleOpen,
 }: Props) {
+  const { push } = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -53,7 +57,15 @@ export default function EditConsumoProductoForm({
         valor_real: !values.valor_real ? null : Number(values.valor_real),
       };
 
-      await editAplicacionConsumo(PAYLOAD);
+      const access_token = Cookies.get('access_token');
+      if (!access_token) {
+        toast.error('La sesión ha expirado', { position: 'top-center' });
+        push('/');
+
+        return;
+      }
+
+      await editAplicacionConsumo(PAYLOAD, access_token);
       await revalidate('pulverizaciones');
 
       setIsSubmitSuccessful(true);

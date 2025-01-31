@@ -1,4 +1,7 @@
+import { RedirectType, redirect } from 'next/navigation';
+
 import ProductoItem from './producto-item';
+import { cookies } from 'next/headers';
 import { getProductos } from '@/services/productos.service';
 
 interface Props {
@@ -6,7 +9,10 @@ interface Props {
 }
 
 export default async function ProductosContainer({ query }: Props) {
-  const data = await getProductos();
+  const access_token = (await cookies()).get('access_token');
+  if (!access_token) redirect('/', RedirectType.replace);
+
+  const data = await getProductos(access_token.value);
   if (data instanceof Error) return <p>{data?.message}</p>;
 
   const filteredData = !query

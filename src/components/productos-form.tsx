@@ -11,12 +11,14 @@ import { addProducto, editProducto } from '@/services/productos.service';
 
 import { Button } from './ui/button';
 import { Check } from 'lucide-react';
+import Cookies from 'js-cookie';
 import { Input } from './ui/input';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDataStore } from '@/store/data.store';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 const UNIDADES = Object.entries(UNIDAD).map(([key, value]) => ({
@@ -33,6 +35,8 @@ export default function AddOrEditProductoForm({
   data?: Producto;
   handleOpen: () => void;
 }) {
+  const { push } = useRouter();
+
   const {
     register,
     control,
@@ -66,8 +70,17 @@ export default function AddOrEditProductoForm({
         cantidad: parseInt(values.cantidad.toString()),
         unidad: values.unidad.toUpperCase() as UNIDAD,
       };
-      if (!isEdit) await addProducto(PAYLOAD);
-      else await editProducto(PAYLOAD);
+
+      const access_token = Cookies.get('access_token');
+      if (!access_token) {
+        toast.error('La sesión ha expirado', { position: 'top-center' });
+        push('/');
+
+        return;
+      }
+
+      if (!isEdit) await addProducto(PAYLOAD, access_token);
+      else await editProducto(PAYLOAD, access_token);
       await revalidate('productos');
       await getProductos();
 

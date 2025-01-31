@@ -24,6 +24,7 @@ import Map from '@/components/map';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { UUID } from 'crypto';
 import { cn } from '@/lib/utils';
+import { cookies } from 'next/headers';
 import { getById } from '@/services/pulverizaciones.service';
 
 type Params = Promise<{ id: UUID }>;
@@ -36,7 +37,10 @@ export default async function PulverizacionDetail({ searchParams }: Props) {
   const { id } = await searchParams;
   if (!id) redirect('/panel', RedirectType.replace);
 
-  const data: Pulverizacion | Error = await getById(id);
+  const access_token = (await cookies()).get('access_token');
+  if (!access_token) redirect('/', RedirectType.replace);
+
+  const data: Pulverizacion | Error = await getById(id, access_token.value);
 
   if (data instanceof Error) return <p className='px-4'>{data.message}</p>;
 

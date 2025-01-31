@@ -14,12 +14,14 @@ import { Edit, PlusSquare, Trash2 } from 'lucide-react';
 
 import AddOrEditTratamientoForm from './tratamientos-form';
 import { Button } from './ui/button';
+import Cookies from 'js-cookie';
 import { Tratamiento } from '@/types/tratamientos.types';
 import { UUID } from 'crypto';
 import { deleteTratamiento } from '@/services/tratamientos.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
+import { useRouter } from 'next/navigation';
 
 export const AddOrEditTratamientoDialog = ({
   isEdit,
@@ -71,9 +73,19 @@ export const AddOrEditTratamientoDialog = ({
 };
 
 export const DeleteTratamientoDialog = ({ id }: { id: UUID }) => {
+  const { push } = useRouter();
+
   const handleDelete = async () => {
     try {
-      await deleteTratamiento(id);
+      const access_token = Cookies.get('access_token');
+      if (!access_token) {
+        toast.error('La sesión ha expirado', { position: 'top-center' });
+        push('/');
+
+        return;
+      }
+
+      await deleteTratamiento(id, access_token);
       await revalidate('tratamientos');
 
       toast.success('El tipo de tratamiento fue eliminado.');

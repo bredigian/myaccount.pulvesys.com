@@ -3,10 +3,11 @@ import { AplicacionConConsumo } from '@/types/aplicaciones.types';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { UUID } from 'crypto';
 
-export const getPulverizaciones = async () => {
+export const getPulverizaciones = async (access_token: string) => {
   const PATH = `${API_URL}/v1/pulverizaciones`;
   const OPTIONS: RequestInit = {
     method: 'GET',
+    headers: { Authorization: `Bearer ${access_token}` },
     next: { tags: ['pulverizaciones'] },
   };
 
@@ -18,10 +19,14 @@ export const getPulverizaciones = async () => {
   return data as Pulverizacion[];
 };
 
-export const getById = async (id: Pulverizacion['id']) => {
+export const getById = async (
+  id: Pulverizacion['id'],
+  access_token: string,
+) => {
   const PATH = `${API_URL}/v1/pulverizaciones/detalle?id=${id}`;
   const OPTIONS: RequestInit = {
     method: 'GET',
+    headers: { Authorization: `Bearer ${access_token}` },
     next: { tags: ['pulverizaciones'] },
   };
 
@@ -33,12 +38,18 @@ export const getById = async (id: Pulverizacion['id']) => {
   return data as Pulverizacion;
 };
 
-export const addPulverizacion = async (payload: Pulverizacion) => {
+export const addPulverizacion = async (
+  payload: Pulverizacion,
+  access_token: string,
+) => {
   const PATH = `${API_URL}/v1/pulverizaciones`;
   const OPTIONS: RequestInit = {
     method: 'POST',
     body: JSON.stringify(payload),
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access_token}`,
+    },
   };
 
   const res = await fetch(PATH, OPTIONS);
@@ -49,12 +60,18 @@ export const addPulverizacion = async (payload: Pulverizacion) => {
   return data as Pulverizacion;
 };
 
-export const editPulverizacion = async (payload: Pulverizacion) => {
+export const editPulverizacion = async (
+  payload: Pulverizacion,
+  access_token: string,
+) => {
   const PATH = `${API_URL}/v1/pulverizaciones`;
   const OPTIONS: RequestInit = {
     method: 'PUT',
     body: JSON.stringify(payload),
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access_token}`,
+    },
   };
 
   const res = await fetch(PATH, OPTIONS);
@@ -65,12 +82,18 @@ export const editPulverizacion = async (payload: Pulverizacion) => {
   return data as Pulverizacion;
 };
 
-export const editAplicacionConsumo = async (payload: AplicacionConConsumo) => {
+export const editAplicacionConsumo = async (
+  payload: AplicacionConConsumo,
+  access_token: string,
+) => {
   const PATH = `${API_URL}/v1/pulverizaciones/aplicacion`;
   const OPTIONS: RequestInit = {
     method: 'PATCH',
     body: JSON.stringify(payload),
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access_token}`,
+    },
   };
 
   const res = await fetch(PATH, OPTIONS);
@@ -81,12 +104,15 @@ export const editAplicacionConsumo = async (payload: AplicacionConConsumo) => {
   return data as Pulverizacion;
 };
 
-export const deletePulverizacion = async (id: UUID) => {
+export const deletePulverizacion = async (id: UUID, access_token: string) => {
   const PATH = `${API_URL}/v1/pulverizaciones`;
   const OPTIONS: RequestInit = {
     method: 'DELETE',
     body: JSON.stringify({ id }),
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access_token}`,
+    },
   };
 
   const res = await fetch(PATH, OPTIONS);

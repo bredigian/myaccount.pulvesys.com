@@ -5,6 +5,7 @@ import {
 
 import { Button } from './ui/button';
 import { Check } from 'lucide-react';
+import Cookies from 'js-cookie';
 import { Cultivo } from '@/types/cultivos.types';
 import { Input } from './ui/input';
 import { ReloadIcon } from '@radix-ui/react-icons';
@@ -14,6 +15,7 @@ import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDataStore } from '@/store/data.store';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function AddOrEditTratamientoForm({
@@ -25,6 +27,8 @@ export default function AddOrEditTratamientoForm({
   data?: Tratamiento;
   handleOpen: () => void;
 }) {
+  const { push } = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -49,8 +53,17 @@ export default function AddOrEditTratamientoForm({
         ...values,
         id: data?.id,
       };
-      if (!isEdit) await addTratamiento(PAYLOAD);
-      else await editTratamiento(PAYLOAD);
+
+      const access_token = Cookies.get('access_token');
+      if (!access_token) {
+        toast.error('La sesión ha expirado', { position: 'top-center' });
+        push('/');
+
+        return;
+      }
+
+      if (!isEdit) await addTratamiento(PAYLOAD, access_token);
+      else await editTratamiento(PAYLOAD, access_token);
       await revalidate('tratamientos');
       await getTratamientos();
 

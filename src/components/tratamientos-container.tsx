@@ -1,4 +1,7 @@
+import { RedirectType, redirect } from 'next/navigation';
+
 import TratamientoItem from './tratamiento-item';
+import { cookies } from 'next/headers';
 import { getTratamientos } from '@/services/tratamientos.service';
 
 interface Props {
@@ -6,7 +9,10 @@ interface Props {
 }
 
 export default async function TratamientosContainer({ query }: Props) {
-  const data = await getTratamientos();
+  const access_token = (await cookies()).get('access_token');
+  if (!access_token) redirect('/', RedirectType.replace);
+
+  const data = await getTratamientos(access_token.value);
   if (data instanceof Error) return <p>{data?.message}</p>;
 
   const filteredData = !query

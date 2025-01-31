@@ -15,11 +15,13 @@ import { Edit, MapPinPlus, MapPinX } from 'lucide-react';
 import AddOrEditCampoForm from './campos-form';
 import { Button } from './ui/button';
 import { Campo } from '@/types/campos.types';
+import Cookies from 'js-cookie';
 import { UUID } from 'crypto';
 import { deleteCampo } from '@/services/campos.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
+import { useRouter } from 'next/navigation';
 
 export const AddOrEditCampoDialog = ({
   isEdit,
@@ -87,9 +89,19 @@ export const AddOrEditCampoDialog = ({
 };
 
 export const DeleteCampoDialog = ({ id }: { id: UUID }) => {
+  const { push } = useRouter();
+
   const handleDelete = async () => {
     try {
-      await deleteCampo(id);
+      const access_token = Cookies.get('access_token');
+      if (!access_token) {
+        toast.error('La sesión ha expirado', { position: 'top-center' });
+        push('/');
+
+        return;
+      }
+
+      await deleteCampo(id, access_token);
       await revalidate('campos');
 
       toast.success('El campo fue eliminado.');

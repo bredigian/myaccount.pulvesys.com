@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 import { AddOrEditCampoDialog } from './campos-dialog';
 import { Button } from './ui/button';
 import { Calendar } from './ui/calendar';
+import Cookies from 'js-cookie';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import LoteItem from './lote-item';
@@ -30,12 +31,15 @@ import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useControllerAplicaciones } from '@/hooks/use-productos';
 import { useDataStore } from '@/store/data.store';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   handleOpen: () => void;
 }
 
 export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
+  const { push } = useRouter();
+
   const {
     getData,
     loading,
@@ -129,7 +133,16 @@ export default function AddOrEditPulverizacionForm({ handleOpen }: Props) {
         },
         productos: aplicaciones,
       };
-      await addPulverizacion(PAYLOAD);
+
+      const access_token = Cookies.get('access_token');
+      if (!access_token) {
+        toast.error('La sesión ha expirado', { position: 'top-center' });
+        push('/');
+
+        return;
+      }
+
+      await addPulverizacion(PAYLOAD, access_token);
       await revalidate('pulverizaciones');
 
       setIsSubmitSuccessful(true);

@@ -14,12 +14,14 @@ import { PackageOpen, PackagePlus, PackageXIcon } from 'lucide-react';
 
 import AddOrEditProductoForm from './productos-form';
 import { Button } from './ui/button';
+import Cookies from 'js-cookie';
 import { Producto } from '@/types/productos.types';
 import { UUID } from 'crypto';
 import { deleteProducto } from '@/services/productos.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export const AddOrEditProductoDialog = ({
@@ -70,9 +72,19 @@ export const AddOrEditProductoDialog = ({
 };
 
 export const DeleteProductoDialog = ({ id }: { id: UUID }) => {
+  const { push } = useRouter();
+
   const handleDelete = async () => {
     try {
-      await deleteProducto(id);
+      const access_token = Cookies.get('access_token');
+      if (!access_token) {
+        toast.error('La sesión ha expirado', { position: 'top-center' });
+        push('/');
+
+        return;
+      }
+
+      await deleteProducto(id, access_token);
       await revalidate('productos');
 
       toast.success('El producto fue eliminado.');

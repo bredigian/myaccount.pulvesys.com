@@ -1,4 +1,7 @@
+import { RedirectType, redirect } from 'next/navigation';
+
 import CultivoItem from './cultivo-item';
+import { cookies } from 'next/headers';
 import { getCultivos } from '@/services/cultivos.service';
 
 interface Props {
@@ -6,7 +9,10 @@ interface Props {
 }
 
 export default async function CultivosContainer({ query }: Props) {
-  const data = await getCultivos();
+  const access_token = (await cookies()).get('access_token');
+  if (!access_token) redirect('/', RedirectType.replace);
+
+  const data = await getCultivos(access_token.value);
   if (data instanceof Error) return <p>{data?.message}</p>;
 
   const filteredData = !query

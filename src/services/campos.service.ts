@@ -2,9 +2,13 @@ import { API_URL } from '@/config/api';
 import { Campo } from '@/types/campos.types';
 import { UUID } from 'crypto';
 
-export const getCampos = async () => {
+export const getCampos = async (access_token: string) => {
   const PATH = `${API_URL}/v1/campos`;
-  const OPTIONS: RequestInit = { method: 'GET', next: { tags: ['campos'] } };
+  const OPTIONS: RequestInit = {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${access_token}` },
+    next: { tags: ['campos'] },
+  };
 
   const res = await fetch(PATH, OPTIONS);
   const data: Campo[] | Error = await res.json();
@@ -14,12 +18,15 @@ export const getCampos = async () => {
   return data as Campo[];
 };
 
-export const addCampo = async (payload: Campo) => {
+export const addCampo = async (payload: Campo, access_token: string) => {
   const PATH = `${API_URL}/v1/campos`;
   const OPTIONS: RequestInit = {
     method: 'POST',
     body: JSON.stringify(payload),
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access_token}`,
+    },
   };
 
   const res = await fetch(PATH, OPTIONS);
@@ -30,12 +37,15 @@ export const addCampo = async (payload: Campo) => {
   return data as Campo;
 };
 
-export const editCampo = async (payload: Campo) => {
+export const editCampo = async (payload: Campo, access_token: string) => {
   const PATH = `${API_URL}/v1/campos`;
   const OPTIONS: RequestInit = {
     method: 'PUT',
     body: JSON.stringify(payload),
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access_token}`,
+    },
   };
 
   const res = await fetch(PATH, OPTIONS);
@@ -46,12 +56,15 @@ export const editCampo = async (payload: Campo) => {
   return data as Campo;
 };
 
-export const deleteCampo = async (id: UUID) => {
+export const deleteCampo = async (id: UUID, access_token: string) => {
   const PATH = `${API_URL}/v1/campos`;
   const OPTIONS: RequestInit = {
     method: 'DELETE',
     body: JSON.stringify({ id }),
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access_token}`,
+    },
   };
 
   const res = await fetch(PATH, OPTIONS);

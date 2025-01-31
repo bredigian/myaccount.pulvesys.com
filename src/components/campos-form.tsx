@@ -3,6 +3,7 @@ import { Check, Eraser, MapPinPlusInside } from 'lucide-react';
 import { addCampo, editCampo } from '@/services/campos.service';
 
 import { Button } from './ui/button';
+import Cookies from 'js-cookie';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { LatLngExpression } from 'leaflet';
@@ -15,6 +16,7 @@ import { toast } from 'sonner';
 import { useDataStore } from '@/store/data.store';
 import { useDebouncedCallback } from 'use-debounce';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function AddOrEditCampoForm({
@@ -26,6 +28,8 @@ export default function AddOrEditCampoForm({
   data?: Campo;
   handleOpen: () => void;
 }) {
+  const { push } = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -69,8 +73,17 @@ export default function AddOrEditCampoForm({
         hectareas: parseInt(values.hectareas.toString()),
         Lote: lotes,
       };
-      if (!isEdit) await addCampo(PAYLOAD);
-      else await editCampo(PAYLOAD);
+
+      const access_token = Cookies.get('access_token');
+      if (!access_token) {
+        toast.error('La sesión ha expirado', { position: 'top-center' });
+        push('/');
+
+        return;
+      }
+
+      if (!isEdit) await addCampo(PAYLOAD, access_token);
+      else await editCampo(PAYLOAD, access_token);
       await revalidate('campos');
       await getCampos();
 

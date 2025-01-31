@@ -2,10 +2,11 @@ import { API_URL } from '@/config/api';
 import { Tratamiento } from '@/types/tratamientos.types';
 import { UUID } from 'crypto';
 
-export const getTratamientos = async () => {
+export const getTratamientos = async (access_token: string) => {
   const PATH = `${API_URL}/v1/tratamientos`;
   const OPTIONS: RequestInit = {
     method: 'GET',
+    headers: { Authorization: `Bearer ${access_token}` },
     next: { tags: ['tratamientos'] },
   };
 
@@ -17,12 +18,18 @@ export const getTratamientos = async () => {
   return data as Tratamiento[];
 };
 
-export const addTratamiento = async (payload: Tratamiento) => {
+export const addTratamiento = async (
+  payload: Tratamiento,
+  access_token: string,
+) => {
   const PATH = `${API_URL}/v1/tratamientos`;
   const OPTIONS: RequestInit = {
     method: 'POST',
     body: JSON.stringify(payload),
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access_token}`,
+    },
   };
 
   const res = await fetch(PATH, OPTIONS);
@@ -33,12 +40,18 @@ export const addTratamiento = async (payload: Tratamiento) => {
   return data as Tratamiento;
 };
 
-export const editTratamiento = async (payload: Tratamiento) => {
+export const editTratamiento = async (
+  payload: Tratamiento,
+  access_token: string,
+) => {
   const PATH = `${API_URL}/v1/tratamientos`;
   const OPTIONS: RequestInit = {
     method: 'PUT',
     body: JSON.stringify(payload),
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access_token}`,
+    },
   };
 
   const res = await fetch(PATH, OPTIONS);
@@ -49,12 +62,15 @@ export const editTratamiento = async (payload: Tratamiento) => {
   return data as Tratamiento;
 };
 
-export const deleteTratamiento = async (id: UUID) => {
+export const deleteTratamiento = async (id: UUID, access_token: string) => {
   const PATH = `${API_URL}/v1/tratamientos`;
   const OPTIONS: RequestInit = {
     method: 'DELETE',
     body: JSON.stringify({ id }),
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access_token}`,
+    },
   };
 
   const res = await fetch(PATH, OPTIONS);
