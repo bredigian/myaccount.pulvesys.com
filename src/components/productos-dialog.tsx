@@ -22,7 +22,6 @@ import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 export const AddOrEditProductoDialog = ({
   isEdit,
@@ -89,7 +88,8 @@ export const DeleteProductoDialog = ({ id }: { id: UUID }) => {
 
       toast.success('El producto fue eliminado.');
     } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
+      if (error instanceof Error)
+        toast.error(error.message, { className: 'mb-[216px]' });
     }
   };
 

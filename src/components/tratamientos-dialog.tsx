@@ -90,7 +90,8 @@ export const DeleteTratamientoDialog = ({ id }: { id: UUID }) => {
 
       toast.success('El tipo de tratamiento fue eliminado.');
     } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
+      if (error instanceof Error)
+        toast.error(error.message, { className: 'mb-[216px]' });
     }
   };
 

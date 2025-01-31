@@ -87,7 +87,8 @@ export const DeleteCultivoDialog = ({ id }: { id: UUID }) => {
 
       toast.success('El cultivo fue eliminado.');
     } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
+      if (error instanceof Error)
+        toast.error(error.message, { className: 'mb-[216px]' });
     }
   };
 
