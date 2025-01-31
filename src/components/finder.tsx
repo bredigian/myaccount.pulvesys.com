@@ -21,7 +21,7 @@ export default function Finder() {
   }, 300);
 
   return (
-    <div className='relative flex items-center'>
+    <div className='relative flex w-full items-center'>
       <Search className='absolute pl-2 opacity-50' />
       <Input
         defaultValue={searchParams?.get('nombre')?.toString()}
