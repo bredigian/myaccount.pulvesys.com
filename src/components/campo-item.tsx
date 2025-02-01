@@ -34,7 +34,7 @@ export default function CampoItem({ data }: Props) {
             </aside>
           </div>
           <Map lotes={data.Lote as Lote[]} size='!h-[25dvh]' customCenter />
-          <ul className='flex items-center gap-2'>
+          <ul className='flex flex-wrap items-start gap-2'>
             {data.Lote?.map((lote) => (
               <LoteItem key={`lote-${lote.id}`} lote={lote} />
             ))}
