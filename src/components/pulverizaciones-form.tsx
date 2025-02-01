@@ -78,7 +78,6 @@ export default function AddOrEditPulverizacionForm({
 
   const {
     control,
-    register,
     handleSubmit,
     formState: { isSubmitting },
     watch,
@@ -188,7 +187,7 @@ export default function AddOrEditPulverizacionForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
-      className='grid grid-cols-10 gap-4 px-4'
+      className='grid grid-cols-10 gap-4 overflow-y-auto px-4 pb-4'
       id='form-add-pulverizacion'
     >
       <Popover open={calendarDialog.open} onOpenChange={calendarDialog.setOpen}>
@@ -426,6 +425,7 @@ export default function AddOrEditPulverizacionForm({
               </Select>
               <Input
                 placeholder='Dosis'
+                disabled={!watch('detalle.campo.id')}
                 className='col-span-3 text-sm'
                 onChange={(e) =>
                   handleChangeAplicacionDosis(
@@ -445,28 +445,38 @@ export default function AddOrEditPulverizacionForm({
           ))}
         </ul>
       </div>
-      <Button
-        disabled={isSubmitting || isSubmitSuccessful}
-        type='submit'
-        className={cn(
-          'col-span-full disabled:opacity-100',
-          isSubmitSuccessful && 'bg-green-700',
-        )}
-        form='form-add-pulverizacion'
-      >
-        {isSubmitSuccessful ? (
-          <>
-            Completado <Check />
-          </>
-        ) : !isSubmitting ? (
-          <>Crear</>
-        ) : (
-          <>
-            Procesando
-            <ReloadIcon className='animate-spin' />
-          </>
-        )}
-      </Button>
+      <div className='col-span-full flex flex-col items-center gap-2'>
+        <Button
+          disabled={isSubmitting || isSubmitSuccessful}
+          type='submit'
+          className={cn(
+            'w-full disabled:opacity-100',
+            !isSubmitSuccessful ? 'bg-primary' : '!bg-green-700',
+          )}
+          form='form-add-pulverizacion'
+        >
+          {isSubmitSuccessful ? (
+            <>
+              Completado <Check />
+            </>
+          ) : !isSubmitting ? (
+            <>Crear</>
+          ) : (
+            <>
+              Procesando
+              <ReloadIcon className='animate-spin' />
+            </>
+          )}
+        </Button>
+        <Button
+          type='button'
+          variant={'outline'}
+          onClick={handleOpen}
+          className='w-full'
+        >
+          Cerrar
+        </Button>
+      </div>
     </form>
   );
 }

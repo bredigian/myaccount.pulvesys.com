@@ -257,7 +257,7 @@ export default function AddOrEditCampoForm({
         className={cn(
           'w-full',
           !enable && 'disabled:opacity-100',
-          isSubmitSuccessful && 'bg-green-700',
+          !isSubmitSuccessful ? 'bg-primary' : '!bg-green-700',
         )}
         form='form-add-campos'
       >

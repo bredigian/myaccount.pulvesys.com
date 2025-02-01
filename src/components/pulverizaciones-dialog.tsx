@@ -36,7 +36,7 @@ export const AddOrEditPulverizacionDialog = () => {
             <Droplet />
           </Button>
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent className='h-auto'>
           <DrawerHeader>
             <DrawerTitle>Nueva pulverización</DrawerTitle>
             <DrawerDescription>
@@ -50,13 +50,6 @@ export const AddOrEditPulverizacionDialog = () => {
               setTimeout(() => addCampoDialog.handleOpen(), 250);
             }}
           />
-          <DrawerFooter className='pt-2'>
-            <DrawerClose asChild>
-              <Button variant={'outline'} onClick={() => setOpen(false)}>
-                Cerrar
-              </Button>
-            </DrawerClose>
-          </DrawerFooter>
         </DrawerContent>
       </Drawer>
       <AddOrEditCampoDialog

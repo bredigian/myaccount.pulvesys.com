@@ -13,12 +13,18 @@ export const PulverizacionesContainer = async () => {
 
   return (
     <ul className='space-y-4'>
-      {data.map((pulverizacion) => (
-        <PulverizacionItem
-          key={pulverizacion.id}
-          pulverizacion={pulverizacion}
-        />
-      ))}
+      {data.length > 0 ? (
+        data.map((pulverizacion) => (
+          <PulverizacionItem
+            key={pulverizacion.id}
+            pulverizacion={pulverizacion}
+          />
+        ))
+      ) : (
+        <li className='pt-4 text-center opacity-75'>
+          No se encontraron pulverizaciones
+        </li>
+      )}
     </ul>
   );
 };

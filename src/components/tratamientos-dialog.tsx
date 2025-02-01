@@ -63,11 +63,6 @@ export const AddOrEditTratamientoDialog = ({
           data={data}
           handleOpen={handleOpen}
         />
-        <DrawerFooter className='pt-2'>
-          <DrawerClose asChild>
-            <Button variant={'outline'}>Cerrar</Button>
-          </DrawerClose>
-        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );

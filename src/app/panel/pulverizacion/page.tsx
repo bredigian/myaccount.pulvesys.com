@@ -50,7 +50,7 @@ export default async function PulverizacionDetail({ searchParams }: Props) {
   ).reduce((acc, lote) => acc + (lote?.hectareas as number), 0);
 
   return (
-    <main className='space-y-4 p-4 pt-0'>
+    <main className='space-y-6 p-4 pt-0'>
       <div className='flex w-full items-center justify-between'>
         <div className='flex items-center gap-4'>
           <BackToPulverizacionesButton />
@@ -63,7 +63,7 @@ export default async function PulverizacionDetail({ searchParams }: Props) {
           <DeletePulverizacionDialog id={data.id as UUID} />
         </aside>
       </div>
-      <div className='flex items-center justify-between'>
+      <div className='flex items-start justify-between'>
         <Badge className='space-x-1'>
           <Calendar size={14} />
           <p className='text-sm font-normal'>
@@ -75,7 +75,7 @@ export default async function PulverizacionDetail({ searchParams }: Props) {
             )}
           </p>
         </Badge>
-        <ul className='flex flex-wrap items-center gap-2'>
+        <ul className='flex flex-wrap items-center justify-end gap-2'>
           {data.detalle.campo?.Lote?.map((lote) => {
             const isOnPulverizacion = data.detalle.lotes.find(
               (selected) => selected === lote.nombre,

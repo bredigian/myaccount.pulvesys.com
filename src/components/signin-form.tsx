@@ -43,7 +43,7 @@ export default function SigninForm() {
       });
 
       setSuccess(true);
-      push('/panel');
+      setTimeout(() => push('/panel'), 1000);
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
     }
@@ -84,7 +84,10 @@ export default function SigninForm() {
       </div>
       <Button
         type='submit'
-        className={cn('w-full disabled:opacity-100', success && 'bg-green-700')}
+        className={cn(
+          'w-full disabled:opacity-100',
+          !success ? 'bg-primary' : '!bg-green-700',
+        )}
         disabled={isSubmitting || success}
       >
         {success ? (
