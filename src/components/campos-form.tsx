@@ -3,6 +3,7 @@ import { Check, Eraser, Layers, MapPinPlusInside } from 'lucide-react';
 import { addCampo, editCampo } from '@/services/campos.service';
 
 import { Button } from './ui/button';
+import ColorPicker from './color-picker';
 import Cookies from 'js-cookie';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -217,12 +218,9 @@ export default function AddOrEditCampoForm({
               value={lote.hectareas?.toString()}
             />
           </div>
-          <Input
-            type='color'
-            placeholder='color'
-            className='col-span-2'
-            onChange={(e) => handleLoteColor(e.target.value)}
-            value={lote.color as string}
+          <ColorPicker
+            color={lote.color as string}
+            onChange={(color) => handleLoteColor(color)}
           />
         </div>
         <Map
