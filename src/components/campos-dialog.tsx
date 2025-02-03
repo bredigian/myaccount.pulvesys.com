@@ -78,7 +78,7 @@ export const AddOrEditCampoDialog = ({
           )}
         </DrawerTrigger>
       )}
-      <DrawerContent className='z-[9999]'>
+      <DrawerContent className='z-[9999] h-auto'>
         <DrawerHeader>
           <DrawerTitle>
             {!isEdit ? 'Nueva ubicación' : 'Modificar ubicación'}
@@ -92,16 +92,6 @@ export const AddOrEditCampoDialog = ({
           data={data}
           handleOpen={customHandleOpen ?? handleOpen}
         />
-        <DrawerFooter className='pt-2'>
-          <DrawerClose asChild>
-            <Button
-              variant={'outline'}
-              onClick={customHandleOpen ?? handleOpen}
-            >
-              Cerrar
-            </Button>
-          </DrawerClose>
-        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );

@@ -7,6 +7,7 @@ export const getCampos = async (access_token: string) => {
   const OPTIONS: RequestInit = {
     method: 'GET',
     headers: { Authorization: `Bearer ${access_token}` },
+    cache: 'no-cache',
     next: { tags: ['campos'] },
   };
 

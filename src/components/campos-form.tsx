@@ -79,11 +79,14 @@ export default function AddOrEditCampoForm({
 
       if (!isEdit) await addCampo(PAYLOAD, access_token);
       else await editCampo(PAYLOAD, access_token);
-      await revalidate('campos');
+
+      if (!isEdit) await revalidate('campos');
       await getCampos(access_token);
 
       setIsSubmitSuccessful(true);
       setTimeout(() => handleOpen(), 1000);
+
+      if (isEdit) window.location.reload();
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
     }
@@ -123,7 +126,7 @@ export default function AddOrEditCampoForm({
         e.stopPropagation();
         handleSubmit(onSubmit, onInvalidSubmit)(e);
       }}
-      className='space-y-4 px-4'
+      className='space-y-4 overflow-y-auto px-4 pb-4'
       id='form-add-campos'
     >
       <Input
@@ -249,33 +252,49 @@ export default function AddOrEditCampoForm({
           )}
         </ul>
       </div>
-      <Button
-        disabled={isSubmitting || isSubmitSuccessful || enable}
-        type='submit'
-        className={cn(
-          'w-full',
-          !enable && 'disabled:opacity-100',
-          !isSubmitSuccessful ? 'bg-primary' : '!bg-green-700',
-        )}
-        form='form-add-campos'
-      >
-        {isSubmitSuccessful ? (
-          <>
-            Completado <Check />
-          </>
-        ) : !isSubmitting ? (
-          !isEdit ? (
-            'Agregar'
+      {isEdit && (
+        <p className='text-sm italic opacity-75'>
+          *Tenga en cuenta que la página se recargará una vez finalizada la
+          modificación
+        </p>
+      )}
+      <div className='col-span-full flex flex-col items-center gap-2'>
+        <Button
+          disabled={isSubmitting || isSubmitSuccessful || enable}
+          type='submit'
+          className={cn(
+            'w-full',
+            !enable && 'disabled:opacity-100',
+            !isSubmitSuccessful ? 'bg-primary' : '!bg-green-700',
+          )}
+          form='form-add-campos'
+        >
+          {isSubmitSuccessful ? (
+            <>
+              Completado. {isEdit && 'Recargando...'} <Check />
+            </>
+          ) : !isSubmitting ? (
+            !isEdit ? (
+              'Agregar'
+            ) : (
+              'Modificar'
+            )
           ) : (
-            'Modificar'
-          )
-        ) : (
-          <>
-            Procesando
-            <ReloadIcon className='animate-spin' />
-          </>
-        )}
-      </Button>
+            <>
+              Procesando
+              <ReloadIcon className='animate-spin' />
+            </>
+          )}
+        </Button>
+        <Button
+          type='button'
+          variant={'outline'}
+          onClick={handleOpen}
+          className='w-full'
+        >
+          Cerrar
+        </Button>
+      </div>
     </form>
   );
 }
