@@ -41,7 +41,7 @@ export const addCampo = async (payload: Campo, access_token: string) => {
 export const editCampo = async (payload: Campo, access_token: string) => {
   const PATH = `${API_URL}/v1/campos`;
   const OPTIONS: RequestInit = {
-    method: 'PUT',
+    method: 'PATCH',
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
