@@ -15,7 +15,7 @@ export const useControllerAplicaciones = () => {
 
   const handleChangeSelectValue = (value: string, index: number) => {
     const updatedItems: Aplicacion[] = aplicaciones.map((item, i) => ({
-      producto_id: index === i ? value : item.producto_id,
+      producto_id: index === i ? (value as UUID) : item.producto_id,
       dosis: item.dosis,
     }));
 

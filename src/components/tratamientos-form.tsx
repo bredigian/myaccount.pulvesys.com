@@ -1,3 +1,4 @@
+import { FieldErrors, useForm } from 'react-hook-form';
 import {
   addTratamiento,
   editTratamiento,
@@ -14,7 +15,6 @@ import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDataStore } from '@/store/data.store';
-import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -43,7 +43,7 @@ export default function AddOrEditTratamientoForm({
     boolean | undefined
   >(undefined);
 
-  const onInvalidSubmit = (errors) => {
+  const onInvalidSubmit = (errors: FieldErrors<Tratamiento>) => {
     if (errors.nombre)
       toast.error(errors.nombre.message, { className: 'mb-64' });
   };

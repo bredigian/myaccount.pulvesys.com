@@ -1,4 +1,5 @@
 import { ArrowRight, Check } from 'lucide-react';
+import { FieldErrors, useForm } from 'react-hook-form';
 
 import { AplicacionConConsumo } from '@/types/aplicaciones.types';
 import { Badge } from './ui/badge';
@@ -11,7 +12,6 @@ import { cn } from '@/lib/utils';
 import { editAplicacionConsumo } from '@/services/pulverizaciones.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
-import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -36,7 +36,7 @@ export default function EditConsumoProductoForm({
     boolean | undefined
   >(undefined);
 
-  const onInvalidSubmit = (errors: any) => {
+  const onInvalidSubmit = (errors: FieldErrors<AplicacionConConsumo>) => {
     if (errors?.dosis)
       toast.error(errors.dosis.message, {
         className: 'mb-64',

@@ -1,4 +1,4 @@
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { Producto, UNIDAD } from '@/types/productos.types';
 import {
   Select,
@@ -54,7 +54,7 @@ export default function AddOrEditProductoForm({
     boolean | undefined
   >(undefined);
 
-  const onInvalidSubmit = (errors) => {
+  const onInvalidSubmit = (errors: FieldErrors<Producto>) => {
     if (errors.nombre)
       toast.error(errors.nombre.message, { className: 'mb-[312px]' });
     else if (errors.cantidad)

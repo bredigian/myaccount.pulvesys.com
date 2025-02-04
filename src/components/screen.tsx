@@ -36,6 +36,7 @@ export default function Screen({ children, userdata }: Props) {
 
   useEffect(() => {
     if (!nombre_usuario) if (userdata) setUserdata(userdata);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

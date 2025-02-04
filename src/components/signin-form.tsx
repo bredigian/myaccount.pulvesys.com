@@ -1,5 +1,6 @@
 'use client';
 
+import { FieldErrors, useForm } from 'react-hook-form';
 import { KeyRound, LogIn, ShieldCheck, User } from 'lucide-react';
 
 import { Button } from './ui/button';
@@ -10,7 +11,6 @@ import { UsuarioToSignin } from '@/types/usuario.types';
 import { cn } from '@/lib/utils';
 import { signin } from '@/services/auth.service';
 import { toast } from 'sonner';
-import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -23,7 +23,7 @@ export default function SigninForm() {
 
   const { push } = useRouter();
 
-  const onInvalidSubmit = async (errors: any) => {
+  const onInvalidSubmit = async (errors: FieldErrors<UsuarioToSignin>) => {
     if (errors?.nombre_usuario)
       toast.error(errors.nombre_usuario?.message, { position: 'top-center' });
     else if (errors?.contrasena)

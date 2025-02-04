@@ -8,7 +8,7 @@ import {
   PackageMinus,
   PackagePlus,
 } from 'lucide-react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import {
   Select,
@@ -74,6 +74,8 @@ export default function AddOrEditPulverizacionForm({
       const fetchData = async () => await getData(access_token);
       fetchData();
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const {
@@ -101,17 +103,13 @@ export default function AddOrEditPulverizacionForm({
     boolean | undefined
   >(undefined);
 
-  const onInvalidSubmit = (errors: any) => {
+  const onInvalidSubmit = (errors: FieldErrors<Pulverizacion>) => {
     if (errors?.fecha)
       toast.error(errors.fecha.message, {
         position: 'top-center',
       });
     else if (errors?.detalle) {
-      if (errors?.detalle?.hectareas)
-        toast.error(errors?.detalle?.hectareas?.message, {
-          position: 'top-center',
-        });
-      else if (errors?.detalle?.cultivo?.id)
+      if (errors?.detalle?.cultivo?.id)
         toast.error(errors.detalle.cultivo.id.message, {
           position: 'top-center',
         });

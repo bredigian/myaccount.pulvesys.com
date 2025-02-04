@@ -1,5 +1,6 @@
 import { Campo, Coordinada, Lote } from '@/types/campos.types';
 import { Check, Eraser, Layers, MapPinPlusInside } from 'lucide-react';
+import { FieldErrors, useForm } from 'react-hook-form';
 import { addCampo, editCampo } from '@/services/campos.service';
 
 import { Button } from './ui/button';
@@ -16,7 +17,6 @@ import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDataStore } from '@/store/data.store';
 import { useDebouncedCallback } from 'use-debounce';
-import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -45,13 +45,9 @@ export default function AddOrEditCampoForm({
     boolean | undefined
   >(undefined);
 
-  const onInvalidSubmit = (errors) => {
+  const onInvalidSubmit = (errors: FieldErrors<Campo>) => {
     if (errors.nombre)
       toast.error(errors.nombre.message, {
-        position: 'top-center',
-      });
-    else if (errors.hectareas)
-      toast.error(errors.hectareas.message, {
         position: 'top-center',
       });
   };
