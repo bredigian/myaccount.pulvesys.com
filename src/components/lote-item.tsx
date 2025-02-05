@@ -16,7 +16,7 @@ export default function LoteItem({ lote, customStyle, onClick }: Props) {
           borderColor: lote.color as string,
         }
       }
-      className='flex items-center gap-1 rounded-md border-2 px-3 py-1 text-xs font-semibold'
+      className='flex items-center gap-1 rounded-md border-2 px-3 py-1 text-xs font-semibold hover:cursor-pointer'
       onClick={onClick}
     >
       <Tag size={14} />

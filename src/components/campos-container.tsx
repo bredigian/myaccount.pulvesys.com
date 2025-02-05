@@ -26,7 +26,7 @@ export default async function CamposContainer({ query }: Props) {
       {filteredData.length > 0 ? (
         filteredData.map((campo) => <CampoItem key={campo.id} data={campo} />)
       ) : (
-        <li className='pt-4 text-center opacity-75'>
+        <li className='col-span-full pt-4 text-center opacity-75 md:pt-0 md:text-start'>
           No se encontraron ubicaciones
         </li>
       )}

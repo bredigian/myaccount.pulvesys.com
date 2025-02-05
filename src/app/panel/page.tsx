@@ -7,7 +7,7 @@ export default function Pulverizaciones() {
   return (
     <main className='space-y-4 p-4 pt-0'>
       <h2>Crea, modifica y elimina las ordenes de Pulverizacion que desees.</h2>
-      <aside id='finder' className='flex items-center gap-4'>
+      <aside id='finder' className='flex items-center justify-between gap-4'>
         <Finder />
         <AddOrEditPulverizacionDialog />
       </aside>

@@ -12,7 +12,7 @@ export const PulverizacionesContainer = async () => {
   if (data instanceof Error) return <p>{data?.message}</p>;
 
   return (
-    <ul className='space-y-4'>
+    <ul className='grid w-full grid-cols-4 gap-4 lg:grid-cols-6 xl:grid-cols-8'>
       {data.length > 0 ? (
         data.map((pulverizacion) => (
           <PulverizacionItem
@@ -21,7 +21,7 @@ export const PulverizacionesContainer = async () => {
           />
         ))
       ) : (
-        <li className='pt-4 text-center opacity-75'>
+        <li className='col-span-full pt-4 text-center opacity-75 md:pt-0 md:text-start'>
           No se encontraron pulverizaciones
         </li>
       )}

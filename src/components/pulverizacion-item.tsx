@@ -14,12 +14,17 @@ interface Props {
 
 export default function PulverizacionItem({ pulverizacion }: Props) {
   return (
-    <li>
-      <Link href={`/panel/pulverizacion?id=${pulverizacion.id}`}>
-        <Card className='duration-200 ease-in-out hover:cursor-pointer hover:bg-secondary'>
+    <li className='col-span-full flex items-start justify-between md:col-span-2'>
+      <Link
+        href={`/panel/pulverizacion?id=${pulverizacion.id}`}
+        className='w-full'
+      >
+        <Card className='h-full w-full duration-200 ease-in-out hover:cursor-pointer hover:bg-secondary'>
           <CardHeader>
-            <CardTitle className='flex items-center justify-between'>
-              {pulverizacion.detalle.campo?.nombre}
+            <CardTitle className='flex items-center justify-between gap-4'>
+              <h4 className='truncate text-base font-semibold'>
+                {pulverizacion.detalle.campo?.nombre}
+              </h4>
               <p className='text-sm font-normal'>
                 {DateTime.fromISO(pulverizacion.fecha as string).toLocaleString(
                   DateTime.DATE_MED_WITH_WEEKDAY,
@@ -32,7 +37,7 @@ export default function PulverizacionItem({ pulverizacion }: Props) {
           </CardHeader>
           <CardContent className='space-y-4'>
             <div className='flex items-start justify-between'>
-              <ul className='flex flex-wrap items-center justify-end gap-2'>
+              <ul className='flex flex-wrap items-start gap-2'>
                 {pulverizacion.detalle.lotes.map((lote) => {
                   const loteData = pulverizacion.detalle.campo?.Lote?.find(
                     (item) => item.nombre === lote,
@@ -44,7 +49,7 @@ export default function PulverizacionItem({ pulverizacion }: Props) {
                 })}
               </ul>
             </div>
-            <div className='space-x-4'>
+            <div className='flex flex-wrap gap-2'>
               <Badge variant={'secondary'} className='space-x-1'>
                 <Leaf size={14} />
                 <h6>{pulverizacion.detalle.cultivo?.nombre}</h6>

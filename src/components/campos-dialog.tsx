@@ -109,22 +109,24 @@ export const AddOrEditCampoDialog = ({
     </Drawer>
   ) : (
     <Dialog open={customOpen ?? open} onOpenChange={customSetOpen ?? setOpen}>
-      <DialogTrigger asChild>
-        {!isEdit ? (
-          <Button
-            variant={variant ?? 'default'}
-            className={className}
-            size={!onlyIcon ? 'default' : 'icon'}
-          >
-            {!onlyIcon && 'Agregar'}
-            <MapPinPlus />
-          </Button>
-        ) : (
-          <Button size={'icon'} variant={'outline'}>
-            <Edit />
-          </Button>
-        )}
-      </DialogTrigger>
+      {!hidden && (
+        <DialogTrigger asChild>
+          {!isEdit ? (
+            <Button
+              variant={variant ?? 'default'}
+              className={className}
+              size={!onlyIcon ? 'default' : 'icon'}
+            >
+              {!onlyIcon && 'Agregar'}
+              <MapPinPlus />
+            </Button>
+          ) : (
+            <Button size={'icon'} variant={'outline'}>
+              <Edit />
+            </Button>
+          )}
+        </DialogTrigger>
+      )}
       <DialogContent className='z-[9999] h-auto'>
         <DialogHeader>
           <DialogTitle>

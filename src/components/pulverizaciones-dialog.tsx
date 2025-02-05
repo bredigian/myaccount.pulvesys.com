@@ -1,6 +1,16 @@
 'use client';
 
 import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
+import {
   Drawer,
   DrawerClose,
   DrawerContent,
@@ -21,13 +31,16 @@ import { deletePulverizacion } from '@/services/pulverizaciones.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 
 export const AddOrEditPulverizacionDialog = () => {
   const { open, setOpen, handleOpen } = useDialog();
   const addCampoDialog = useDialog();
 
-  return (
+  const isMobile = useIsMobile();
+
+  return isMobile ? (
     <>
       <Drawer dismissible={false} open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>
@@ -52,6 +65,38 @@ export const AddOrEditPulverizacionDialog = () => {
           />
         </DrawerContent>
       </Drawer>
+      <AddOrEditCampoDialog
+        hidden
+        customOpen={addCampoDialog.open}
+        customSetOpen={addCampoDialog.setOpen}
+        customHandleOpen={addCampoDialog.handleOpen}
+      />
+    </>
+  ) : (
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button>
+            Crear
+            <Droplet />
+          </Button>
+        </DialogTrigger>
+        <DialogContent className='h-auto'>
+          <DialogHeader>
+            <DialogTitle>Nueva pulverización</DialogTitle>
+            <DialogDescription>
+              Completa con lo requerido para la pulverización
+            </DialogDescription>
+          </DialogHeader>
+          <AddOrEditPulverizacionForm
+            handleOpen={handleOpen}
+            handleAddCampoDialog={() => {
+              handleOpen();
+              setTimeout(() => addCampoDialog.handleOpen(), 250);
+            }}
+          />
+        </DialogContent>
+      </Dialog>
       <AddOrEditCampoDialog
         hidden
         customOpen={addCampoDialog.open}
@@ -87,7 +132,9 @@ export const DeletePulverizacionDialog = ({ id }: { id: UUID }) => {
     }
   };
 
-  return (
+  const isMobile = useIsMobile();
+
+  return isMobile ? (
     <Drawer>
       <DrawerTrigger asChild>
         <Button variant={'destructive'} size={'icon'}>
@@ -111,5 +158,29 @@ export const DeletePulverizacionDialog = ({ id }: { id: UUID }) => {
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
+  ) : (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant={'destructive'} size={'icon'}>
+          <Trash2 />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className='z-50'>
+        <DialogHeader>
+          <DialogTitle>¿Estás seguro?</DialogTitle>
+          <DialogDescription>
+            Esta acción no se puede deshacer
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant={'destructive'} onClick={handleDelete}>
+            Eliminar
+          </Button>
+          <DialogClose asChild>
+            <Button variant={'outline'}>Cerrar</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
