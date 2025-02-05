@@ -54,6 +54,7 @@ export default function SigninForm() {
       className='space-y-4'
       onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
     >
+      <h2 className='hidden lg:block text-center text-xl font-semibold opacity-75'>Autenticación</h2>
       <div className='group relative flex items-center'>
         <User className='absolute pl-2 opacity-60 group-focus-within:opacity-100 peer-[:not(:placeholder-shown)]:opacity-100' />
         <Input
@@ -64,7 +65,7 @@ export default function SigninForm() {
             },
           })}
           placeholder='Usuario'
-          className='peer pl-7 text-sm'
+          className='peer pl-7 text-sm lg:text-base'
           type='text'
         />
       </div>
@@ -79,28 +80,28 @@ export default function SigninForm() {
           })}
           type='password'
           placeholder='Contraseña'
-          className='peer pl-7 text-sm'
+          className='peer pl-7 text-sm lg:text-base'
         />
       </div>
       <Button
         type='submit'
         className={cn(
-          'w-full disabled:opacity-100',
+          'w-full disabled:opacity-100 lg:text-base',
           !success ? 'bg-primary' : '!bg-green-700',
         )}
         disabled={isSubmitting || success}
       >
         {success ? (
           <>
-            Bienvenido <ShieldCheck />
+            Bienvenido <ShieldCheck className='lg:!size-5'/>
           </>
         ) : !isSubmitting ? (
           <>
-            Iniciar sesión <LogIn />
+            Iniciar sesión <LogIn className='lg:!size-5'/>
           </>
         ) : (
           <>
-            Autenticando <ReloadIcon className='animate-spin' />
+            Autenticando <ReloadIcon className='animate-spin lg:!size-5' />
           </>
         )}
       </Button>

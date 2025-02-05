@@ -20,12 +20,12 @@ export default function CampoItem({ data }: Props) {
   );
 
   return (
-    <li className='flex items-start justify-between'>
+    <li className='flex items-start justify-between col-span-full lg:col-span-2'>
       <Card className='w-full duration-200 ease-in-out hover:bg-sidebar-accent'>
         <CardContent className='space-y-4'>
           <div className='flex items-start justify-between pt-6'>
             <div className='space-y-1'>
-              <h3 className='text-base font-semibold'>{data.nombre}</h3>
+              <h3 className='text-base font-semibold truncate max-w-52'>{data.nombre}</h3>
               <Badge variant={'secondary'}>{totalHectareas}ha</Badge>
             </div>
             <aside className='producto-settings space-x-4'>

@@ -18,11 +18,11 @@ export default async function CamposContainer({ query }: Props) {
   const filteredData = !query
     ? data
     : data.filter((item) =>
-        item.nombre.toLowerCase().includes(query.toLowerCase()),
-      );
+      item.nombre.toLowerCase().includes(query.toLowerCase()),
+    );
 
   return (
-    <ul className='space-y-4'>
+    <ul className='grid 2xl:grid-cols-8 xl:grid-cols-6 sm:grid-cols-4 gap-4 w-full'>
       {filteredData.length > 0 ? (
         filteredData.map((campo) => <CampoItem key={campo.id} data={campo} />)
       ) : (
