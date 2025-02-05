@@ -122,7 +122,7 @@ export default function AddOrEditCampoForm({
         e.stopPropagation();
         handleSubmit(onSubmit, onInvalidSubmit)(e);
       }}
-      className='space-y-4 overflow-y-auto px-4 pb-4'
+      className='space-y-4 overflow-y-auto px-4 pb-4 md:px-0 md:pb-0'
       id='form-add-campos'
     >
       <Input
@@ -137,7 +137,7 @@ export default function AddOrEditCampoForm({
         className='text-sm'
       />
 
-      <div className='w-full space-y-4'>
+      <div className='flex w-full flex-col gap-4 md:max-h-[540px] md:justify-between'>
         <div className='flex items-center justify-between'>
           <Label>Ubicación</Label>
           <aside className='flex items-center gap-2'>
@@ -227,6 +227,7 @@ export default function AddOrEditCampoForm({
           actualLote={lote}
           handleLote={handleLote as () => void}
           enable={enable}
+          size='md:!grow !h-[40dvh]'
           centerByEdit={
             isEdit
               ? ([
@@ -236,7 +237,7 @@ export default function AddOrEditCampoForm({
               : undefined
           }
         />
-        <ul className='flex items-center gap-2 overflow-x-auto'>
+        <ul className='flex items-center gap-2 overflow-x-auto md:flex-wrap md:overflow-x-visible'>
           {lotes.length === 0 ? (
             <li className='rounded-md border-2 border-gray-200 bg-gray-50/50 px-3 py-1 text-xs font-semibold'>
               Sin lotes
@@ -254,12 +255,12 @@ export default function AddOrEditCampoForm({
           modificación
         </p>
       )}
-      <div className='col-span-full flex flex-col items-center gap-2'>
+      <div className='flex flex-col items-center gap-2 md:flex-row-reverse md:items-end'>
         <Button
           disabled={isSubmitting || isSubmitSuccessful || enable}
           type='submit'
           className={cn(
-            'w-full',
+            'w-full md:w-fit',
             !enable && 'disabled:opacity-100',
             !isSubmitSuccessful ? 'bg-primary' : '!bg-green-700',
           )}
@@ -286,7 +287,7 @@ export default function AddOrEditCampoForm({
           type='button'
           variant={'outline'}
           onClick={handleOpen}
-          className='w-full'
+          className='w-full md:w-fit'
         >
           Cerrar
         </Button>

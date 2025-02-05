@@ -1,5 +1,13 @@
 'use client';
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
 import { Dispatch, SetStateAction } from 'react';
 import {
   Drawer,
@@ -23,6 +31,7 @@ import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDataStore } from '@/store/data.store';
 import { useDialog } from '@/hooks/use-dialog';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 
 export const AddOrEditCampoDialog = ({
@@ -54,7 +63,9 @@ export const AddOrEditCampoDialog = ({
 }) => {
   const { open, setOpen, handleOpen } = useDialog();
 
-  return (
+  const isMobile = useIsMobile();
+
+  return isMobile ? (
     <Drawer
       open={customOpen ?? open}
       onOpenChange={customSetOpen ?? setOpen}
@@ -94,6 +105,40 @@ export const AddOrEditCampoDialog = ({
         />
       </DrawerContent>
     </Drawer>
+  ) : (
+    <Dialog open={customOpen ?? open} onOpenChange={customSetOpen ?? setOpen}>
+      <DialogTrigger asChild>
+        {!isEdit ? (
+          <Button
+            variant={variant ?? 'default'}
+            className={className}
+            size={!onlyIcon ? 'default' : 'icon'}
+          >
+            {!onlyIcon && 'Agregar'}
+            <MapPinPlus />
+          </Button>
+        ) : (
+          <Button size={'icon'} variant={'outline'}>
+            <Edit />
+          </Button>
+        )}
+      </DialogTrigger>
+      <DialogContent className='z-[9999] h-auto'>
+        <DialogHeader>
+          <DialogTitle>
+            {!isEdit ? 'Nueva ubicación' : 'Modificar ubicación'}
+          </DialogTitle>
+          <DialogDescription>
+            Completa con las caracteristicas del campo
+          </DialogDescription>
+        </DialogHeader>
+        <AddOrEditCampoForm
+          isEdit={isEdit}
+          data={data}
+          handleOpen={customHandleOpen ?? handleOpen}
+        />
+      </DialogContent>
+    </Dialog>
   );
 };
 

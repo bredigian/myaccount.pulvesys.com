@@ -84,7 +84,7 @@ export default function Map({
       id='map'
       className={cn(
         'pointer-events-auto relative z-10 h-full w-full overflow-hidden rounded-lg',
-        size || '!h-[40dvh]',
+        size ?? '!h-[40dvh]',
         className,
       )}
       center={CENTER as LatLngExpression}

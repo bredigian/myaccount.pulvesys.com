@@ -20,12 +20,14 @@ export default function CampoItem({ data }: Props) {
   );
 
   return (
-    <li className='flex items-start justify-between col-span-full lg:col-span-2'>
-      <Card className='w-full duration-200 ease-in-out hover:bg-sidebar-accent'>
-        <CardContent className='space-y-4'>
+    <li className='col-span-full flex h-[471.75px] items-start justify-between lg:col-span-2'>
+      <Card className='h-full w-full duration-200 ease-in-out hover:bg-sidebar-accent'>
+        <CardContent className='flex h-full flex-col gap-4'>
           <div className='flex items-start justify-between pt-6'>
             <div className='space-y-1'>
-              <h3 className='text-base font-semibold truncate max-w-52'>{data.nombre}</h3>
+              <h3 className='max-w-52 truncate text-base font-semibold'>
+                {data.nombre}
+              </h3>
               <Badge variant={'secondary'}>{totalHectareas}ha</Badge>
             </div>
             <aside className='producto-settings space-x-4'>
@@ -33,7 +35,7 @@ export default function CampoItem({ data }: Props) {
               <DeleteCampoDialog id={data.id as UUID} />
             </aside>
           </div>
-          <Map lotes={data.Lote as Lote[]} size='!h-[25dvh]' customCenter />
+          <Map lotes={data.Lote as Lote[]} size='!grow' customCenter />
           <ul className='flex flex-wrap items-start gap-2'>
             {data.Lote?.map((lote) => (
               <LoteItem key={`lote-${lote.id}`} lote={lote} />
