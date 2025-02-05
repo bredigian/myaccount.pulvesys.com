@@ -2,8 +2,10 @@
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -146,6 +148,8 @@ export const DeleteCampoDialog = ({ id }: { id: UUID }) => {
   const { push } = useRouter();
   const { getCampos } = useDataStore();
 
+  const isMobile = useIsMobile();
+
   const handleDelete = async () => {
     try {
       const access_token = Cookies.get('access_token');
@@ -167,7 +171,7 @@ export const DeleteCampoDialog = ({ id }: { id: UUID }) => {
     }
   };
 
-  return (
+  return isMobile ? (
     <Drawer>
       <DrawerTrigger asChild>
         <Button size={'icon'} variant={'destructive'}>
@@ -191,5 +195,29 @@ export const DeleteCampoDialog = ({ id }: { id: UUID }) => {
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
+  ) : (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button size={'icon'} variant={'destructive'}>
+          <MapPinX />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>¿Estás seguro?</DialogTitle>
+          <DialogDescription>
+            Esta acción no se puede deshacer
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className=''>
+          <Button variant={'destructive'} onClick={handleDelete}>
+            Eliminar
+          </Button>
+          <DialogClose asChild>
+            <Button variant={'outline'}>Cerrar</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
