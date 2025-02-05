@@ -63,19 +63,8 @@ export default async function PulverizacionDetail({ searchParams }: Props) {
           <DeletePulverizacionDialog id={data.id as UUID} />
         </aside>
       </div>
-      <div className='flex items-start justify-between'>
-        <Badge className='space-x-1'>
-          <Calendar size={14} />
-          <p className='text-sm font-normal'>
-            {DateTime.fromISO(data.fecha as string).toLocaleString(
-              DateTime.DATE_SHORT,
-              {
-                locale: 'es-AR',
-              },
-            )}
-          </p>
-        </Badge>
-        <ul className='flex flex-wrap items-center justify-end gap-2'>
+      <div className='flex items-start justify-between gap-4'>
+        <ul className='flex flex-wrap items-center justify-start gap-2'>
           {data.detalle.campo?.Lote?.map((lote) => {
             const isOnPulverizacion = data.detalle.lotes.find(
               (selected) => selected === lote.nombre,
@@ -100,92 +89,110 @@ export default async function PulverizacionDetail({ searchParams }: Props) {
             );
           })}
         </ul>
+        <Badge className='space-x-1'>
+          <Calendar size={14} />
+          <p className='text-sm font-normal'>
+            {DateTime.fromISO(data.fecha as string).toLocaleString(
+              DateTime.DATE_SHORT,
+              {
+                locale: 'es-AR',
+              },
+            )}
+          </p>
+        </Badge>
       </div>
-      <Map
-        lotes={data.detalle.campo?.Lote as Lote[]}
-        customCenter
-        size='!h-[25vh]'
-        customZoom={14}
-      />
-      <Card>
-        <CardHeader>
-          <CardTitle>Detalle</CardTitle>
-        </CardHeader>
-        <CardContent className='flex flex-wrap items-center gap-4'>
-          <Badge variant={'secondary'} className='w-fit space-x-1'>
-            <Layers size={14} />
-            <h6>{selectedHectareas}ha</h6>
-          </Badge>
-          <Badge variant={'secondary'} className='w-fit space-x-1'>
-            <Leaf size={14} />
-            <h6>{data.detalle.cultivo?.nombre}</h6>
-          </Badge>
-          <Badge variant={'secondary'} className='w-fit space-x-1'>
-            <ListCheckIcon size={14} />
-            <h6>{data.detalle.tratamiento?.nombre}</h6>
-          </Badge>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Productos</CardTitle>
-        </CardHeader>
-        <CardContent className='flex flex-wrap items-center gap-4'>
-          <ul className='w-full space-y-4'>
-            {data.Aplicacion?.map((aplicacion) => {
-              const consumo: ConsumoProducto = data.ConsumoProducto?.find(
-                (item) => item.producto_id === aplicacion.producto?.id,
-              ) as ConsumoProducto;
+      <div className='flex w-full flex-col gap-6 lg:flex-row'>
+        <Map
+          lotes={data.detalle.campo?.Lote as Lote[]}
+          customCenter
+          size='!h-[25vh] md:!h-[35vh] lg:!h-[78.5vh]'
+          customZoom={14}
+        />
+        <div className='flex w-full flex-col gap-6 md:flex-row lg:flex-col'>
+          <Card className='h-fit w-full'>
+            <CardHeader>
+              <CardTitle>Detalle</CardTitle>
+            </CardHeader>
+            <CardContent className='flex flex-wrap items-center gap-4'>
+              <Badge variant={'secondary'} className='w-fit space-x-1'>
+                <Layers size={14} />
+                <h6>{selectedHectareas}ha</h6>
+              </Badge>
+              <Badge variant={'secondary'} className='w-fit space-x-1'>
+                <Leaf size={14} />
+                <h6>{data.detalle.cultivo?.nombre}</h6>
+              </Badge>
+              <Badge variant={'secondary'} className='w-fit space-x-1'>
+                <ListCheckIcon size={14} />
+                <h6>{data.detalle.tratamiento?.nombre}</h6>
+              </Badge>
+            </CardContent>
+          </Card>
+          <Card className='max-h-full w-full'>
+            <CardHeader>
+              <CardTitle>Productos</CardTitle>
+            </CardHeader>
+            <CardContent className='flex flex-wrap items-center gap-4 overflow-y-auto'>
+              <ul className='w-full space-y-4'>
+                {data.Aplicacion?.map((aplicacion) => {
+                  const consumo: ConsumoProducto = data.ConsumoProducto?.find(
+                    (item) => item.producto_id === aplicacion.producto?.id,
+                  ) as ConsumoProducto;
 
-              const defaultValues: AplicacionConConsumo = {
-                consumo_id: consumo.id,
-                id: aplicacion.id,
-                pulverizacion_id: aplicacion.pulverizacion_id,
-                producto_id: aplicacion.producto_id,
-                dosis: aplicacion.dosis,
-                valor_real: consumo.valor_real,
-                valor_teorico: consumo.valor_teorico,
-                producto: aplicacion.producto,
-              };
+                  const defaultValues: AplicacionConConsumo = {
+                    consumo_id: consumo.id,
+                    id: aplicacion.id,
+                    pulverizacion_id: aplicacion.pulverizacion_id,
+                    producto_id: aplicacion.producto_id,
+                    dosis: aplicacion.dosis,
+                    valor_real: consumo.valor_real,
+                    valor_teorico: consumo.valor_teorico,
+                    producto: aplicacion.producto,
+                  };
 
-              return (
-                <div key={aplicacion.id} className='w-full space-y-2'>
-                  <div className='flex w-full items-center justify-between'>
-                    <Badge variant={'secondary'} className='text-sm'>
-                      {aplicacion.producto?.nombre}
-                    </Badge>
-                    <EditConsumoProductoDialog defaultValues={defaultValues} />
-                  </div>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Dosis</TableHead>
-                        <TableHead>Teórico</TableHead>
-                        <TableHead>Real</TableHead>
-                        <TableHead>Restante</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>{aplicacion.dosis}</TableCell>
-                        <TableCell>
-                          {consumo.valor_teorico.toFixed(2)}
-                        </TableCell>
-                        <TableCell>
-                          {consumo.valor_real?.toFixed(2) ?? 'Sin espec.'}
-                        </TableCell>
-                        <TableCell>
-                          {consumo.valor_devolucion?.toFixed(2) ?? 'Sin espec.'}
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </div>
-              );
-            })}
-          </ul>
-        </CardContent>
-      </Card>
+                  return (
+                    <div key={aplicacion.id} className='w-full space-y-2'>
+                      <div className='flex w-full items-center justify-between'>
+                        <Badge variant={'secondary'} className='text-sm'>
+                          {aplicacion.producto?.nombre}
+                        </Badge>
+                        <EditConsumoProductoDialog
+                          defaultValues={defaultValues}
+                        />
+                      </div>
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Dosis</TableHead>
+                            <TableHead>Teórico</TableHead>
+                            <TableHead>Real</TableHead>
+                            <TableHead>Restante</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell>{aplicacion.dosis}</TableCell>
+                            <TableCell>
+                              {consumo.valor_teorico.toFixed(2)}
+                            </TableCell>
+                            <TableCell>
+                              {consumo.valor_real?.toFixed(2) ?? 'Sin espec.'}
+                            </TableCell>
+                            <TableCell>
+                              {consumo.valor_devolucion?.toFixed(2) ??
+                                'Sin espec.'}
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </div>
+                  );
+                })}
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </main>
   );
 }

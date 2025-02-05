@@ -2,6 +2,16 @@
 
 import { ArrowLeft, Info, PackageOpen } from 'lucide-react';
 import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
+import {
   Drawer,
   DrawerClose,
   DrawerContent,
@@ -18,6 +28,7 @@ import { DateTime } from 'luxon';
 import EditConsumoProductoForm from './pulverizacion-detail-form';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { useDialog } from '@/hooks/use-dialog';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 
 interface Props {
@@ -26,7 +37,9 @@ interface Props {
 }
 
 export const ShowPulverizacionInfoDialog = ({ data }: Props) => {
-  return (
+  const isMobile = useIsMobile();
+
+  return isMobile ? (
     <Drawer>
       <DrawerTrigger asChild>
         <Button variant='outline' size={'icon'}>
@@ -61,6 +74,41 @@ export const ShowPulverizacionInfoDialog = ({ data }: Props) => {
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
+  ) : (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant='outline' size={'icon'}>
+          <Info />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className='z-[9999]'>
+        <DialogHeader>
+          <DialogTitle>Información</DialogTitle>
+          <DialogDescription className='hidden'></DialogDescription>
+        </DialogHeader>
+        <div className='flex flex-col gap-2 px-4 pb-4 text-sm opacity-75 md:px-0 md:pb-0'>
+          <p>
+            Última vez modificado el{' '}
+            {DateTime.fromISO(data?.updatedAt as string).toLocaleString(
+              DateTime.DATETIME_SHORT,
+              { locale: 'es-AR' },
+            )}
+          </p>
+          <p>
+            Creado el{' '}
+            {DateTime.fromISO(data?.createdAt as string).toLocaleString(
+              DateTime.DATETIME_SHORT,
+              { locale: 'es-AR' },
+            )}
+          </p>
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant={'outline'}>Cerrar</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
