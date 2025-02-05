@@ -1,6 +1,16 @@
 'use client';
 
 import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
+import {
   Drawer,
   DrawerClose,
   DrawerContent,
@@ -22,6 +32,7 @@ import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDataStore } from '@/store/data.store';
 import { useDialog } from '@/hooks/use-dialog';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 
 export const AddOrEditCultivoDialog = ({
@@ -33,7 +44,9 @@ export const AddOrEditCultivoDialog = ({
 }) => {
   const { open, setOpen, handleOpen } = useDialog();
 
-  return (
+  const isMobile = useIsMobile();
+
+  return isMobile ? (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         {!isEdit ? (
@@ -63,6 +76,36 @@ export const AddOrEditCultivoDialog = ({
         />
       </DrawerContent>
     </Drawer>
+  ) : (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        {!isEdit ? (
+          <Button>
+            Agregar
+            <PlusSquare />
+          </Button>
+        ) : (
+          <Button size={'icon'} variant={'outline'}>
+            <Edit />
+          </Button>
+        )}
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            {!isEdit ? 'Nuevo cultivo' : 'Modificar cultivo'}
+          </DialogTitle>
+          <DialogDescription>
+            Completa con las caracteristicas del cultivo
+          </DialogDescription>
+        </DialogHeader>
+        <AddOrEditCultivoForm
+          isEdit={isEdit}
+          data={data}
+          handleOpen={handleOpen}
+        />
+      </DialogContent>
+    </Dialog>
   );
 };
 
@@ -90,7 +133,9 @@ export const DeleteCultivoDialog = ({ id }: { id: UUID }) => {
     }
   };
 
-  return (
+  const isMobile = useIsMobile();
+
+  return isMobile ? (
     <Drawer>
       <DrawerTrigger asChild>
         <Button size={'icon'} variant={'destructive'}>
@@ -114,5 +159,29 @@ export const DeleteCultivoDialog = ({ id }: { id: UUID }) => {
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
+  ) : (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button size={'icon'} variant={'destructive'}>
+          <Trash2 />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>¿Estás seguro?</DialogTitle>
+          <DialogDescription>
+            Esta acción no se puede deshacer
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className=''>
+          <Button variant={'destructive'} onClick={handleDelete}>
+            Eliminar
+          </Button>
+          <DialogClose asChild>
+            <Button variant={'outline'}>Cerrar</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
