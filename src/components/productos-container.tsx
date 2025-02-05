@@ -22,13 +22,13 @@ export default async function ProductosContainer({ query }: Props) {
       );
 
   return (
-    <ul className='space-y-4'>
+    <ul className='grid w-full gap-4 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10'>
       {filteredData.length > 0 ? (
         filteredData.map((producto) => (
           <ProductoItem key={producto.id} data={producto} />
         ))
       ) : (
-        <li className='pt-4 text-center opacity-75'>
+        <li className='col-span-full pt-4 text-center opacity-75 md:pt-0 md:text-start'>
           No se encontraron productos
         </li>
       )}

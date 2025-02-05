@@ -94,7 +94,7 @@ export default function AddOrEditProductoForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
-      className='space-y-4 px-4 pb-4'
+      className='space-y-4 px-4 pb-4 md:px-0 md:pb-0'
     >
       <Input
         {...register('nombre', {
@@ -139,12 +139,12 @@ export default function AddOrEditProductoForm({
           )}
         />
       </div>
-      <div className='col-span-full flex flex-col items-center gap-2'>
+      <div className='flex flex-col items-center gap-2 md:flex-row-reverse md:items-end'>
         <Button
           disabled={isSubmitting || isSubmitSuccessful}
           type='submit'
           className={cn(
-            'w-full disabled:opacity-100',
+            'w-full disabled:opacity-100 md:w-fit',
             !isSubmitSuccessful ? 'bg-primary' : '!bg-green-700',
           )}
         >
@@ -169,7 +169,7 @@ export default function AddOrEditProductoForm({
           type='button'
           variant={'outline'}
           onClick={handleOpen}
-          className='w-full'
+          className='w-full md:w-fit'
         >
           Cerrar
         </Button>

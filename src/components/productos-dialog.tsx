@@ -1,6 +1,16 @@
 'use client';
 
 import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
+import {
   Drawer,
   DrawerClose,
   DrawerContent,
@@ -22,6 +32,7 @@ import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDataStore } from '@/store/data.store';
 import { useDialog } from '@/hooks/use-dialog';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 
 export const AddOrEditProductoDialog = ({
@@ -33,7 +44,9 @@ export const AddOrEditProductoDialog = ({
 }) => {
   const { open, setOpen, handleOpen } = useDialog();
 
-  return (
+  const isMobile = useIsMobile();
+
+  return isMobile ? (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         {!isEdit ? (
@@ -63,6 +76,36 @@ export const AddOrEditProductoDialog = ({
         />
       </DrawerContent>
     </Drawer>
+  ) : (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        {!isEdit ? (
+          <Button>
+            Agregar
+            <PackagePlus />
+          </Button>
+        ) : (
+          <Button size={'icon'} variant={'outline'}>
+            <PackageOpen />
+          </Button>
+        )}
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            {!isEdit ? 'Nuevo producto' : 'Modificar producto'}
+          </DialogTitle>
+          <DialogDescription>
+            Completa con las caracteristicas del producto
+          </DialogDescription>
+        </DialogHeader>
+        <AddOrEditProductoForm
+          isEdit={isEdit}
+          data={data}
+          handleOpen={handleOpen}
+        />
+      </DialogContent>
+    </Dialog>
   );
 };
 
@@ -87,11 +130,13 @@ export const DeleteProductoDialog = ({ id }: { id: UUID }) => {
       toast.success('El producto fue eliminado.');
     } catch (error) {
       if (error instanceof Error)
-        toast.error(error.message, { className: 'mb-[216px]' });
+        toast.error(error.message, { className: 'mb-[216px] md:mb-0' });
     }
   };
 
-  return (
+  const isMobile = useIsMobile();
+
+  return isMobile ? (
     <Drawer>
       <DrawerTrigger asChild>
         <Button size={'icon'} variant={'destructive'}>
@@ -115,5 +160,29 @@ export const DeleteProductoDialog = ({ id }: { id: UUID }) => {
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
+  ) : (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button size={'icon'} variant={'destructive'}>
+          <PackageXIcon />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>¿Estás seguro?</DialogTitle>
+          <DialogDescription>
+            Esta acción no se puede deshacer
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className=''>
+          <Button variant={'destructive'} onClick={handleDelete}>
+            Eliminar
+          </Button>
+          <DialogClose asChild>
+            <Button variant={'outline'}>Cerrar</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };

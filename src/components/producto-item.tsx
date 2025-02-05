@@ -20,11 +20,11 @@ export default function ProductoItem({ data }: Props) {
     .concat(data.unidad.substring(1).toLowerCase());
 
   return (
-    <li className='flex items-start justify-between'>
-      <Card className='hover:bg-sidebar-accent w-full duration-200 ease-in-out'>
-        <CardContent className='flex items-start justify-between pt-6'>
-          <div className='space-y-1'>
-            <h3 className='text-base font-semibold'>{data.nombre}</h3>
+    <li className='col-span-full flex items-start justify-between sm:col-span-2 xl:col-span-2'>
+      <Card className='w-full duration-200 ease-in-out hover:bg-sidebar-accent'>
+        <CardContent className='flex items-start justify-between gap-4 pt-6'>
+          <div className='space-y-1 truncate'>
+            <h3 className='truncate text-base font-semibold'>{data.nombre}</h3>
             <div className='flex items-center gap-2'>
               <p className='text-sm text-muted-foreground'>
                 20
@@ -35,7 +35,7 @@ export default function ProductoItem({ data }: Props) {
               <Badge variant='secondary'>{parsedUnidad}</Badge>
             </div>
           </div>
-          <aside className='producto-settings space-x-4'>
+          <aside className='producto-settings flex items-center gap-2'>
             <AddOrEditProductoDialog isEdit data={data} />
             <DeleteProductoDialog id={data.id as UUID} />
           </aside>

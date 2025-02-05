@@ -15,7 +15,7 @@ export default async function Productos({ searchParams }: Props) {
   return (
     <main className='space-y-4 p-4 pt-0'>
       <h2>Administra los productos disponibles para las pulverizaciones.</h2>
-      <aside id='finder' className='flex items-center gap-4'>
+      <aside id='finder' className='flex items-center justify-between gap-4'>
         <Finder />
         <AddOrEditProductoDialog />
       </aside>
