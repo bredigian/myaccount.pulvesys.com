@@ -39,10 +39,12 @@ import { Button } from './ui/button';
 import { ConsumoProducto } from '@/types/productos.types';
 import { DateTime } from 'luxon';
 import EditConsumoProductoForm from './pulverizacion-detail-form';
+import Image from 'next/image';
 import { Input } from './ui/input';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { Usuario } from '@/types/usuario.types';
 import jsPDF from 'jspdf';
+import logo from '../../public/logo_dalle.webp';
 import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -179,7 +181,9 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
     const pdf = new jsPDF('p', 'mm', 'a4', true);
     try {
       pdf.addImage({
-        imageData: document.getElementById('pulvesys_logo') as HTMLImageElement,
+        imageData: document.querySelector(
+          '#pulvesys-aux-logo',
+        ) as HTMLImageElement,
         x: 95,
         y: 14,
         width: 20,
@@ -312,6 +316,12 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
           </DrawerDescription>
         </DrawerHeader>
         <div className='flex flex-col gap-4 px-4 pb-4'>
+          <Image
+            src={logo}
+            alt='Logo auxiliar de PulveSys'
+            className='hidden size-2'
+            id='pulvesys-aux-logo'
+          />
           <div className='flex items-center gap-4'>
             <Input
               id='pulverizacion-public_link'
@@ -369,6 +379,12 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
         </DialogHeader>
         <div className='flex flex-col gap-4'>
           <div className='flex items-center gap-4'>
+            <Image
+              src={logo}
+              alt='Logo auxiliar de PulveSys'
+              className='hidden size-2'
+              id='pulvesys-aux-logo'
+            />
             <Input
               id='pulverizacion-public_link'
               placeholder='URL'
