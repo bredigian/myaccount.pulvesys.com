@@ -317,8 +317,8 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
             alt='Logo auxiliar de PulveSys'
             className='hidden size-2'
             id='pulvesys_logo'
-            width={4}
-            height={4}
+            width={100}
+            height={100}
           />
           <div className='flex items-center gap-4'>
             <Input
@@ -382,8 +382,8 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
               alt='Logo auxiliar de PulveSys'
               className='hidden size-2'
               id='pulvesys_logo'
-              width={4}
-              height={4}
+              width={100}
+              height={100}
             />
             <Input
               id='pulverizacion-public_link'
