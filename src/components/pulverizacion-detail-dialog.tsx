@@ -188,6 +188,7 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
         y: 14,
         width: 20,
         height: 20,
+        format: 'UNKNOWN',
       });
 
       pdf
