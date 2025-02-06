@@ -31,6 +31,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   src={logo}
                   alt='Logo del Sistema de Ordenes de Pulverización'
                   className='size-9 rounded-md'
+                  id='pulvesys_logo'
                 />
                 <div className='grid flex-1 text-left text-sm leading-tight'>
                   <span className='font-semibold'>PulveSys</span>
