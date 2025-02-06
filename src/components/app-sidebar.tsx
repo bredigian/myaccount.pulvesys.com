@@ -17,7 +17,7 @@ import Link from 'next/link';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { ROUTES } from '@/routes';
-import logo from '../../public/logo_dalle.webp';
+import logo from '../../public/logo.png';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -31,7 +31,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   src={logo}
                   alt='Logo del Sistema de Ordenes de Pulverización'
                   className='size-9 rounded-md'
-                  id='pulvesys_logo'
+                  id='primary_pulvesys_logo'
                 />
                 <div className='grid flex-1 text-left text-sm leading-tight'>
                   <span className='font-semibold'>PulveSys</span>

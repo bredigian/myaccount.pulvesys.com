@@ -3,8 +3,6 @@
 
 import {
   ArrowLeft,
-  ClipboardCheck,
-  ClipboardCopy,
   ExternalLink,
   FileDown,
   Globe,
@@ -44,7 +42,6 @@ import { Input } from './ui/input';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { Usuario } from '@/types/usuario.types';
 import jsPDF from 'jspdf';
-import logo from '../../public/logo_dalle.webp';
 import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -179,16 +176,14 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
 
   const handleShareByPDF = () => {
     const pdf = new jsPDF('p', 'mm', 'a4', true);
+
     try {
       pdf.addImage({
-        imageData: document.querySelector(
-          '#pulvesys-aux-logo',
-        ) as HTMLImageElement,
+        imageData: document.getElementById('pulvesys_logo') as HTMLImageElement,
         x: 95,
         y: 14,
         width: 20,
         height: 20,
-        format: 'UNKNOWN',
       });
 
       pdf
@@ -318,10 +313,12 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
         </DrawerHeader>
         <div className='flex flex-col gap-4 px-4 pb-4'>
           <Image
-            src={logo}
+            src={'/logo.png'}
             alt='Logo auxiliar de PulveSys'
             className='hidden size-2'
-            id='pulvesys-aux-logo'
+            id='pulvesys_logo'
+            width={4}
+            height={4}
           />
           <div className='flex items-center gap-4'>
             <Input
@@ -381,10 +378,12 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
         <div className='flex flex-col gap-4'>
           <div className='flex items-center gap-4'>
             <Image
-              src={logo}
+              src={'/logo.png'}
               alt='Logo auxiliar de PulveSys'
               className='hidden size-2'
-              id='pulvesys-aux-logo'
+              id='pulvesys_logo'
+              width={4}
+              height={4}
             />
             <Input
               id='pulverizacion-public_link'
