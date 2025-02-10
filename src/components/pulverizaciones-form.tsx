@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { SHORT_UNIDAD_BY_HA, UNIDAD } from '@/types/productos.types';
 import {
   Select,
   SelectContent,
@@ -28,7 +29,6 @@ import LoteItem from './lote-item';
 import Map from './map';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
-import { UNIDAD } from '@/types/productos.types';
 import { UUID } from 'crypto';
 import { addPulverizacion } from '@/services/pulverizaciones.service';
 import { cn } from '@/lib/utils';
@@ -433,11 +433,13 @@ export default function AddOrEditPulverizacionForm({
                 }
               />
               <span className='col-span-2 self-center text-sm font-semibold opacity-60'>
-                {productos?.find(
-                  (producto) => producto.id === aplicacion.producto_id,
-                )?.unidad === UNIDAD.LITROS.toUpperCase()
-                  ? 'L/Ha'
-                  : 'g/Ha'}
+                {
+                  SHORT_UNIDAD_BY_HA[
+                    productos?.find(
+                      (producto) => producto?.id === aplicacion?.producto_id,
+                    )?.unidad as UNIDAD
+                  ]
+                }
               </span>
             </li>
           ))}

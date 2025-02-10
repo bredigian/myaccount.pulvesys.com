@@ -1,8 +1,15 @@
 import { UUID } from 'crypto';
 
 export enum UNIDAD {
-  LITROS = 'Litros',
-  GRAMOS = 'Gramos',
+  LITROS = 'LITROS',
+  GRAMOS = 'GRAMOS',
+  KILOGRAMOS = 'KILOGRAMOS',
+}
+
+export enum SHORT_UNIDAD_BY_HA {
+  LITROS = 'L/Ha',
+  GRAMOS = 'g/Ha',
+  KILOGRAMOS = 'kg/Ha',
 }
 
 export interface Producto {

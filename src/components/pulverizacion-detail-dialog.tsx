@@ -11,6 +11,11 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import {
+  ConsumoProducto,
+  SHORT_UNIDAD_BY_HA,
+  UNIDAD,
+} from '@/types/productos.types';
+import {
   Dialog,
   DialogClose,
   DialogContent,
@@ -34,7 +39,6 @@ import autoTable, { RowInput } from 'jspdf-autotable';
 
 import { AplicacionConConsumo } from '@/types/aplicaciones.types';
 import { Button } from './ui/button';
-import { ConsumoProducto } from '@/types/productos.types';
 import { DateTime } from 'luxon';
 import EditConsumoProductoForm from './pulverizacion-detail-form';
 import Image from 'next/image';
@@ -255,7 +259,15 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
 
       autoTable(pdf, {
         theme: 'grid',
-        head: [['Producto', 'Dosis', 'Teórico', 'Real', 'Restante']],
+        head: [
+          [
+            'Producto',
+            'Dosis',
+            'Cons. Teórico',
+            'Cons. Real',
+            'Prod. Restante',
+          ],
+        ],
         headStyles: { fillColor: '#243641' },
         body: data?.Aplicacion?.map((aplicacion) => {
           const consumo: ConsumoProducto = data.ConsumoProducto?.find(
@@ -264,10 +276,22 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
 
           return [
             aplicacion.producto?.nombre,
-            aplicacion.dosis,
-            consumo.valor_teorico,
-            consumo.valor_real ?? 'Sin espec.',
-            consumo.valor_devolucion ?? 'Sin espec.',
+            `${aplicacion.dosis.toFixed(2)} ${SHORT_UNIDAD_BY_HA[aplicacion.producto?.unidad as UNIDAD]}`,
+            `${consumo.valor_teorico.toFixed(2)} ${aplicacion.producto?.unidad === UNIDAD.KILOGRAMOS ? 'kg' : aplicacion.producto?.unidad.charAt(0)}`,
+            consumo.valor_real
+              ? `${consumo.valor_real?.toFixed(2)} ${
+                  aplicacion.producto?.unidad === UNIDAD.KILOGRAMOS
+                    ? 'kg'
+                    : aplicacion.producto?.unidad.charAt(0)
+                }`
+              : 'Sin espec.',
+            consumo.valor_devolucion
+              ? `${consumo.valor_devolucion?.toFixed(2)} ${
+                  aplicacion.producto?.unidad === UNIDAD.KILOGRAMOS
+                    ? 'kg'
+                    : aplicacion.producto?.unidad.charAt(0)
+                }`
+              : 'Sin espec.',
           ] as RowInput;
         }),
         tableId: 'productos_table',

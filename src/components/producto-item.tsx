@@ -5,9 +5,9 @@ import {
   DeleteProductoDialog,
 } from './productos-dialog';
 import { Card, CardContent } from './ui/card';
-import { Producto, UNIDAD } from '@/types/productos.types';
 
 import { Badge } from './ui/badge';
+import { Producto } from '@/types/productos.types';
 import { UUID } from 'crypto';
 
 interface Props {
@@ -26,13 +26,9 @@ export default function ProductoItem({ data }: Props) {
           <div className='space-y-1 truncate'>
             <h3 className='truncate text-base font-semibold'>{data.nombre}</h3>
             <div className='flex items-center gap-2'>
-              <p className='text-sm text-muted-foreground'>
-                20
-                {data.unidad === UNIDAD.GRAMOS.toUpperCase()
-                  ? data.unidad.charAt(0).toLowerCase()
-                  : data.unidad.charAt(0)}{' '}
-              </p>
-              <Badge variant='secondary'>{parsedUnidad}</Badge>
+              <Badge variant='secondary'>
+                {data.cantidad} {parsedUnidad}
+              </Badge>
             </div>
           </div>
           <aside className='producto-settings flex items-center gap-2'>

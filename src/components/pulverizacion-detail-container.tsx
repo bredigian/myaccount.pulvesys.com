@@ -9,6 +9,11 @@ import {
 import { Calendar, Layers, Leaf, ListCheckIcon, Tag } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
+  ConsumoProducto,
+  SHORT_UNIDAD_BY_HA,
+  UNIDAD,
+} from '@/types/productos.types';
+import {
   Table,
   TableBody,
   TableCell,
@@ -19,7 +24,6 @@ import {
 
 import { AplicacionConConsumo } from '@/types/aplicaciones.types';
 import { Badge } from '@/components/ui/badge';
-import { ConsumoProducto } from '@/types/productos.types';
 import { DateTime } from 'luxon';
 import { DeletePulverizacionDialog } from '@/components/pulverizaciones-dialog';
 import { Lote } from '@/types/campos.types';
@@ -161,23 +165,47 @@ export default function PulverizacionDetailContainer({ data }: Props) {
                           <TableHeader>
                             <TableRow>
                               <TableHead>Dosis</TableHead>
-                              <TableHead>Teórico</TableHead>
-                              <TableHead>Real</TableHead>
-                              <TableHead>Restante</TableHead>
+                              <TableHead>Cons. Teórico</TableHead>
+                              <TableHead>Cons. Real</TableHead>
+                              <TableHead>Prod. Restante</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
                             <TableRow>
-                              <TableCell>{aplicacion.dosis}</TableCell>
                               <TableCell>
-                                {consumo.valor_teorico.toFixed(2)}
+                                {aplicacion.dosis}{' '}
+                                {
+                                  SHORT_UNIDAD_BY_HA[
+                                    aplicacion.producto?.unidad as UNIDAD
+                                  ]
+                                }
                               </TableCell>
                               <TableCell>
-                                {consumo.valor_real?.toFixed(2) ?? 'Sin espec.'}
+                                {consumo.valor_teorico.toFixed(2)}{' '}
+                                {aplicacion.producto?.unidad ===
+                                UNIDAD.KILOGRAMOS
+                                  ? 'kg'
+                                  : aplicacion.producto?.unidad.charAt(0)}
                               </TableCell>
                               <TableCell>
-                                {consumo.valor_devolucion?.toFixed(2) ??
-                                  'Sin espec.'}
+                                {consumo.valor_real
+                                  ? `${consumo.valor_real?.toFixed(2)} ${
+                                      aplicacion.producto?.unidad ===
+                                      UNIDAD.KILOGRAMOS
+                                        ? 'kg'
+                                        : aplicacion.producto?.unidad.charAt(0)
+                                    }`
+                                  : 'Sin espec.'}
+                              </TableCell>
+                              <TableCell>
+                                {consumo.valor_devolucion
+                                  ? `${consumo.valor_devolucion?.toFixed(2)} ${
+                                      aplicacion.producto?.unidad ===
+                                      UNIDAD.KILOGRAMOS
+                                        ? 'kg'
+                                        : aplicacion.producto?.unidad.charAt(0)
+                                    }`
+                                  : 'Sin espec.'}
                               </TableCell>
                             </TableRow>
                           </TableBody>
