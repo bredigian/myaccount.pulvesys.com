@@ -26,9 +26,7 @@ export default function ProductoItem({ data }: Props) {
           <div className='space-y-1 truncate'>
             <h3 className='truncate text-base font-semibold'>{data.nombre}</h3>
             <div className='flex items-center gap-2'>
-              <Badge variant='secondary'>
-                {data.cantidad} {parsedUnidad}
-              </Badge>
+              <Badge variant='secondary'>{parsedUnidad}</Badge>
             </div>
           </div>
           <aside className='producto-settings flex items-center gap-2'>

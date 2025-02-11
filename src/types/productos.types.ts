@@ -16,7 +16,6 @@ export interface Producto {
   id?: UUID;
   nombre: string;
   unidad: UNIDAD;
-  cantidad: number;
 }
 
 export interface ConsumoProducto {

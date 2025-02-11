@@ -41,10 +41,10 @@ export default function AddOrEditProductoForm({
     register,
     control,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
   } = useForm<Producto>({
     defaultValues: isEdit
-      ? { nombre: data?.nombre, cantidad: data?.cantidad, unidad: data?.unidad }
+      ? { nombre: data?.nombre, unidad: data?.unidad }
       : undefined,
   });
 
@@ -56,18 +56,15 @@ export default function AddOrEditProductoForm({
 
   const onInvalidSubmit = (errors: FieldErrors<Producto>) => {
     if (errors.nombre)
-      toast.error(errors.nombre.message, { className: 'mb-[312px]' });
-    else if (errors.cantidad)
-      toast.error(errors.cantidad.message, { className: 'mb-[312px]' });
+      toast.error(errors.nombre.message, { className: 'mb-64' });
     else if (errors.unidad)
-      toast.error(errors.unidad.message, { className: 'mb-[312px]' });
+      toast.error(errors.unidad.message, { className: 'mb-64' });
   };
   const onSubmit = async (values: Producto) => {
     try {
       const PAYLOAD: Producto = {
         ...values,
         id: data?.id,
-        cantidad: parseInt(values.cantidad.toString()),
         unidad: values.unidad.toUpperCase() as UNIDAD,
       };
 
@@ -94,7 +91,7 @@ export default function AddOrEditProductoForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
-      className='space-y-4 px-4 pb-4 md:px-0 md:pb-0'
+      className='grid grid-cols-7 gap-4 px-4 pb-4 md:px-0 md:pb-0'
     >
       <Input
         {...register('nombre', {
@@ -105,46 +102,36 @@ export default function AddOrEditProductoForm({
           },
         })}
         placeholder='Nombre'
-        className='text-sm'
+        className='col-span-4 text-sm'
       />
-      <div className='grid grid-cols-8 gap-4'>
-        <Input
-          {...register('cantidad', {
-            required: { value: true, message: 'La cantidad es requerida.' },
-            min: { value: 1, message: 'El valor mínimo es 1' },
-          })}
-          className='col-span-5 text-sm'
-          placeholder='Cantidad'
-          type='number'
-        />
-        <Controller
-          control={control}
-          name='unidad'
-          rules={{
-            required: { value: true, message: 'La unidad es requerida' },
-          }}
-          render={({ field }) => (
-            <Select onValueChange={field.onChange} defaultValue={data?.unidad}>
-              <SelectTrigger className='col-span-3 text-sm'>
-                <SelectValue placeholder='Unidad' />
-              </SelectTrigger>
-              <SelectContent className='col-span-3' align='start'>
-                {UNIDADES.map((unidad) => (
-                  <SelectItem key={unidad.label} value={unidad.value}>
-                    {unidad.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-        />
-      </div>
-      <div className='flex flex-col items-center gap-2 md:flex-row-reverse md:items-end'>
+      <Controller
+        control={control}
+        name='unidad'
+        rules={{
+          required: { value: true, message: 'La unidad es requerida' },
+        }}
+        render={({ field }) => (
+          <Select onValueChange={field.onChange} defaultValue={data?.unidad}>
+            <SelectTrigger className='col-span-3 !mt-0 text-sm'>
+              <SelectValue placeholder='Unidad' />
+            </SelectTrigger>
+            <SelectContent className='col-span-3' align='start'>
+              {UNIDADES.map((unidad) => (
+                <SelectItem key={unidad.label} value={unidad.value}>
+                  {unidad.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+      />
+      <div className='col-span-full flex flex-col items-center gap-2 md:flex-row-reverse md:items-end'>
         <Button
-          disabled={isSubmitting || isSubmitSuccessful}
+          disabled={!isDirty || isSubmitting || isSubmitSuccessful}
           type='submit'
           className={cn(
-            'w-full disabled:opacity-100 md:w-fit',
+            'w-full md:w-fit',
+            isDirty ? 'disabled:opacity-100' : 'disabled:opacity-75',
             !isSubmitSuccessful ? 'bg-primary' : '!bg-green-700',
           )}
         >
