@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from './ui/dialog';
+import { Dispatch, SetStateAction } from 'react';
 import {
   Drawer,
   DrawerClose,
@@ -38,28 +39,44 @@ import { useRouter } from 'next/navigation';
 export const AddOrEditProductoDialog = ({
   isEdit,
   data,
+  from,
+  hidden,
+  customOpen,
+  customSetOpen,
+  customHandleOpen,
 }: {
   isEdit?: boolean;
   data?: Producto;
+  from?: 'cultivos' | 'pulverizaciones';
+  hidden?: boolean;
+  customOpen?: boolean;
+  customSetOpen?: Dispatch<SetStateAction<boolean>>;
+  customHandleOpen?: () => void;
 }) => {
   const { open, setOpen, handleOpen } = useDialog();
 
   const isMobile = useIsMobile();
 
   return isMobile ? (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        {!isEdit ? (
-          <Button>
-            Agregar
-            <PackagePlus />
-          </Button>
-        ) : (
-          <Button size={'icon'} variant={'outline'}>
-            <PackageOpen />
-          </Button>
-        )}
-      </DrawerTrigger>
+    <Drawer open={customOpen ?? open} onOpenChange={customSetOpen ?? setOpen}>
+      {!hidden && (
+        <DrawerTrigger asChild>
+          {!isEdit ? (
+            <Button
+              size={from === 'cultivos' ? 'default' : 'sm'}
+              variant={from === 'pulverizaciones' ? 'outline' : 'default'}
+              className='mb-2 flex w-full items-center justify-between'
+            >
+              Agregar
+              <PackagePlus />
+            </Button>
+          ) : (
+            <Button size={'icon'} variant={'outline'}>
+              <PackageOpen />
+            </Button>
+          )}
+        </DrawerTrigger>
+      )}
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>
@@ -72,24 +89,30 @@ export const AddOrEditProductoDialog = ({
         <AddOrEditProductoForm
           isEdit={isEdit}
           data={data}
-          handleOpen={handleOpen}
+          handleOpen={customHandleOpen ?? handleOpen}
         />
       </DrawerContent>
     </Drawer>
   ) : (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {!isEdit ? (
-          <Button>
-            Agregar
-            <PackagePlus />
-          </Button>
-        ) : (
-          <Button size={'icon'} variant={'outline'}>
-            <PackageOpen />
-          </Button>
-        )}
-      </DialogTrigger>
+    <Dialog open={customOpen ?? open} onOpenChange={customSetOpen ?? setOpen}>
+      {!hidden && (
+        <DialogTrigger asChild>
+          {!isEdit ? (
+            <Button
+              size={from === 'cultivos' ? 'default' : 'sm'}
+              variant={from === 'pulverizaciones' ? 'outline' : 'default'}
+              className='mb-2 flex w-full items-center justify-between'
+            >
+              Agregar
+              <PackagePlus />
+            </Button>
+          ) : (
+            <Button size={'icon'} variant={'outline'}>
+              <PackageOpen />
+            </Button>
+          )}
+        </DialogTrigger>
+      )}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
@@ -102,7 +125,7 @@ export const AddOrEditProductoDialog = ({
         <AddOrEditProductoForm
           isEdit={isEdit}
           data={data}
-          handleOpen={handleOpen}
+          handleOpen={customHandleOpen ?? handleOpen}
         />
       </DialogContent>
     </Dialog>

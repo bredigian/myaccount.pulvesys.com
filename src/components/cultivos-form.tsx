@@ -72,7 +72,10 @@ export default function AddOrEditCultivoForm({
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
+      onSubmit={(e) => {
+        e.stopPropagation();
+        handleSubmit(onSubmit, onInvalidSubmit)(e);
+      }}
       className='space-y-4 px-4 pb-4 md:px-0 md:pb-0'
     >
       <Input

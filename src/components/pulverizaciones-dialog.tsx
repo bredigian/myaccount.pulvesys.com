@@ -21,22 +21,28 @@ import {
   DrawerTrigger,
 } from './ui/drawer';
 import { Droplet, Trash2 } from 'lucide-react';
+import { Dialog as TDialog, useDialog } from '@/hooks/use-dialog';
 
 import { AddOrEditCampoDialog } from './campos-dialog';
+import { AddOrEditCultivoDialog } from './cultivos-dialog';
+import { AddOrEditProductoDialog } from './productos-dialog';
 import AddOrEditPulverizacionForm from './pulverizaciones-form';
+import { AddOrEditTratamientoDialog } from './tratamientos-dialog';
 import { Button } from './ui/button';
 import Cookies from 'js-cookie';
 import { UUID } from 'crypto';
 import { deletePulverizacion } from '@/services/pulverizaciones.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
-import { useDialog } from '@/hooks/use-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 
 export const AddOrEditPulverizacionDialog = () => {
   const { open, setOpen, handleOpen } = useDialog();
   const addCampoDialog = useDialog();
+  const addCultivoDialog = useDialog();
+  const addTratamientoDialog = useDialog();
+  const addProductoDialog = useDialog();
 
   const isMobile = useIsMobile();
 
@@ -58,9 +64,13 @@ export const AddOrEditPulverizacionDialog = () => {
           </DrawerHeader>
           <AddOrEditPulverizacionForm
             handleOpen={handleOpen}
-            handleAddCampoDialog={() => {
+            camposDialog={addCampoDialog}
+            cultivosDialog={addCultivoDialog}
+            tratamientosDialog={addTratamientoDialog}
+            productosDialog={addProductoDialog}
+            handleExternalDialog={(dialog: TDialog) => {
               handleOpen();
-              setTimeout(() => addCampoDialog.handleOpen(), 250);
+              setTimeout(() => dialog.handleOpen(), 250);
             }}
           />
         </DrawerContent>
@@ -70,6 +80,24 @@ export const AddOrEditPulverizacionDialog = () => {
         customOpen={addCampoDialog.open}
         customSetOpen={addCampoDialog.setOpen}
         customHandleOpen={addCampoDialog.handleOpen}
+      />
+      <AddOrEditCultivoDialog
+        hidden
+        customOpen={addCultivoDialog.open}
+        customSetOpen={addCultivoDialog.setOpen}
+        customHandleOpen={addCultivoDialog.handleOpen}
+      />
+      <AddOrEditTratamientoDialog
+        hidden
+        customOpen={addTratamientoDialog.open}
+        customSetOpen={addTratamientoDialog.setOpen}
+        customHandleOpen={addTratamientoDialog.handleOpen}
+      />
+      <AddOrEditProductoDialog
+        hidden
+        customOpen={addProductoDialog.open}
+        customSetOpen={addProductoDialog.setOpen}
+        customHandleOpen={addProductoDialog.handleOpen}
       />
     </>
   ) : (
@@ -90,9 +118,13 @@ export const AddOrEditPulverizacionDialog = () => {
           </DialogHeader>
           <AddOrEditPulverizacionForm
             handleOpen={handleOpen}
-            handleAddCampoDialog={() => {
+            camposDialog={addCampoDialog}
+            cultivosDialog={addCultivoDialog}
+            tratamientosDialog={addTratamientoDialog}
+            productosDialog={addProductoDialog}
+            handleExternalDialog={(dialog: TDialog) => {
               handleOpen();
-              setTimeout(() => addCampoDialog.handleOpen(), 250);
+              setTimeout(() => dialog.handleOpen(), 250);
             }}
           />
         </DialogContent>
@@ -102,6 +134,24 @@ export const AddOrEditPulverizacionDialog = () => {
         customOpen={addCampoDialog.open}
         customSetOpen={addCampoDialog.setOpen}
         customHandleOpen={addCampoDialog.handleOpen}
+      />
+      <AddOrEditCultivoDialog
+        hidden
+        customOpen={addCultivoDialog.open}
+        customSetOpen={addCultivoDialog.setOpen}
+        customHandleOpen={addCultivoDialog.handleOpen}
+      />
+      <AddOrEditTratamientoDialog
+        hidden
+        customOpen={addTratamientoDialog.open}
+        customSetOpen={addTratamientoDialog.setOpen}
+        customHandleOpen={addTratamientoDialog.handleOpen}
+      />
+      <AddOrEditProductoDialog
+        hidden
+        customOpen={addProductoDialog.open}
+        customSetOpen={addProductoDialog.setOpen}
+        customHandleOpen={addProductoDialog.handleOpen}
       />
     </>
   );

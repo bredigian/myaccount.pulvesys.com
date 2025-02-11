@@ -56,9 +56,9 @@ export default function AddOrEditProductoForm({
 
   const onInvalidSubmit = (errors: FieldErrors<Producto>) => {
     if (errors.nombre)
-      toast.error(errors.nombre.message, { className: 'mb-64' });
+      toast.error(errors.nombre.message, { className: 'mb-64 md:mb-0' });
     else if (errors.unidad)
-      toast.error(errors.unidad.message, { className: 'mb-64' });
+      toast.error(errors.unidad.message, { className: 'mb-64 md:mb-0' });
   };
   const onSubmit = async (values: Producto) => {
     try {
@@ -90,7 +90,10 @@ export default function AddOrEditProductoForm({
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
+      onSubmit={(e) => {
+        e.stopPropagation();
+        handleSubmit(onSubmit, onInvalidSubmit)(e);
+      }}
       className='grid grid-cols-7 gap-4 px-4 pb-4 md:px-0 md:pb-0'
     >
       <Input

@@ -7,8 +7,10 @@ import {
   MapPinPlus,
   PackageMinus,
   PackagePlus,
+  PlusSquare,
 } from 'lucide-react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
+import { Dialog, useDialog } from '@/hooks/use-dialog';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { SHORT_UNIDAD, UNIDAD } from '@/types/productos.types';
 import {
@@ -36,17 +38,24 @@ import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useControllerAplicaciones } from '@/hooks/use-productos';
 import { useDataStore } from '@/store/data.store';
-import { useDialog } from '@/hooks/use-dialog';
 import { useRouter } from 'next/navigation';
 
 interface Props {
   handleOpen: () => void;
-  handleAddCampoDialog: () => void;
+  handleExternalDialog: (dialog: Dialog) => void;
+  camposDialog: Dialog;
+  cultivosDialog: Dialog;
+  tratamientosDialog: Dialog;
+  productosDialog: Dialog;
 }
 
 export default function AddOrEditPulverizacionForm({
   handleOpen,
-  handleAddCampoDialog,
+  handleExternalDialog,
+  camposDialog,
+  cultivosDialog,
+  productosDialog,
+  tratamientosDialog,
 }: Props) {
   const { push } = useRouter();
 
@@ -168,6 +177,9 @@ export default function AddOrEditPulverizacionForm({
     }
   };
 
+  const cultivoSelector = useDialog();
+  const tratamientoSelector = useDialog();
+
   if (loading)
     return (
       <div className='grid place-items-center py-6'>
@@ -262,11 +274,11 @@ export default function AddOrEditPulverizacionForm({
       />
       <Button
         variant={'default'}
-        onClick={handleAddCampoDialog}
+        onClick={() => handleExternalDialog(camposDialog)}
         type='button'
         className='col-span-4'
       >
-        Agregar
+        <span className='truncate'>Nueva ubicación</span>
         <MapPinPlus />
       </Button>
       {selectedCampo && (
@@ -318,11 +330,29 @@ export default function AddOrEditPulverizacionForm({
           required: { value: true, message: 'El cultivo es requerido.' },
         }}
         render={({ field }) => (
-          <Select onValueChange={field.onChange} {...field}>
+          <Select
+            open={cultivoSelector.open}
+            onOpenChange={cultivoSelector.setOpen}
+            onValueChange={field.onChange}
+            {...field}
+          >
             <SelectTrigger className='col-span-4'>
               <SelectValue placeholder='Cultivo' />
             </SelectTrigger>
             <SelectContent className='col-span-4'>
+              <Button
+                type='button'
+                size='default'
+                variant='default'
+                className='mb-2 flex w-full items-center justify-between'
+                onClick={() => {
+                  cultivoSelector.handleOpen();
+                  handleExternalDialog(cultivosDialog);
+                }}
+              >
+                Nuevo cultivo
+                <PlusSquare />
+              </Button>
               {cultivos?.length === 0 ? (
                 <p className='px-4 py-2 text-sm'>No se encontraron cultivos</p>
               ) : (
@@ -345,11 +375,29 @@ export default function AddOrEditPulverizacionForm({
           required: { value: true, message: 'El tratamiento es requerido.' },
         }}
         render={({ field }) => (
-          <Select onValueChange={field.onChange} {...field}>
+          <Select
+            open={tratamientoSelector.open}
+            onOpenChange={tratamientoSelector.setOpen}
+            onValueChange={field.onChange}
+            {...field}
+          >
             <SelectTrigger className='col-span-6'>
               <SelectValue placeholder='Tipo de tratamiento' />
             </SelectTrigger>
             <SelectContent className='col-span-6'>
+              <Button
+                type='button'
+                size='default'
+                variant='default'
+                className='mb-2 flex w-full items-center justify-between'
+                onClick={() => {
+                  tratamientoSelector.handleOpen();
+                  handleExternalDialog(tratamientosDialog);
+                }}
+              >
+                Nuevo tratratamiento
+                <PlusSquare />
+              </Button>
               {tratamientos?.length === 0 ? (
                 <p className='px-4 py-2 text-sm'>
                   No se encontraron tratamientos
@@ -390,6 +438,15 @@ export default function AddOrEditPulverizacionForm({
               onClick={deleteAplicacion}
             >
               <PackageMinus />
+            </Button>
+            <Button
+              type='button'
+              variant='default'
+              className='ml-2'
+              onClick={() => handleExternalDialog(productosDialog)}
+            >
+              Nuevo
+              <PackagePlus />
             </Button>
           </aside>
         </div>
@@ -440,6 +497,7 @@ export default function AddOrEditPulverizacionForm({
                     )?.unidad as UNIDAD
                   ]
                 }
+                /ha
               </span>
             </li>
           ))}
