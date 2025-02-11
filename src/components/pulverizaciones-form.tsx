@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { SHORT_UNIDAD_BY_HA, UNIDAD } from '@/types/productos.types';
+import { SHORT_UNIDAD, UNIDAD } from '@/types/productos.types';
 import {
   Select,
   SelectContent,
@@ -434,7 +434,7 @@ export default function AddOrEditPulverizacionForm({
               />
               <span className='col-span-2 self-center text-sm font-semibold opacity-60'>
                 {
-                  SHORT_UNIDAD_BY_HA[
+                  SHORT_UNIDAD[
                     productos?.find(
                       (producto) => producto?.id === aplicacion?.producto_id,
                     )?.unidad as UNIDAD

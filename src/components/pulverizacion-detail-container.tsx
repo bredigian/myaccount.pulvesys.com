@@ -8,11 +8,7 @@ import {
 } from '@/components/pulverizacion-detail-dialog';
 import { Calendar, Layers, Leaf, ListCheckIcon, Tag } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  ConsumoProducto,
-  SHORT_UNIDAD_BY_HA,
-  UNIDAD,
-} from '@/types/productos.types';
+import { ConsumoProducto, SHORT_UNIDAD, UNIDAD } from '@/types/productos.types';
 import {
   Table,
   TableBody,
@@ -46,7 +42,7 @@ export default function PulverizacionDetailContainer({ data }: Props) {
 
   return (
     <main className='space-y-6 p-4 pt-0'>
-      <div className='flex w-full items-center justify-between'>
+      <div className='flex w-full items-center justify-between gap-4'>
         <div className='flex items-center gap-4'>
           <BackToPulverizacionesButton />
           <h1 className='text-2xl font-semibold'>
@@ -170,40 +166,40 @@ export default function PulverizacionDetailContainer({ data }: Props) {
                               <TableHead>Prod. Restante</TableHead>
                             </TableRow>
                           </TableHeader>
-                          <TableBody>
+                          <TableBody className='overflow-auto'>
                             <TableRow>
                               <TableCell>
-                                {aplicacion.dosis}{' '}
+                                {aplicacion.dosis}
                                 {
-                                  SHORT_UNIDAD_BY_HA[
+                                  SHORT_UNIDAD[
+                                    aplicacion.producto?.unidad as UNIDAD
+                                  ]
+                                }
+                                /ha
+                              </TableCell>
+                              <TableCell>
+                                {consumo.valor_teorico.toLocaleString('es-AR')}
+                                {
+                                  SHORT_UNIDAD[
                                     aplicacion.producto?.unidad as UNIDAD
                                   ]
                                 }
                               </TableCell>
                               <TableCell>
-                                {consumo.valor_teorico.toFixed(2)}{' '}
-                                {aplicacion.producto?.unidad ===
-                                UNIDAD.KILOGRAMOS
-                                  ? 'kg'
-                                  : aplicacion.producto?.unidad.charAt(0)}
-                              </TableCell>
-                              <TableCell>
                                 {consumo.valor_real
-                                  ? `${consumo.valor_real?.toFixed(2)} ${
-                                      aplicacion.producto?.unidad ===
-                                      UNIDAD.KILOGRAMOS
-                                        ? 'kg'
-                                        : aplicacion.producto?.unidad.charAt(0)
+                                  ? `${consumo.valor_real?.toLocaleString('es-AR')}${
+                                      SHORT_UNIDAD[
+                                        aplicacion.producto?.unidad as UNIDAD
+                                      ]
                                     }`
                                   : 'Sin espec.'}
                               </TableCell>
                               <TableCell>
                                 {consumo.valor_devolucion
-                                  ? `${consumo.valor_devolucion?.toFixed(2)} ${
-                                      aplicacion.producto?.unidad ===
-                                      UNIDAD.KILOGRAMOS
-                                        ? 'kg'
-                                        : aplicacion.producto?.unidad.charAt(0)
+                                  ? `${consumo.valor_devolucion?.toLocaleString('es-AR')}${
+                                      SHORT_UNIDAD[
+                                        aplicacion.producto?.unidad as UNIDAD
+                                      ]
                                     }`
                                   : 'Sin espec.'}
                               </TableCell>

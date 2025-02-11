@@ -10,11 +10,7 @@ import {
   PackageOpen,
   ShieldCheck,
 } from 'lucide-react';
-import {
-  ConsumoProducto,
-  SHORT_UNIDAD_BY_HA,
-  UNIDAD,
-} from '@/types/productos.types';
+import { ConsumoProducto, SHORT_UNIDAD, UNIDAD } from '@/types/productos.types';
 import {
   Dialog,
   DialogClose,
@@ -276,20 +272,18 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
 
           return [
             aplicacion.producto?.nombre,
-            `${aplicacion.dosis.toFixed(2)} ${SHORT_UNIDAD_BY_HA[aplicacion.producto?.unidad as UNIDAD]}`,
-            `${consumo.valor_teorico.toFixed(2)} ${aplicacion.producto?.unidad === UNIDAD.KILOGRAMOS ? 'kg' : aplicacion.producto?.unidad.charAt(0)}`,
+            `${aplicacion.dosis.toLocaleString('es-AR')}${SHORT_UNIDAD[aplicacion.producto?.unidad as UNIDAD]}/ha`,
+            `${consumo.valor_teorico.toLocaleString('es-AR')}${
+              SHORT_UNIDAD[aplicacion.producto?.unidad as UNIDAD]
+            }`,
             consumo.valor_real
-              ? `${consumo.valor_real?.toFixed(2)} ${
-                  aplicacion.producto?.unidad === UNIDAD.KILOGRAMOS
-                    ? 'kg'
-                    : aplicacion.producto?.unidad.charAt(0)
+              ? `${consumo.valor_real?.toLocaleString('es-AR')}${
+                  SHORT_UNIDAD[aplicacion.producto?.unidad as UNIDAD]
                 }`
               : 'Sin espec.',
             consumo.valor_devolucion
-              ? `${consumo.valor_devolucion?.toFixed(2)} ${
-                  aplicacion.producto?.unidad === UNIDAD.KILOGRAMOS
-                    ? 'kg'
-                    : aplicacion.producto?.unidad.charAt(0)
+              ? `${consumo.valor_devolucion?.toLocaleString('es-AR')}${
+                  SHORT_UNIDAD[aplicacion.producto?.unidad as UNIDAD]
                 }`
               : 'Sin espec.',
           ] as RowInput;

@@ -1,5 +1,6 @@
 import { ArrowRight, Check } from 'lucide-react';
 import { FieldErrors, useForm } from 'react-hook-form';
+import { SHORT_UNIDAD, UNIDAD } from '@/types/productos.types';
 
 import { AplicacionConConsumo } from '@/types/aplicaciones.types';
 import { Badge } from './ui/badge';
@@ -83,8 +84,8 @@ export default function EditConsumoProductoForm({
     >
       <Badge className='col-span-full w-fit' variant={'secondary'}>
         Consumo teórico <ArrowRight size={16} className='mx-1' />
-        {defaultValues.valor_teorico?.toFixed(2)}{' '}
-        {defaultValues.producto?.unidad.charAt(0)}
+        {defaultValues.valor_teorico?.toLocaleString('es-AR')}{' '}
+        {SHORT_UNIDAD[defaultValues.producto?.unidad as UNIDAD]}
         /ha
       </Badge>
       <Input

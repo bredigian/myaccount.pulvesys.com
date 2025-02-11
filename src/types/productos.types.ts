@@ -6,10 +6,10 @@ export enum UNIDAD {
   KILOGRAMOS = 'KILOGRAMOS',
 }
 
-export enum SHORT_UNIDAD_BY_HA {
-  LITROS = 'L/Ha',
-  GRAMOS = 'g/Ha',
-  KILOGRAMOS = 'kg/Ha',
+export enum SHORT_UNIDAD {
+  LITROS = 'L',
+  GRAMOS = 'g',
+  KILOGRAMOS = 'kg',
 }
 
 export interface Producto {
