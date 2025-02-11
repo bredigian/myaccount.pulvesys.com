@@ -39,7 +39,6 @@ import { useRouter } from 'next/navigation';
 export const AddOrEditTratamientoDialog = ({
   isEdit,
   data,
-  from,
   hidden,
   customOpen,
   customSetOpen,
@@ -47,7 +46,6 @@ export const AddOrEditTratamientoDialog = ({
 }: {
   isEdit?: boolean;
   data?: Tratamiento;
-  from?: 'cultivos' | 'pulverizaciones';
   hidden?: boolean;
   customOpen?: boolean;
   customSetOpen?: Dispatch<SetStateAction<boolean>>;
@@ -62,11 +60,7 @@ export const AddOrEditTratamientoDialog = ({
       {!hidden && (
         <DrawerTrigger asChild>
           {!isEdit ? (
-            <Button
-              size={from === 'cultivos' ? 'default' : 'sm'}
-              variant={from === 'pulverizaciones' ? 'outline' : 'default'}
-              className='mb-2 flex w-full items-center justify-between'
-            >
+            <Button>
               Agregar
               <PlusSquare />
             </Button>
@@ -100,11 +94,7 @@ export const AddOrEditTratamientoDialog = ({
       {!hidden && (
         <DialogTrigger asChild>
           {!isEdit ? (
-            <Button
-              size={from === 'cultivos' ? 'default' : 'sm'}
-              variant={from === 'pulverizaciones' ? 'outline' : 'default'}
-              className='mb-2 flex w-full items-center justify-between'
-            >
+            <Button>
               Agregar
               <PlusSquare />
             </Button>

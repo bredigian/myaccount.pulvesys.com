@@ -39,7 +39,6 @@ import { useRouter } from 'next/navigation';
 export const AddOrEditCultivoDialog = ({
   isEdit,
   data,
-  from,
   hidden,
   customOpen,
   customSetOpen,
@@ -47,7 +46,6 @@ export const AddOrEditCultivoDialog = ({
 }: {
   isEdit?: boolean;
   data?: Cultivo;
-  from?: 'cultivos' | 'pulverizaciones';
   hidden?: boolean;
   customOpen?: boolean;
   customSetOpen?: Dispatch<SetStateAction<boolean>>;
@@ -62,11 +60,7 @@ export const AddOrEditCultivoDialog = ({
       {!hidden && (
         <DrawerTrigger asChild>
           {!isEdit ? (
-            <Button
-              size={from === 'cultivos' ? 'default' : 'sm'}
-              variant={from === 'pulverizaciones' ? 'outline' : 'default'}
-              className='mb-2 flex w-full items-center justify-between'
-            >
+            <Button>
               Agregar
               <PlusSquare />
             </Button>
@@ -98,11 +92,7 @@ export const AddOrEditCultivoDialog = ({
       {!hidden && (
         <DialogTrigger asChild>
           {!isEdit ? (
-            <Button
-              size={from === 'cultivos' ? 'default' : 'sm'}
-              variant={from === 'pulverizaciones' ? 'outline' : 'default'}
-              className='mb-2 flex w-full items-center justify-between'
-            >
+            <Button>
               Agregar
               <PlusSquare />
             </Button>

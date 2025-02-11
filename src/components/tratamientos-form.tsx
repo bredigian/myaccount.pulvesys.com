@@ -32,7 +32,7 @@ export default function AddOrEditTratamientoForm({
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
   } = useForm<Tratamiento>({
     defaultValues: isEdit ? { nombre: data?.nombre } : undefined,
   });
@@ -95,10 +95,11 @@ export default function AddOrEditTratamientoForm({
       />
       <div className='flex flex-col items-center gap-2 md:flex-row-reverse md:items-end'>
         <Button
-          disabled={isSubmitting || isSubmitSuccessful}
+          disabled={!isDirty || isSubmitting || isSubmitSuccessful}
           type='submit'
           className={cn(
-            'w-full disabled:opacity-100 md:w-fit',
+            'w-full md:w-fit',
+            isDirty ? 'disabled:opacity-100' : 'disabled:opacity-75',
             !isSubmitSuccessful ? 'bg-primary' : '!bg-green-700',
           )}
         >
