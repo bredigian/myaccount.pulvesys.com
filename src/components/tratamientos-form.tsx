@@ -45,7 +45,7 @@ export default function AddOrEditTratamientoForm({
 
   const onInvalidSubmit = (errors: FieldErrors<Tratamiento>) => {
     if (errors.nombre)
-      toast.error(errors.nombre.message, { className: 'mb-64 md:mb-0' });
+      toast.error(errors.nombre.message, { position: 'top-center' });
   };
   const onSubmit = async (values: Cultivo) => {
     try {

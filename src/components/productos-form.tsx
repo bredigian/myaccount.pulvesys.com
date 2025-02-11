@@ -56,9 +56,9 @@ export default function AddOrEditProductoForm({
 
   const onInvalidSubmit = (errors: FieldErrors<Producto>) => {
     if (errors.nombre)
-      toast.error(errors.nombre.message, { className: 'mb-64 md:mb-0' });
+      toast.error(errors.nombre.message, { position: 'top-center' });
     else if (errors.unidad)
-      toast.error(errors.unidad.message, { className: 'mb-64 md:mb-0' });
+      toast.error(errors.unidad.message, { position: 'top-center' });
   };
   const onSubmit = async (values: Producto) => {
     try {
