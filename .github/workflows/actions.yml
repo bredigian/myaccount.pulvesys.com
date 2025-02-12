@@ -26,4 +26,4 @@ jobs:
       - name: Build app
         run: pnpm run build
       - name: Reload proxy server
-        run: pm2 reload pulvesys-app --update-env
+        run: pm2 reload pulvesys.com --update-env
