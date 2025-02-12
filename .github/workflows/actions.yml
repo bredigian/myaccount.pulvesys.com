@@ -7,6 +7,7 @@ jobs:
     runs-on: self-hosted
     env:
       NEXT_PUBLIC_API_URL: ${{secrets.NEXT_PUBLIC_API_URL}}
+      NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{secrets.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}}
     strategy:
       matrix:
         node-version: [22.x]
