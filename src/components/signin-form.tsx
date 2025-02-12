@@ -1,7 +1,14 @@
 'use client';
 
+import {
+  Eye,
+  EyeClosed,
+  KeyRound,
+  LogIn,
+  ShieldCheck,
+  User,
+} from 'lucide-react';
 import { FieldErrors, useForm } from 'react-hook-form';
-import { KeyRound, LogIn, ShieldCheck, User } from 'lucide-react';
 
 import { Button } from './ui/button';
 import Cookies from 'js-cookie';
@@ -49,12 +56,17 @@ export default function SigninForm() {
     }
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+  const handleShowPassword = () => setShowPassword(!showPassword);
+
   return (
     <form
       className='space-y-4'
       onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
     >
-      <h2 className='hidden lg:block text-center text-xl font-semibold opacity-75'>Autenticación</h2>
+      <h2 className='hidden text-center text-xl font-semibold opacity-75 lg:block'>
+        Autenticación
+      </h2>
       <div className='group relative flex items-center'>
         <User className='absolute pl-2 opacity-60 group-focus-within:opacity-100 peer-[:not(:placeholder-shown)]:opacity-100' />
         <Input
@@ -65,7 +77,7 @@ export default function SigninForm() {
             },
           })}
           placeholder='Usuario'
-          className='peer pl-7 text-sm lg:text-base'
+          className='peer pl-8 text-sm lg:text-base'
           type='text'
         />
       </div>
@@ -78,10 +90,19 @@ export default function SigninForm() {
               message: 'La contraseña es requerida.',
             },
           })}
-          type='password'
+          type={!showPassword ? 'password' : 'text'}
           placeholder='Contraseña'
-          className='peer pl-7 text-sm lg:text-base'
+          className='peer pl-8 text-sm lg:text-base'
         />
+        <Button
+          type='button'
+          variant='link'
+          className='absolute end-0 opacity-60 group-focus-within:opacity-100 peer-[:not(:placeholder-shown)]:opacity-100'
+          size='icon'
+          onClick={handleShowPassword}
+        >
+          {!showPassword ? <EyeClosed /> : <Eye />}
+        </Button>
       </div>
       <Button
         type='submit'
@@ -93,11 +114,11 @@ export default function SigninForm() {
       >
         {success ? (
           <>
-            Bienvenido <ShieldCheck className='lg:!size-5'/>
+            Bienvenido <ShieldCheck className='lg:!size-5' />
           </>
         ) : !isSubmitting ? (
           <>
-            Iniciar sesión <LogIn className='lg:!size-5'/>
+            Iniciar sesión <LogIn className='lg:!size-5' />
           </>
         ) : (
           <>
