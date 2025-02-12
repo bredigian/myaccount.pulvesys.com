@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import {
@@ -6,10 +5,8 @@ import {
   ExternalLink,
   FileCheck,
   FileDown,
-  Globe,
   Info,
   PackageOpen,
-  ShieldCheck,
 } from 'lucide-react';
 import { ConsumoProducto, SHORT_UNIDAD, UNIDAD } from '@/types/productos.types';
 import {
@@ -39,7 +36,6 @@ import { Button } from './ui/button';
 import { DateTime } from 'luxon';
 import EditConsumoProductoForm from './pulverizacion-detail-form';
 import Image from 'next/image';
-import { Input } from './ui/input';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { Usuario } from '@/types/usuario.types';
@@ -310,22 +306,6 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
     }
   };
 
-  const [copied, setCopied] = useState(false);
-
-  const generateSignedURL = async () => {
-    // try {
-    //   const url: HTMLInputElement | null = document.querySelector(
-    //     '#pulverizacion-public_link',
-    //   );
-    //   if (!url) throw new Error('No se encontró la URL');
-    //   await navigator.clipboard.writeText(url.value);
-    //   setCopied(true);
-    //   setTimeout(() => setCopied(false), 2000);
-    // } catch (e) {
-    //   if (e instanceof Error) toast.error(e.message);
-    // }
-  };
-
   return isMobile ? (
     <Drawer>
       <DrawerTrigger asChild>
@@ -337,49 +317,18 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
         <DrawerHeader>
           <DrawerTitle>Compartir</DrawerTitle>
           <DrawerDescription>
-            Genera una URL segura con duración de hasta 7 días o exporta la
-            información en formato PDF
+            Exporta el detalle de la pulverización en formato PDF y compartilo
+            con quien desees
           </DrawerDescription>
         </DrawerHeader>
-        <div className='flex flex-col gap-4 px-4 pb-4'>
-          <Image
-            src={'/logo.png'}
-            alt='Logo auxiliar de PulveSys'
-            className='hidden size-2'
-            id='pulvesys_logo'
-            width={100}
-            height={100}
-          />
-          <div className='flex items-center gap-4'>
-            <Input
-              id='pulverizacion-public_link'
-              placeholder='URL'
-              disabled
-              className='disabled:cursor-text disabled:select-text disabled:hover:cursor-text'
-              onChange={() => null}
-            />
-            <Button
-              onClick={generateSignedURL}
-              disabled
-              className={!copied ? '' : '!bg-green-700'}
-            >
-              {!copied ? (
-                <>
-                  Generar URL
-                  <Globe />
-                </>
-              ) : (
-                <>
-                  URL generada
-                  <ShieldCheck />
-                </>
-              )}
-            </Button>
-          </div>
-          <p className='text-xs italic opacity-75'>
-            *Generación de URL no disponible
-          </p>
-        </div>
+        <Image
+          src={'/logo.png'}
+          alt='Logo auxiliar de PulveSys'
+          className='hidden size-2'
+          id='pulvesys_logo'
+          width={100}
+          height={100}
+        />
         <DrawerFooter className='pt-2'>
           <Button
             type='button'
@@ -422,49 +371,18 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
         <DialogHeader>
           <DialogTitle>Compartir</DialogTitle>
           <DialogDescription>
-            Genera una URL segura con duración de hasta 7 días o exporta la
-            información en formato PDF
+            Exporta el detalle de la pulverización en formato PDF y compartilo
+            con quien desees
           </DialogDescription>
         </DialogHeader>
-        <div className='flex flex-col gap-4'>
-          <div className='flex items-center gap-4'>
-            <Image
-              src={'/logo.png'}
-              alt='Logo auxiliar de PulveSys'
-              className='hidden size-2'
-              id='pulvesys_logo'
-              width={100}
-              height={100}
-            />
-            <Input
-              id='pulverizacion-public_link'
-              placeholder='URL'
-              disabled
-              className='disabled:cursor-text disabled:select-text disabled:hover:cursor-text'
-              onChange={() => null}
-            />
-            <Button
-              onClick={generateSignedURL}
-              disabled
-              className={!copied ? '' : '!bg-green-700'}
-            >
-              {!copied ? (
-                <>
-                  Generar URL
-                  <Globe />
-                </>
-              ) : (
-                <>
-                  URL generada
-                  <ShieldCheck />
-                </>
-              )}
-            </Button>
-          </div>
-          <p className='text-sm italic opacity-75'>
-            *Generación de URL no disponible
-          </p>
-        </div>
+        <Image
+          src={'/logo.png'}
+          alt='Logo auxiliar de PulveSys'
+          className='hidden size-2'
+          id='pulvesys_logo'
+          width={100}
+          height={100}
+        />
         <DialogFooter className='pt-2'>
           <Button
             type='button'
