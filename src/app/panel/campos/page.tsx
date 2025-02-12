@@ -15,7 +15,7 @@ export default async function Campos({ searchParams }: Props) {
   return (
     <main className='space-y-4 p-4 pt-0'>
       <h2>Administra las ubicaciones en los que se realizan los trabajos.</h2>
-      <aside id='finder' className='flex items-center gap-4 justify-between'>
+      <aside id='finder' className='flex items-center justify-between gap-4'>
         <Finder />
         <AddOrEditCampoDialog />
       </aside>

@@ -23,7 +23,7 @@ import { Badge } from '@/components/ui/badge';
 import { DateTime } from 'luxon';
 import { DeletePulverizacionDialog } from '@/components/pulverizaciones-dialog';
 import { Lote } from '@/types/campos.types';
-import Map from '@/components/map';
+import MapboxMap from './mapbox-map-for-pdf';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { UUID } from 'crypto';
 import { cn } from '@/lib/utils';
@@ -39,6 +39,10 @@ export default function PulverizacionDetailContainer({ data }: Props) {
   ).reduce((acc, lote) => acc + (lote?.hectareas as number), 0);
 
   const { nombre, apellido } = usuarioStore();
+
+  const lotesPulverizados = data.detalle.campo?.Lote?.filter((lote) =>
+    data.detalle.lotes.includes(lote?.nombre as string),
+  );
 
   return (
     <main className='space-y-6 p-4 pt-0'>
@@ -62,29 +66,22 @@ export default function PulverizacionDetailContainer({ data }: Props) {
       <div className='flex flex-col gap-6'>
         <div className='flex items-start justify-between gap-4'>
           <ul className='flex flex-wrap items-center justify-start gap-2'>
-            {data.detalle.campo?.Lote?.map((lote) => {
-              const isOnPulverizacion = data.detalle.lotes.find(
-                (selected) => selected === lote.nombre,
-              );
-
-              return (
-                <li
-                  key={`badge-${lote.nombre}`}
-                  style={{
-                    backgroundColor: `${lote.color as string}50`,
-                    borderColor: lote.color as string,
-                  }}
-                  className={cn(
-                    'inline-flex space-x-1 rounded-md border-2 px-3 py-1 text-xs font-semibold',
-                    isOnPulverizacion ? 'opacity-100' : 'opacity-50',
-                  )}
-                >
-                  <Tag size={14} />
-                  <span>{lote.nombre}</span>
-                  <p>({lote.hectareas}ha)</p>
-                </li>
-              );
-            })}
+            {lotesPulverizados?.map((lote) => (
+              <li
+                key={`badge-${lote.nombre}`}
+                style={{
+                  backgroundColor: `${lote.color as string}75`,
+                  borderColor: lote.color as string,
+                }}
+                className={cn(
+                  'inline-flex space-x-1 rounded-md border-2 px-3 py-1 text-xs font-semibold',
+                )}
+              >
+                <Tag size={14} />
+                <span>{lote.nombre}</span>
+                <p>({lote.hectareas}ha)</p>
+              </li>
+            ))}
           </ul>
           <Badge className='space-x-1'>
             <Calendar size={14} />
@@ -99,11 +96,11 @@ export default function PulverizacionDetailContainer({ data }: Props) {
           </Badge>
         </div>
         <div className='flex w-full flex-col gap-6 lg:flex-row'>
-          <Map
-            lotes={data.detalle.campo?.Lote as Lote[]}
-            customCenter
-            size='!h-[25vh] md:!h-[35vh] lg:!h-[78.5vh]'
-            customZoom={14}
+          <MapboxMap
+            lotesCampo={data.detalle.campo?.Lote as Lote[]}
+            lotesPulverizados={lotesPulverizados as Lote[]}
+            customZoom={13}
+            size='!h-[40dvh] lg:!h-[78.5vh]'
           />
           <div className='flex w-full flex-col gap-6 md:flex-row lg:flex-col'>
             <Card className='h-fit w-full'>

@@ -1,3 +1,5 @@
+'use client';
+
 import { Campo, Coordinada, Lote } from '@/types/campos.types';
 import { Check, Eraser, Layers, MapPinPlusInside } from 'lucide-react';
 import { FieldErrors, useForm } from 'react-hook-form';

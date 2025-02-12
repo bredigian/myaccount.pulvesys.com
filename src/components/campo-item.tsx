@@ -6,7 +6,7 @@ import { Card, CardContent } from './ui/card';
 
 import { Badge } from './ui/badge';
 import LoteItem from './lote-item';
-import Map from './map';
+import MapboxMap from './mapbox-map-for-pdf';
 import { UUID } from 'crypto';
 
 interface Props {
@@ -35,7 +35,12 @@ export default function CampoItem({ data }: Props) {
               <DeleteCampoDialog id={data.id as UUID} />
             </aside>
           </div>
-          <Map lotes={data.Lote as Lote[]} size='!grow' customCenter />
+          <MapboxMap
+            lotesCampo={data.Lote as Lote[]}
+            lotesPulverizados={data.Lote as Lote[]}
+            size='!grow'
+            customZoom={13}
+          />
           <ul className='flex flex-wrap items-start gap-2'>
             {data.Lote?.map((lote) => (
               <LoteItem key={`lote-${lote.id}`} lote={lote} />

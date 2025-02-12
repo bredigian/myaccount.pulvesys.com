@@ -4,6 +4,7 @@
 import {
   ArrowLeft,
   ExternalLink,
+  FileCheck,
   FileDown,
   Globe,
   Info,
@@ -40,7 +41,10 @@ import EditConsumoProductoForm from './pulverizacion-detail-form';
 import Image from 'next/image';
 import { Input } from './ui/input';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
+import { ReloadIcon } from '@radix-ui/react-icons';
 import { Usuario } from '@/types/usuario.types';
+import { cn } from '@/lib/utils';
+import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
@@ -171,10 +175,15 @@ export const EditConsumoProductoDialog = ({ defaultValues }: Props) => {
   );
 };
 
+type STATE = 'pending' | 'exporting' | 'exported';
+
 export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
   const isMobile = useIsMobile();
 
-  const handleShareByPDF = () => {
+  const [state, setState] = useState<STATE>('pending');
+
+  const handleShareByPDF = async () => {
+    setState('exporting');
     const pdf = new jsPDF('p', 'mm', 'a4', true);
 
     try {
@@ -204,27 +213,15 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
         align: 'right',
       });
 
-      pdf.setFontSize(11).text(`Campo: ${data?.detalle.campo?.nombre}`, 14, 64);
-      // pdf
-      //   .setFontSize(11)
-      //   .setTextColor(0, 0, 255)
-      //   .text(`Ver mapa + detalle`, 194, 64, { align: 'right' })
-      //   .link(161, 62, 33, 2, {
-      //     url: `${window.location.origin}/publico/${data?.id}`,
-      //   });
-
-      // pdf.setDrawColor(0, 0, 255).line(161, 65, 194, 65);
-      // pdf.setTextColor(0, 0, 0);
+      pdf
+        .setFontSize(11)
+        .text(`Cultivo: ${data?.detalle.cultivo?.nombre}`, 14, 64);
 
       pdf
         .setFontSize(11)
-        .text(`Cultivo: ${data?.detalle.cultivo?.nombre}`, 14, 72);
+        .text(`Tratamiento: ${data?.detalle.tratamiento?.nombre}`, 14, 72);
 
-      pdf
-        .setFontSize(11)
-        .text(`Tratamiento: ${data?.detalle.tratamiento?.nombre}`, 14, 80);
-
-      pdf.setFontSize(11).text('Lotes y Productos', 14, 96);
+      pdf.setFontSize(11).text(`Campo: ${data?.detalle.campo?.nombre}`, 14, 88);
 
       autoTable(pdf, {
         theme: 'grid',
@@ -235,13 +232,10 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
           `${lote.hectareas}ha`,
           data.detalle.lotes.includes(lote?.nombre as string) ? 'Si' : 'No',
         ]),
-        columnStyles: {
-          0: { cellWidth: 82 },
-          1: { cellWidth: 60 },
-          2: { cellWidth: 40 },
-        },
+
         margin: {
-          top: 102,
+          top: 96,
+          left: 122,
         },
         tableId: 'lotes_table',
         didParseCell: (data) => {
@@ -253,45 +247,63 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
         },
       });
 
-      autoTable(pdf, {
-        theme: 'grid',
-        head: [
-          [
-            'Producto',
-            'Dosis',
-            'Cons. Teórico',
-            'Cons. Real',
-            'Prod. Restante',
+      setTimeout(async () => {
+        const mapElement = document.getElementById('map-for-pdf');
+        if (mapElement) {
+          const canvas = await html2canvas(mapElement);
+          const imgData = canvas.toDataURL('image/png');
+
+          pdf.addImage(imgData, 'PNG', 14, 96, 100, 100);
+        }
+
+        pdf.setFontSize(11).text('Productos', 14, 218);
+
+        autoTable(pdf, {
+          theme: 'grid',
+          head: [
+            [
+              'Producto',
+              'Dosis',
+              'Cons. Teórico',
+              'Cons. Real',
+              'Prod. Restante',
+            ],
           ],
-        ],
-        headStyles: { fillColor: '#243641' },
-        body: data?.Aplicacion?.map((aplicacion) => {
-          const consumo: ConsumoProducto = data.ConsumoProducto?.find(
-            (item) => item.producto_id === aplicacion.producto?.id,
-          ) as ConsumoProducto;
+          headStyles: { fillColor: '#243641' },
+          body: data?.Aplicacion?.map((aplicacion) => {
+            const consumo: ConsumoProducto = data.ConsumoProducto?.find(
+              (item) => item.producto_id === aplicacion.producto?.id,
+            ) as ConsumoProducto;
 
-          return [
-            aplicacion.producto?.nombre,
-            `${aplicacion.dosis.toLocaleString('es-AR')}${SHORT_UNIDAD[aplicacion.producto?.unidad as UNIDAD]}/ha`,
-            `${consumo.valor_teorico.toLocaleString('es-AR')}${
-              SHORT_UNIDAD[aplicacion.producto?.unidad as UNIDAD]
-            }`,
-            consumo.valor_real
-              ? `${consumo.valor_real?.toLocaleString('es-AR')}${
-                  SHORT_UNIDAD[aplicacion.producto?.unidad as UNIDAD]
-                }`
-              : 'Sin espec.',
-            consumo.valor_devolucion
-              ? `${consumo.valor_devolucion?.toLocaleString('es-AR')}${
-                  SHORT_UNIDAD[aplicacion.producto?.unidad as UNIDAD]
-                }`
-              : 'Sin espec.',
-          ] as RowInput;
-        }),
-        tableId: 'productos_table',
-      });
+            return [
+              aplicacion.producto?.nombre,
+              `${aplicacion.dosis.toLocaleString('es-AR')}${SHORT_UNIDAD[aplicacion.producto?.unidad as UNIDAD]}/ha`,
+              `${consumo.valor_teorico.toLocaleString('es-AR')}${
+                SHORT_UNIDAD[aplicacion.producto?.unidad as UNIDAD]
+              }`,
+              consumo.valor_real
+                ? `${consumo.valor_real?.toLocaleString('es-AR')}${
+                    SHORT_UNIDAD[aplicacion.producto?.unidad as UNIDAD]
+                  }`
+                : 'Sin espec.',
+              consumo.valor_devolucion
+                ? `${consumo.valor_devolucion?.toLocaleString('es-AR')}${
+                    SHORT_UNIDAD[aplicacion.producto?.unidad as UNIDAD]
+                  }`
+                : 'Sin espec.',
+            ] as RowInput;
+          }),
+          startY: 226,
 
-      pdf.save(`pulverizacion_${data?.detalle.campo?.nombre}_${data?.id}.pdf`);
+          tableId: 'productos_table',
+        });
+
+        pdf.save(
+          `pulverizacion_${data?.detalle.campo?.nombre}_${data?.id}.pdf`,
+        );
+
+        setState('exported');
+      }, 1000);
     } catch (e) {
       if (e instanceof Error)
         toast.error(e.message, { position: 'top-center' });
@@ -369,11 +381,32 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
           </p>
         </div>
         <DrawerFooter className='pt-2'>
-          <Button type='button' onClick={handleShareByPDF}>
-            Exportar como PDF <FileDown />
+          <Button
+            type='button'
+            onClick={handleShareByPDF}
+            disabled={state === 'exporting' || state === 'exported'}
+            className={cn(
+              state === 'exported' && '!bg-green-700 disabled:opacity-100',
+            )}
+          >
+            {state === 'pending' ? (
+              <>
+                Exportar como PDF <FileDown />
+              </>
+            ) : state === 'exporting' ? (
+              <>
+                Exportando <ReloadIcon className='animate-spin' />
+              </>
+            ) : (
+              <>
+                Exportado como PDF <FileCheck />
+              </>
+            )}
           </Button>
           <DrawerClose asChild>
-            <Button variant={'outline'}>Cerrar</Button>
+            <Button variant={'outline'} onClick={() => setState('pending')}>
+              Cerrar
+            </Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
@@ -433,11 +466,32 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
           </p>
         </div>
         <DialogFooter className='pt-2'>
-          <Button type='button' onClick={handleShareByPDF}>
-            Exportar como PDF <FileDown />
+          <Button
+            type='button'
+            onClick={handleShareByPDF}
+            disabled={state === 'exporting' || state === 'exported'}
+            className={cn(
+              state === 'exported' && '!bg-green-700 disabled:opacity-100',
+            )}
+          >
+            {state === 'pending' ? (
+              <>
+                Exportar como PDF <FileDown />
+              </>
+            ) : state === 'exporting' ? (
+              <>
+                Exportando <ReloadIcon className='animate-spin' />
+              </>
+            ) : (
+              <>
+                Exportado como PDF <FileCheck />
+              </>
+            )}
           </Button>
           <DialogClose asChild>
-            <Button variant={'outline'}>Cerrar</Button>
+            <Button variant={'outline'} onClick={() => setState('pending')}>
+              Cerrar
+            </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

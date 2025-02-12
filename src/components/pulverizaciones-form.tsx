@@ -28,7 +28,7 @@ import Cookies from 'js-cookie';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import LoteItem from './lote-item';
-import Map from './map';
+import MapboxMap from './mapbox-map-for-pdf';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { UUID } from 'crypto';
@@ -313,13 +313,12 @@ export default function AddOrEditPulverizacionForm({
               />
             ))}
           </ul>
-          <Map
-            selectedCampo={selectedCampo}
-            lotes={selectedCampo.Lote as Lote[]}
+          <MapboxMap
+            lotesCampo={selectedCampo.Lote as Lote[]}
+            lotesPulverizados={selectedCampo.Lote as Lote[]}
             className='col-span-full'
-            size='!h-[20vh]'
-            customCenter
-            customZoom={15}
+            size='!h-[20dvh]'
+            selectedCampo={selectedCampo}
           />
         </>
       )}

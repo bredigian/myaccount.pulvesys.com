@@ -12,7 +12,7 @@ export default function LoteItem({ lote, customStyle, onClick }: Props) {
     <li
       style={
         customStyle ?? {
-          backgroundColor: `${lote.color as string}50`,
+          backgroundColor: `${lote.color as string}75`,
           borderColor: lote.color as string,
         }
       }
