@@ -140,7 +140,7 @@ export default function PulverizacionDetailContainer({ data }: Props) {
                   {data.detalle.observacion ? (
                     <MessageCircleWarning size={14} className='flex-shrink-0' />
                   ) : (
-                    <MessageCircleOff size={14} />
+                    <MessageCircleOff size={14} className='flex-shrink-0' />
                   )}
                   <h6 className='break-words'>
                     {data.detalle.observacion || 'Sin observaciones'}
