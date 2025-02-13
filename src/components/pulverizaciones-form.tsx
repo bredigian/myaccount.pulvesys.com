@@ -89,6 +89,7 @@ export default function AddOrEditPulverizacionForm({
 
   const {
     control,
+    register,
     handleSubmit,
     formState: { isSubmitting },
     watch,
@@ -126,6 +127,10 @@ export default function AddOrEditPulverizacionForm({
         toast.error(errors.detalle.tratamiento.id.message, {
           position: 'top-center',
         });
+      else if (errors?.detalle?.observacion)
+        toast.error(errors.detalle.observacion.message, {
+          position: 'top-center',
+        });
     }
   };
   const onSubmit = async (values: Pulverizacion) => {
@@ -155,6 +160,7 @@ export default function AddOrEditPulverizacionForm({
           cultivo_id: values.detalle.cultivo?.id as UUID,
           tratamiento_id: values.detalle.tratamiento?.id as UUID,
           lotes: selectedLotes,
+          observacion: values.detalle.observacion,
         },
         productos: aplicaciones,
       };
@@ -502,6 +508,17 @@ export default function AddOrEditPulverizacionForm({
           ))}
         </ul>
       </div>
+      <Input
+        {...register('detalle.observacion', {
+          required: false,
+          minLength: {
+            value: 6,
+            message: 'La observación debe tener al menos 6 caracteres',
+          },
+        })}
+        className='col-span-full text-sm'
+        placeholder='Observación'
+      />
       <div className='col-span-full flex flex-col items-center gap-2 md:flex-row-reverse md:items-end'>
         <Button
           disabled={isSubmitting || isSubmitSuccessful}

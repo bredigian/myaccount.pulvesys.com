@@ -6,7 +6,15 @@ import {
   SharePulverizacionDialog,
   ShowPulverizacionInfoDialog,
 } from '@/components/pulverizacion-detail-dialog';
-import { Calendar, Layers, Leaf, ListCheckIcon, Tag } from 'lucide-react';
+import {
+  Calendar,
+  Layers,
+  Leaf,
+  ListCheckIcon,
+  MessageCircleOff,
+  MessageCircleWarning,
+  Tag,
+} from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ConsumoProducto, SHORT_UNIDAD, UNIDAD } from '@/types/productos.types';
 import {
@@ -119,6 +127,24 @@ export default function PulverizacionDetailContainer({ data }: Props) {
                 <Badge variant={'secondary'} className='w-fit space-x-1'>
                   <ListCheckIcon size={14} />
                   <h6>{data.detalle.tratamiento?.nombre}</h6>
+                </Badge>
+                <Badge
+                  variant={'secondary'}
+                  className={cn(
+                    'flex w-fit items-center gap-1',
+                    data.detalle.observacion
+                      ? '!bg-yellow-200'
+                      : 'bg-secondary',
+                  )}
+                >
+                  {data.detalle.observacion ? (
+                    <MessageCircleWarning size={14} className='flex-shrink-0' />
+                  ) : (
+                    <MessageCircleOff size={14} />
+                  )}
+                  <h6 className='break-words'>
+                    {data.detalle.observacion || 'Sin observaciones'}
+                  </h6>
                 </Badge>
               </CardContent>
             </Card>

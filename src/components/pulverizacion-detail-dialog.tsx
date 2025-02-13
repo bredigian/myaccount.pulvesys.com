@@ -176,6 +176,8 @@ type STATE = 'pending' | 'exporting' | 'exported';
 export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
   const isMobile = useIsMobile();
 
+  const hasObservacion = data?.detalle.observacion;
+
   const [state, setState] = useState<STATE>('pending');
 
   const handleShareByPDF = async () => {
@@ -217,7 +219,22 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
         .setFontSize(11)
         .text(`Tratamiento: ${data?.detalle.tratamiento?.nombre}`, 14, 72);
 
-      pdf.setFontSize(11).text(`Campo: ${data?.detalle.campo?.nombre}`, 14, 88);
+      if (hasObservacion) {
+        const text = pdf.splitTextToSize(
+          `Observación: ${data?.detalle.observacion} askjdhas dajklshd lkhjasdk aaslkdjaskldj ald kj`,
+          180,
+        );
+
+        pdf.setFontSize(11).text(text, 14, 80);
+      }
+
+      pdf
+        .setFontSize(11)
+        .text(
+          `Campo: ${data?.detalle.campo?.nombre}`,
+          14,
+          !hasObservacion ? 88 : 96,
+        );
 
       autoTable(pdf, {
         theme: 'grid',
@@ -230,7 +247,7 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
         ]),
 
         margin: {
-          top: 96,
+          top: !hasObservacion ? 96 : 104,
           left: 122,
         },
         tableId: 'lotes_table',
@@ -249,10 +266,17 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
           const canvas = await html2canvas(mapElement);
           const imgData = canvas.toDataURL('image/png');
 
-          pdf.addImage(imgData, 'PNG', 14, 96, 100, 100);
+          pdf.addImage(
+            imgData,
+            'PNG',
+            14,
+            !hasObservacion ? 96 : 104,
+            100,
+            100,
+          );
         }
 
-        pdf.setFontSize(11).text('Productos', 14, 218);
+        pdf.setFontSize(11).text('Productos', 14, !hasObservacion ? 218 : 224);
 
         autoTable(pdf, {
           theme: 'grid',
@@ -289,7 +313,7 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
                 : 'Sin espec.',
             ] as RowInput;
           }),
-          startY: 226,
+          startY: !hasObservacion ? 226 : 232,
 
           tableId: 'productos_table',
         });

@@ -14,6 +14,7 @@ export interface Detalle {
   cultivo?: Cultivo;
   tratamiento_id: UUID;
   tratamiento?: Tratamiento;
+  observacion?: string;
 }
 
 export interface Pulverizacion {
