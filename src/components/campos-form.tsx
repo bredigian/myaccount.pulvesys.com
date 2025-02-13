@@ -124,7 +124,7 @@ export default function AddOrEditCampoForm({
         e.stopPropagation();
         handleSubmit(onSubmit, onInvalidSubmit)(e);
       }}
-      className='space-y-4 overflow-y-auto px-4 pb-4 md:px-0 md:pb-0'
+      className='max-h-[86dvh] space-y-4 overflow-y-auto px-4 pb-4 md:px-0 md:pb-0'
       id='form-add-campos'
     >
       <Input

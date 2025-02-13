@@ -203,7 +203,7 @@ export default function AddOrEditPulverizacionForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
-      className='grid grid-cols-10 gap-4 overflow-y-auto px-4 pb-4 md:px-0 md:pb-0'
+      className='grid max-h-[86dvh] grid-cols-10 gap-4 overflow-y-auto px-4 pb-4 md:px-0 md:pb-0'
       id='form-add-pulverizacion'
     >
       <Popover open={calendarDialog.open} onOpenChange={calendarDialog.setOpen}>
@@ -519,7 +519,7 @@ export default function AddOrEditPulverizacionForm({
         className='col-span-full text-sm'
         placeholder='Observación'
       />
-      <div className='col-span-full flex flex-col items-center gap-2 md:flex-row-reverse md:items-end'>
+      <div className='col-span-full flex flex-col items-center gap-2 bg-white md:flex-row-reverse md:items-end'>
         <Button
           disabled={isSubmitting || isSubmitSuccessful}
           type='submit'
