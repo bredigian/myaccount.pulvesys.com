@@ -37,7 +37,13 @@ import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 
-export const AddOrEditPulverizacionDialog = () => {
+import { AllData } from '@/types/root.types';
+
+interface Props {
+  data: AllData;
+}
+
+export const AddOrEditPulverizacionDialog = ({ data }: Props) => {
   const { open, setOpen, handleOpen } = useDialog();
   const addCampoDialog = useDialog();
   const addCultivoDialog = useDialog();
@@ -72,6 +78,7 @@ export const AddOrEditPulverizacionDialog = () => {
               handleOpen();
               setTimeout(() => dialog.handleOpen(), 250);
             }}
+            data={data}
           />
         </DrawerContent>
       </Drawer>
@@ -150,6 +157,7 @@ export const AddOrEditPulverizacionDialog = () => {
               handleOpen();
               setTimeout(() => dialog.handleOpen(), 250);
             }}
+            data={data}
           />
         </DialogContent>
       </Dialog>

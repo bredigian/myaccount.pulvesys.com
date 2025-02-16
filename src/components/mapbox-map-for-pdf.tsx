@@ -40,20 +40,87 @@ interface Props {
 }
 
 export default function MapboxMap({
+  actualLote,
   lotesCampo,
   lotesPulverizados,
   size,
   customZoom,
   className,
   selectedCampo,
+  enable,
+  handleLote,
 }: Props) {
+  const firstPointGeoJSON: FeatureCollection = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [
+            actualLote?.zona[0]?.lng as number,
+            actualLote?.zona[0]?.lat as number,
+          ],
+        },
+        properties: {
+          color: actualLote?.color,
+          opacity: 1,
+        },
+      },
+    ],
+  };
+
+  const lastLineGeoJSON: FeatureCollection = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [
+              actualLote?.zona[0]?.lng as number,
+              actualLote?.zona[0]?.lat as number,
+            ],
+            [
+              actualLote?.zona[actualLote?.zona.length - 1]?.lng as number,
+              actualLote?.zona[actualLote?.zona.length - 1]?.lat as number,
+            ],
+          ],
+        },
+        properties: {
+          color: actualLote?.color,
+          opacity: 1,
+        },
+      },
+    ],
+  };
+
+  const actualGeoJSON: FeatureCollection = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'Polygon',
+          coordinates: actualLote?.zona
+            ? [actualLote.zona.map((c) => [c.lng, c.lat])]
+            : [],
+        },
+        properties: {
+          color: actualLote?.color,
+          opacity: 0.75,
+        },
+      },
+    ],
+  };
+
   const geoJSON: FeatureCollection = {
     type: 'FeatureCollection',
     features: lotesCampo.map((lote) => {
-      const coords = lote.Coordinada?.map((coord) => [
-        coord.lng,
-        coord.lat,
-      ]).filter(Boolean) as number[][];
+      const coords = (lote.Coordinada ?? lote.zona)
+        .map((coord) => [coord.lng, coord.lat])
+        .filter(Boolean) as number[][];
 
       if (coords?.[0] !== coords?.[coords.length - 1]) {
         coords?.push(coords[0]);
@@ -77,7 +144,9 @@ export default function MapboxMap({
   const textGeoJSON: FeatureCollection = {
     type: 'FeatureCollection',
     features: lotesCampo.map((lote) => {
-      const centroide = calcularCentroide(lote.Coordinada as Coordinada[]);
+      const centroide = calcularCentroide(
+        (lote.Coordinada ?? lote.zona) as Coordinada[],
+      );
       return {
         type: 'Feature',
         geometry: {
@@ -103,14 +172,23 @@ export default function MapboxMap({
       <Map
         initialViewState={{
           zoom: customZoom ?? 12,
-          latitude: lotesCampo[0].Coordinada?.[0].lat,
-          longitude: lotesCampo[0].Coordinada?.[0].lng,
+          latitude: lotesCampo?.[0]?.Coordinada?.[0]?.lat ?? -37.31587,
+          longitude: lotesCampo?.[0]?.Coordinada?.[0]?.lng ?? -59.98368,
         }}
         mapboxAccessToken={MAPBOX_TOKEN}
         mapStyle={MAP_STYLE}
         style={{ width: '100%', height: '100%' }}
         id='map-for-pdf'
         preserveDrawingBuffer
+        onClick={(e) => {
+          if (enable) {
+            const punto: Coordinada = {
+              lat: e.lngLat.lat,
+              lng: e.lngLat.lng,
+            };
+            if (handleLote) handleLote(punto);
+          }
+        }}
       >
         {selectedCampo && <FlyTo selectedCampo={selectedCampo} />}
         <Source id='lotes-source' type='geojson' data={geoJSON}>
@@ -151,6 +229,74 @@ export default function MapboxMap({
             }}
           />
         </Source>
+        {actualLote && (
+          <>
+            <Source
+              key={`actual_lote-source`}
+              type='geojson'
+              data={actualGeoJSON}
+            >
+              <Layer
+                id='actual_lote-layer'
+                type='fill'
+                paint={{
+                  'fill-color': ['get', 'color'],
+                  'fill-opacity': ['get', 'opacity'],
+                }}
+              />
+              <Layer
+                id='actual_lote-border'
+                type='line'
+                paint={{
+                  'line-color': ['get', 'color'],
+                  'line-width': 2,
+                  'line-opacity': 1,
+                }}
+              />
+              <Layer
+                id='actual_lote-point'
+                type='circle'
+                paint={{
+                  'circle-color': ['get', 'color'],
+                  'circle-stroke-width': 1,
+                  'circle-opacity': 1,
+                  'circle-stroke-color': ['get', 'color'],
+                }}
+              />
+            </Source>
+            <Source
+              id='first-point-marked-source'
+              type='geojson'
+              data={firstPointGeoJSON}
+            >
+              <Layer
+                id='actual_lote-first-marked-point'
+                type='circle'
+                paint={{
+                  'circle-color': ['get', 'color'],
+                  'circle-stroke-width': 1,
+                  'circle-opacity': 1,
+                  'circle-stroke-color': ['get', 'color'],
+                }}
+              />
+            </Source>
+            <Source
+              id='last-polygon-line-source'
+              type='geojson'
+              data={lastLineGeoJSON}
+            >
+              <Layer
+                id='actual_lote-last-polygon-line'
+                type='line'
+                paint={{
+                  'line-color': ['get', 'color'],
+                  'line-width': 2,
+                  'line-opacity': 1,
+                }}
+              />
+            </Source>
+          </>
+        )}
       </Map>
     </div>
   );

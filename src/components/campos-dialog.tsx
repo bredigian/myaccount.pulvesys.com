@@ -31,7 +31,6 @@ import { UUID } from 'crypto';
 import { deleteCampo } from '@/services/campos.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
-import { useDataStore } from '@/store/data.store';
 import { useDialog } from '@/hooks/use-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
@@ -148,7 +147,6 @@ export const AddOrEditCampoDialog = ({
 
 export const DeleteCampoDialog = ({ id }: { id: UUID }) => {
   const { push } = useRouter();
-  const { getCampos } = useDataStore();
 
   const isMobile = useIsMobile();
 
@@ -164,7 +162,6 @@ export const DeleteCampoDialog = ({ id }: { id: UUID }) => {
 
       await deleteCampo(id, access_token);
       await revalidate('campos');
-      await getCampos(access_token);
 
       toast.success('El campo fue eliminado.');
     } catch (error) {

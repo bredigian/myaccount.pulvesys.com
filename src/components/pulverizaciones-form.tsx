@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Button } from './ui/button';
 import { Calendar } from './ui/calendar';
@@ -37,8 +37,8 @@ import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useControllerAplicaciones } from '@/hooks/use-productos';
-import { useDataStore } from '@/store/data.store';
 import { useRouter } from 'next/navigation';
+import { AllData } from '@/types/root.types';
 
 interface Props {
   handleOpen: () => void;
@@ -47,6 +47,7 @@ interface Props {
   cultivosDialog: Dialog;
   tratamientosDialog: Dialog;
   productosDialog: Dialog;
+  data: AllData;
 }
 
 export default function AddOrEditPulverizacionForm({
@@ -56,36 +57,9 @@ export default function AddOrEditPulverizacionForm({
   cultivosDialog,
   productosDialog,
   tratamientosDialog,
+  data,
 }: Props) {
   const { push } = useRouter();
-
-  const {
-    getData,
-    loading,
-    error,
-    campos,
-    cultivos,
-    productos,
-    tratamientos,
-    isAlreadyFetching,
-  } = useDataStore();
-
-  useEffect(() => {
-    if (!isAlreadyFetching()) {
-      const access_token = Cookies.get('access_token');
-      if (!access_token) {
-        toast.error('La sesión ha expirado.', { position: 'top-center' });
-        push('/');
-
-        return;
-      }
-
-      const fetchData = async () => await getData(access_token);
-      fetchData();
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const {
     control,
@@ -186,20 +160,6 @@ export default function AddOrEditPulverizacionForm({
   const cultivoSelector = useDialog();
   const tratamientoSelector = useDialog();
 
-  if (loading)
-    return (
-      <div className='grid place-items-center py-6'>
-        <ReloadIcon className='size-6 animate-spin' />
-      </div>
-    );
-
-  if (error)
-    return (
-      <p className='pb-4 text-center text-sm'>
-        Se produjo un error al obtener los datos del servidor
-      </p>
-    );
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
@@ -254,7 +214,9 @@ export default function AddOrEditPulverizacionForm({
           <Select
             onValueChange={(value) => {
               field.onChange(value);
-              setSelectedCampo(campos?.find((campo) => campo.id === value));
+              setSelectedCampo(
+                data.campos?.find((campo) => campo.id === value),
+              );
               setSelectedLotes([]);
             }}
             {...field}
@@ -263,7 +225,7 @@ export default function AddOrEditPulverizacionForm({
               <SelectValue placeholder='Ubicación' />
             </SelectTrigger>
             <SelectContent className='col-span-6'>
-              {campos?.map((campo) => {
+              {data.campos?.map((campo) => {
                 const totalHectareas = campo.Lote?.reduce(
                   (acc, lote) => acc + (lote?.hectareas as number),
                   0,
@@ -358,10 +320,10 @@ export default function AddOrEditPulverizacionForm({
                 Nuevo cultivo
                 <PlusSquare />
               </Button>
-              {cultivos?.length === 0 ? (
+              {data.cultivos?.length === 0 ? (
                 <p className='px-4 py-2 text-sm'>No se encontraron cultivos</p>
               ) : (
-                cultivos?.map((cultivo) => {
+                data.cultivos?.map((cultivo) => {
                   return (
                     <SelectItem key={cultivo.id} value={cultivo.id as string}>
                       {cultivo.nombre}
@@ -403,12 +365,12 @@ export default function AddOrEditPulverizacionForm({
                 Nuevo tratratamiento
                 <PlusSquare />
               </Button>
-              {tratamientos?.length === 0 ? (
+              {data.tratamientos?.length === 0 ? (
                 <p className='px-4 py-2 text-sm'>
                   No se encontraron tratamientos
                 </p>
               ) : (
-                tratamientos?.map((tratamiento) => {
+                data.tratamientos?.map((tratamiento) => {
                   return (
                     <SelectItem
                       key={tratamiento.id}
@@ -465,12 +427,12 @@ export default function AddOrEditPulverizacionForm({
                   <SelectValue placeholder='Producto' />
                 </SelectTrigger>
                 <SelectContent className='col-span-5'>
-                  {productos?.length === 0 ? (
+                  {data.productos?.length === 0 ? (
                     <p className='px-4 py-2 text-sm'>
                       No se encontraron productos
                     </p>
                   ) : (
-                    productos?.map((producto) => {
+                    data.productos?.map((producto) => {
                       return (
                         <SelectItem
                           key={producto.id}
@@ -497,7 +459,7 @@ export default function AddOrEditPulverizacionForm({
               <span className='col-span-2 self-center text-sm font-semibold opacity-60'>
                 {
                   SHORT_UNIDAD[
-                    productos?.find(
+                    data.productos?.find(
                       (producto) => producto?.id === aplicacion?.producto_id,
                     )?.unidad as UNIDAD
                   ]

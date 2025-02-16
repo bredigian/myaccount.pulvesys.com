@@ -10,17 +10,15 @@ import ColorPicker from './color-picker';
 import Cookies from 'js-cookie';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { LatLngExpression } from 'leaflet';
 import LoteItem from './lote-item';
-import Map from './map';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
-import { useDataStore } from '@/store/data.store';
 import { useDebouncedCallback } from 'use-debounce';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import MapboxMap from './mapbox-map-for-pdf';
 
 export default function AddOrEditCampoForm({
   isEdit,
@@ -40,8 +38,6 @@ export default function AddOrEditCampoForm({
   } = useForm<Campo>({
     defaultValues: isEdit ? { nombre: data?.nombre } : undefined,
   });
-
-  const { getCampos } = useDataStore();
 
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState<
     boolean | undefined
@@ -79,7 +75,6 @@ export default function AddOrEditCampoForm({
       else await editCampo(PAYLOAD, access_token);
 
       if (!isEdit) await revalidate('campos');
-      await getCampos(access_token);
 
       setIsSubmitSuccessful(true);
       setTimeout(() => handleOpen(), 1000);
@@ -224,20 +219,13 @@ export default function AddOrEditCampoForm({
             onChange={(color) => handleLoteColor(color)}
           />
         </div>
-        <Map
-          lotes={lotes}
-          actualLote={lote}
-          handleLote={handleLote as () => void}
-          enable={enable}
+        <MapboxMap
           size='md:!grow !h-[40dvh]'
-          centerByEdit={
-            isEdit
-              ? ([
-                  data?.Lote?.[0]?.Coordinada?.[0]?.lat,
-                  data?.Lote?.[0]?.Coordinada?.[0]?.lng,
-                ] as LatLngExpression)
-              : undefined
-          }
+          enable={enable}
+          handleLote={handleLote as () => void}
+          actualLote={lote}
+          lotesCampo={lotes}
+          lotesPulverizados={lotes}
         />
         <ul className='flex items-center gap-2 overflow-x-auto md:flex-wrap md:overflow-x-visible'>
           {lotes.length === 0 ? (
@@ -246,7 +234,16 @@ export default function AddOrEditCampoForm({
             </li>
           ) : (
             lotes?.map((lote, index) => (
-              <LoteItem key={`badge-${lote.nombre}-${index}`} lote={lote} />
+              <LoteItem
+                key={`badge-${lote.nombre}-${index}`}
+                lote={lote}
+                showButtonClear
+                deleteLote={() =>
+                  setLotes((prev) =>
+                    prev.filter((l) => l.nombre !== lote.nombre),
+                  )
+                }
+              />
             ))
           )}
         </ul>
