@@ -6,7 +6,12 @@ import { Input } from './ui/input';
 import { Search } from 'lucide-react';
 import { useDebouncedCallback } from 'use-debounce';
 
-export default function Finder() {
+interface Props {
+  param?: string;
+  placeholder?: string;
+}
+
+export default function Finder({ param, placeholder }: Props) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -14,8 +19,8 @@ export default function Finder() {
   const handleSearch = useDebouncedCallback((value: string) => {
     const parsedValue = value.trim();
     const params = new URLSearchParams(searchParams);
-    if (parsedValue) params.set('nombre', parsedValue.toLowerCase());
-    else params.delete('nombre');
+    if (parsedValue) params.set(param || 'nombre', parsedValue.toLowerCase());
+    else params.delete(param || 'nombre');
 
     replace(`${pathname}?${params.toString()}`);
   }, 300);
@@ -24,10 +29,10 @@ export default function Finder() {
     <div className='relative flex w-full items-center md:max-w-sm'>
       <Search className='absolute pl-2 opacity-50' />
       <Input
-        defaultValue={searchParams?.get('nombre')?.toString()}
+        defaultValue={searchParams?.get(param || 'nombre')?.toString()}
         onChange={(e) => handleSearch(e.target.value)}
-        placeholder='Buscar'
-        className='pl-7 lg:text-base'
+        placeholder={placeholder ?? 'Buscar'}
+        className='truncate pl-7 lg:text-base'
       />
     </div>
   );

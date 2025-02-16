@@ -11,7 +11,7 @@ export default async function Home({ searchParams }: Props) {
   const { session, expired } = await searchParams;
 
   return (
-    <main className='flex h-dvh flex-col items-center justify-center gap-8 lg:gap-24 lg:flex-row'>
+    <main className='flex h-dvh flex-col items-center justify-center gap-8 lg:flex-row lg:gap-24'>
       {session && expired === true && (
         <Badge className='bg-red-400'>La sesión ha expirado</Badge>
       )}
@@ -19,7 +19,7 @@ export default async function Home({ searchParams }: Props) {
         <Image
           src={logo}
           alt='Logo de PulveSys'
-          className='size-36 lg:size-64 rounded-xl'
+          className='size-36 rounded-xl lg:size-64'
         />
         <h1 className='font-semibold opacity-75'>PulveSys</h1>
       </div>
