@@ -28,7 +28,7 @@ import Cookies from 'js-cookie';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import LoteItem from './lote-item';
-import MapboxMap from './mapbox-map-for-pdf';
+import MapboxMap from './map';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { UUID } from 'crypto';

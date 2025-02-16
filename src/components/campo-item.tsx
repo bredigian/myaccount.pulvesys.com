@@ -6,7 +6,7 @@ import { Card, CardContent } from './ui/card';
 
 import { Badge } from './ui/badge';
 import LoteItem from './lote-item';
-import MapboxMap from './mapbox-map-for-pdf';
+import MapboxMap from './map';
 import { UUID } from 'crypto';
 
 interface Props {

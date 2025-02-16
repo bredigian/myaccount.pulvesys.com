@@ -1,6 +1,6 @@
 import { CSSProperties } from 'react';
 import { Lote } from '@/types/campos.types';
-import { Tag, Trash, Trash2 } from 'lucide-react';
+import { Tag, Trash } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Props {
