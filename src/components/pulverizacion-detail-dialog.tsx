@@ -318,8 +318,12 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
           tableId: 'productos_table',
         });
 
+        const dateString = DateTime.fromISO(data?.fecha as string)
+          .setLocale('es-AR')
+          .toISODate();
+
         pdf.save(
-          `pulverizacion_${data?.detalle.campo?.nombre}_${data?.id}.pdf`,
+          `Pulverización_${data?.detalle.campo?.nombre}_${dateString}_${data?.id}.pdf`,
         );
 
         setState('exported');
