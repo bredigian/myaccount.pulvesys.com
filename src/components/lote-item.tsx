@@ -16,11 +16,11 @@ export default function LoteItem({ lote, customStyle, onClick }: Props) {
           borderColor: lote.color as string,
         }
       }
-      className='flex items-center gap-1 rounded-md border-2 px-3 py-1 text-xs font-semibold hover:cursor-pointer'
+      className='flex items-center gap-1 overflow-hidden rounded-md border-2 px-3 py-1 text-xs font-semibold hover:cursor-pointer'
       onClick={onClick}
     >
       <Tag size={14} />
-      <span>{lote.nombre}</span>
+      <span className='truncate'>{lote.nombre}</span>
       <p>({lote.hectareas}ha)</p>
     </li>
   );

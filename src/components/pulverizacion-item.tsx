@@ -14,18 +14,18 @@ interface Props {
 
 export default function PulverizacionItem({ pulverizacion }: Props) {
   return (
-    <li className='col-span-full flex items-start justify-between md:col-span-2'>
+    <li className='flex w-full items-start justify-between'>
       <Link
         href={`/panel/pulverizacion?id=${pulverizacion.id}`}
         className='w-full'
       >
         <Card className='h-full w-full duration-200 ease-in-out hover:cursor-pointer hover:bg-secondary'>
           <CardHeader>
-            <CardTitle className='flex items-center justify-between gap-4'>
+            <CardTitle className='flex items-start justify-between gap-4'>
               <h4 className='truncate text-base font-semibold'>
                 {pulverizacion.detalle.campo?.nombre}
               </h4>
-              <p className='text-sm font-normal'>
+              <p className='w-fit text-end text-sm font-normal'>
                 {DateTime.fromISO(pulverizacion.fecha as string).toLocaleString(
                   DateTime.DATE_MED_WITH_WEEKDAY,
                   {
@@ -37,7 +37,7 @@ export default function PulverizacionItem({ pulverizacion }: Props) {
           </CardHeader>
           <CardContent className='space-y-4'>
             <div className='flex items-start justify-between'>
-              <ul className='flex flex-wrap items-start gap-2'>
+              <ul className='flex flex-wrap items-start gap-2 overflow-hidden'>
                 {pulverizacion.detalle.lotes.map((lote) => {
                   const loteData = pulverizacion.detalle.campo?.Lote?.find(
                     (item) => item.nombre === lote,
