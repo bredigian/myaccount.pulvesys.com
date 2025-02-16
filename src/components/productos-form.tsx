@@ -17,7 +17,6 @@ import { ReloadIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
-import { useDataStore } from '@/store/data.store';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -48,8 +47,6 @@ export default function AddOrEditProductoForm({
       : undefined,
   });
 
-  const { getProductos } = useDataStore();
-
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState<
     boolean | undefined
   >(undefined);
@@ -79,7 +76,6 @@ export default function AddOrEditProductoForm({
       if (!isEdit) await addProducto(PAYLOAD, access_token);
       else await editProducto(PAYLOAD, access_token);
       await revalidate('productos');
-      await getProductos(access_token);
 
       setIsSubmitSuccessful(true);
       setTimeout(() => handleOpen(), 1000);
