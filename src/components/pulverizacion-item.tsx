@@ -59,7 +59,7 @@ export default function PulverizacionItem({ pulverizacion }: Props) {
                 <h6>{pulverizacion.detalle.tratamiento?.nombre}</h6>
               </Badge>
             </div>
-            <ul className='flex flex-wrap items-center gap-4'>
+            <ul className='flex flex-wrap items-center gap-2'>
               {pulverizacion.Aplicacion?.map((aplicacion) => (
                 <li key={`pulverizacion-aplicacion__${aplicacion.id}`}>
                   <Badge variant={'secondary'}>
