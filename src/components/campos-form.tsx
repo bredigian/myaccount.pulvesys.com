@@ -234,7 +234,16 @@ export default function AddOrEditCampoForm({
             </li>
           ) : (
             lotes?.map((lote, index) => (
-              <LoteItem key={`badge-${lote.nombre}-${index}`} lote={lote} />
+              <LoteItem
+                key={`badge-${lote.nombre}-${index}`}
+                lote={lote}
+                showButtonClear
+                deleteLote={() =>
+                  setLotes((prev) =>
+                    prev.filter((l) => l.nombre !== lote.nombre),
+                  )
+                }
+              />
             ))
           )}
         </ul>

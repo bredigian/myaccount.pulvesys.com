@@ -50,6 +50,52 @@ export default function MapboxMap({
   enable,
   handleLote,
 }: Props) {
+  const firstPointGeoJSON: FeatureCollection = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [
+            actualLote?.zona[0]?.lng as number,
+            actualLote?.zona[0]?.lat as number,
+          ],
+        },
+        properties: {
+          color: actualLote?.color,
+          opacity: 1,
+        },
+      },
+    ],
+  };
+
+  const lastLineGeoJSON: FeatureCollection = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [
+              actualLote?.zona[0]?.lng as number,
+              actualLote?.zona[0]?.lat as number,
+            ],
+            [
+              actualLote?.zona[actualLote?.zona.length - 1]?.lng as number,
+              actualLote?.zona[actualLote?.zona.length - 1]?.lat as number,
+            ],
+          ],
+        },
+        properties: {
+          color: actualLote?.color,
+          opacity: 1,
+        },
+      },
+    ],
+  };
+
   const actualGeoJSON: FeatureCollection = {
     type: 'FeatureCollection',
     features: [
@@ -184,39 +230,72 @@ export default function MapboxMap({
           />
         </Source>
         {actualLote && (
-          <Source
-            key={`actual_lote-source`}
-            type='geojson'
-            data={actualGeoJSON}
-          >
-            <Layer
-              id='actual_lote-layer'
-              type='fill'
-              paint={{
-                'fill-color': ['get', 'color'],
-                'fill-opacity': ['get', 'opacity'],
-              }}
-            />
-            <Layer
-              id='actual_lote-border'
-              type='line'
-              paint={{
-                'line-color': ['get', 'color'],
-                'line-width': 2,
-                'line-opacity': 1,
-              }}
-            />
-            <Layer
-              id='actual_lote-point'
-              type='circle'
-              paint={{
-                'circle-color': ['get', 'color'],
-                'circle-stroke-width': 1,
-                'circle-opacity': 1,
-                'circle-stroke-color': ['get', 'color'],
-              }}
-            />
-          </Source>
+          <>
+            <Source
+              key={`actual_lote-source`}
+              type='geojson'
+              data={actualGeoJSON}
+            >
+              <Layer
+                id='actual_lote-layer'
+                type='fill'
+                paint={{
+                  'fill-color': ['get', 'color'],
+                  'fill-opacity': ['get', 'opacity'],
+                }}
+              />
+              <Layer
+                id='actual_lote-border'
+                type='line'
+                paint={{
+                  'line-color': ['get', 'color'],
+                  'line-width': 2,
+                  'line-opacity': 1,
+                }}
+              />
+              <Layer
+                id='actual_lote-point'
+                type='circle'
+                paint={{
+                  'circle-color': ['get', 'color'],
+                  'circle-stroke-width': 1,
+                  'circle-opacity': 1,
+                  'circle-stroke-color': ['get', 'color'],
+                }}
+              />
+            </Source>
+            <Source
+              id='first-point-marked-source'
+              type='geojson'
+              data={firstPointGeoJSON}
+            >
+              <Layer
+                id='actual_lote-first-marked-point'
+                type='circle'
+                paint={{
+                  'circle-color': ['get', 'color'],
+                  'circle-stroke-width': 1,
+                  'circle-opacity': 1,
+                  'circle-stroke-color': ['get', 'color'],
+                }}
+              />
+            </Source>
+            <Source
+              id='last-polygon-line-source'
+              type='geojson'
+              data={lastLineGeoJSON}
+            >
+              <Layer
+                id='actual_lote-last-polygon-line'
+                type='line'
+                paint={{
+                  'line-color': ['get', 'color'],
+                  'line-width': 2,
+                  'line-opacity': 1,
+                }}
+              />
+            </Source>
+          </>
         )}
       </Map>
     </div>
