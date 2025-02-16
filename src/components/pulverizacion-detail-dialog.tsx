@@ -221,7 +221,7 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
 
       if (hasObservacion) {
         const text = pdf.splitTextToSize(
-          `Observación: ${data?.detalle.observacion} askjdhas dajklshd lkhjasdk aaslkdjaskldj ald kj`,
+          `Observación: ${data?.detalle.observacion}`,
           180,
         );
 
