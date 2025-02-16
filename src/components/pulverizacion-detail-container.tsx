@@ -31,7 +31,7 @@ import { Badge } from '@/components/ui/badge';
 import { DateTime } from 'luxon';
 import { DeletePulverizacionDialog } from '@/components/pulverizaciones-dialog';
 import { Lote } from '@/types/campos.types';
-import MapboxMap from './mapbox-map-for-pdf';
+import MapboxMap from './map';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { UUID } from 'crypto';
 import { cn } from '@/lib/utils';

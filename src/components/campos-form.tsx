@@ -18,7 +18,7 @@ import { toast } from 'sonner';
 import { useDebouncedCallback } from 'use-debounce';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import MapboxMap from './mapbox-map-for-pdf';
+import MapboxMap from './map';
 
 export default function AddOrEditCampoForm({
   isEdit,
