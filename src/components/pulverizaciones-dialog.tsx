@@ -78,26 +78,50 @@ export const AddOrEditPulverizacionDialog = () => {
       <AddOrEditCampoDialog
         hidden
         customOpen={addCampoDialog.open}
-        customSetOpen={addCampoDialog.setOpen}
-        customHandleOpen={addCampoDialog.handleOpen}
+        customSetOpen={() => {
+          addCampoDialog.setOpen(!addCampoDialog.open);
+          if (!open) setTimeout(() => handleOpen(), 250);
+        }}
+        customHandleOpen={() => {
+          addCampoDialog.handleOpen();
+          if (!open) setTimeout(() => handleOpen(), 250);
+        }}
       />
       <AddOrEditCultivoDialog
         hidden
         customOpen={addCultivoDialog.open}
-        customSetOpen={addCultivoDialog.setOpen}
-        customHandleOpen={addCultivoDialog.handleOpen}
+        customSetOpen={() => {
+          addCultivoDialog.setOpen(!addCultivoDialog.open);
+          if (!open) setTimeout(() => handleOpen(), 250);
+        }}
+        customHandleOpen={() => {
+          addCultivoDialog.handleOpen();
+          if (!open) setTimeout(() => handleOpen(), 250);
+        }}
       />
       <AddOrEditTratamientoDialog
         hidden
         customOpen={addTratamientoDialog.open}
-        customSetOpen={addTratamientoDialog.setOpen}
-        customHandleOpen={addTratamientoDialog.handleOpen}
+        customSetOpen={() => {
+          addTratamientoDialog.setOpen(!addTratamientoDialog.open);
+          if (!open) setTimeout(() => handleOpen(), 250);
+        }}
+        customHandleOpen={() => {
+          addTratamientoDialog.handleOpen();
+          if (!open) setTimeout(() => handleOpen(), 250);
+        }}
       />
       <AddOrEditProductoDialog
         hidden
         customOpen={addProductoDialog.open}
-        customSetOpen={addProductoDialog.setOpen}
-        customHandleOpen={addProductoDialog.handleOpen}
+        customSetOpen={() => {
+          addProductoDialog.setOpen(!addProductoDialog.open);
+          if (!open) setTimeout(() => handleOpen(), 250);
+        }}
+        customHandleOpen={() => {
+          addProductoDialog.handleOpen();
+          if (!open) setTimeout(() => handleOpen(), 250);
+        }}
       />
     </>
   ) : (
@@ -132,26 +156,50 @@ export const AddOrEditPulverizacionDialog = () => {
       <AddOrEditCampoDialog
         hidden
         customOpen={addCampoDialog.open}
-        customSetOpen={addCampoDialog.setOpen}
-        customHandleOpen={addCampoDialog.handleOpen}
+        customSetOpen={() => {
+          addCampoDialog.setOpen(!addCampoDialog.open);
+          if (!open) setTimeout(() => handleOpen(), 250);
+        }}
+        customHandleOpen={() => {
+          addCampoDialog.handleOpen();
+          if (!open) setTimeout(() => handleOpen(), 250);
+        }}
       />
       <AddOrEditCultivoDialog
         hidden
         customOpen={addCultivoDialog.open}
-        customSetOpen={addCultivoDialog.setOpen}
-        customHandleOpen={addCultivoDialog.handleOpen}
+        customSetOpen={() => {
+          addCultivoDialog.setOpen(!addCultivoDialog.open);
+          if (!open) setTimeout(() => handleOpen(), 250);
+        }}
+        customHandleOpen={() => {
+          addCultivoDialog.handleOpen();
+          if (!open) setTimeout(() => handleOpen(), 250);
+        }}
       />
       <AddOrEditTratamientoDialog
         hidden
         customOpen={addTratamientoDialog.open}
-        customSetOpen={addTratamientoDialog.setOpen}
-        customHandleOpen={addTratamientoDialog.handleOpen}
+        customSetOpen={() => {
+          addTratamientoDialog.setOpen(!addTratamientoDialog.open);
+          if (!open) setTimeout(() => handleOpen(), 250);
+        }}
+        customHandleOpen={() => {
+          addTratamientoDialog.handleOpen();
+          if (!open) setTimeout(() => handleOpen(), 250);
+        }}
       />
       <AddOrEditProductoDialog
         hidden
         customOpen={addProductoDialog.open}
-        customSetOpen={addProductoDialog.setOpen}
-        customHandleOpen={addProductoDialog.handleOpen}
+        customSetOpen={() => {
+          addProductoDialog.setOpen(!addProductoDialog.open);
+          if (!open) setTimeout(() => handleOpen(), 250);
+        }}
+        customHandleOpen={() => {
+          addProductoDialog.handleOpen();
+          if (!open) setTimeout(() => handleOpen(), 250);
+        }}
       />
     </>
   );
