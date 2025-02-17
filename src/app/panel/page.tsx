@@ -17,7 +17,7 @@ export default async function Pulverizaciones({ searchParams }: Props) {
         <Finder param='filter' placeholder='Filtrá por ubicación o por fecha' />
         <FetchDataContainerForAddPulverizacionForm />
       </aside>
-      <Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
         <PulverizacionesContainer query={filter} />
       </Suspense>
     </main>
