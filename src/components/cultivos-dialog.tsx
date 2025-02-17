@@ -58,16 +58,10 @@ export const AddOrEditCultivoDialog = ({
     <Drawer open={customOpen ?? open} onOpenChange={customSetOpen ?? setOpen}>
       {!hidden && (
         <DrawerTrigger asChild>
-          {!isEdit ? (
-            <Button>
-              Agregar
-              <PlusSquare />
-            </Button>
-          ) : (
-            <Button size={'icon'} variant={'outline'}>
-              <Edit />
-            </Button>
-          )}
+          <Button size={!isEdit ? 'default' : 'sm'}>
+            {!isEdit ? 'Agregar' : 'Modificar'}
+            {!isEdit ? <PlusSquare /> : <Edit />}
+          </Button>
         </DrawerTrigger>
       )}
       <DrawerContent>
@@ -90,16 +84,10 @@ export const AddOrEditCultivoDialog = ({
     <Dialog open={customOpen ?? open} onOpenChange={customSetOpen ?? setOpen}>
       {!hidden && (
         <DialogTrigger asChild>
-          {!isEdit ? (
-            <Button>
-              Agregar
-              <PlusSquare />
-            </Button>
-          ) : (
-            <Button size={'icon'} variant={'outline'}>
-              <Edit />
-            </Button>
-          )}
+          <Button size={!isEdit ? 'default' : 'sm'}>
+            {!isEdit ? 'Agregar' : 'Modificar'}
+            {!isEdit ? <PlusSquare /> : <Edit />}
+          </Button>
         </DialogTrigger>
       )}
       <DialogContent>
@@ -148,7 +136,8 @@ export const DeleteCultivoDialog = ({ id }: { id: UUID }) => {
   return isMobile ? (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button size={'icon'} variant={'destructive'}>
+        <Button size={'sm'} variant={'destructive'}>
+          Eliminar
           <Trash2 />
         </Button>
       </DrawerTrigger>
@@ -172,7 +161,8 @@ export const DeleteCultivoDialog = ({ id }: { id: UUID }) => {
   ) : (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size={'icon'} variant={'destructive'}>
+        <Button size={'sm'} variant={'destructive'}>
+          Eliminar
           <Trash2 />
         </Button>
       </DialogTrigger>

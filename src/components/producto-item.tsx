@@ -4,37 +4,59 @@ import {
   AddOrEditProductoDialog,
   DeleteProductoDialog,
 } from './productos-dialog';
-import { Card, CardContent } from './ui/card';
 
 import { Badge } from './ui/badge';
-import { Producto } from '@/types/productos.types';
+import { Producto, UNIDAD } from '@/types/productos.types';
 import { UUID } from 'crypto';
+import { TableCell, TableRow } from './ui/table';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu';
+import { Button } from './ui/button';
+import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 
 interface Props {
-  data: Producto;
+  producto: Producto;
 }
 
-export default function ProductoItem({ data }: Props) {
-  const parsedUnidad = data.unidad
+export default function ProductoItem({ producto }: Props) {
+  const { unidad } = producto;
+  const parsedUnidad = unidad
     .charAt(0)
-    .concat(data.unidad.substring(1).toLowerCase());
+    .concat(unidad.substring(1).toLowerCase());
+  const bgColor =
+    unidad === UNIDAD.GRAMOS
+      ? 'bg-primary/60 text-secondary hover:text-secondary'
+      : unidad === UNIDAD.KILOGRAMOS
+        ? 'bg-primary/75 text-secondary hover:text-secondary'
+        : 'bg-primary/90 text-secondary hover:text-secondary';
 
   return (
-    <li className='col-span-full flex items-start justify-between sm:col-span-2 xl:col-span-2'>
-      <Card className='w-full duration-200 ease-in-out hover:bg-sidebar-accent'>
-        <CardContent className='flex items-start justify-between gap-4 pt-6'>
-          <div className='space-y-1 truncate'>
-            <h3 className='truncate text-base font-semibold'>{data.nombre}</h3>
-            <div className='flex items-center gap-2'>
-              <Badge variant='secondary'>{parsedUnidad}</Badge>
-            </div>
-          </div>
-          <aside className='producto-settings flex items-center gap-2'>
-            <AddOrEditProductoDialog isEdit data={data} />
-            <DeleteProductoDialog id={data.id as UUID} />
-          </aside>
-        </CardContent>
-      </Card>
-    </li>
+    <TableRow className='h-12'>
+      <TableCell className=''>{producto.nombre}</TableCell>
+      <TableCell>
+        <Badge variant={'default'} className={bgColor}>
+          {parsedUnidad}
+        </Badge>
+      </TableCell>
+      <TableCell align='right'>
+        <DropdownMenu modal={false} key={'manage-productos-dropdown'}>
+          <DropdownMenuTrigger asChild>
+            <Button variant={'ghost'} size={'icon'}>
+              <DotsHorizontalIcon />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align='end'>
+            <DropdownMenuGroup className='flex flex-col gap-2 p-2'>
+              <AddOrEditProductoDialog isEdit data={producto} />
+              <DeleteProductoDialog id={producto.id as UUID} />
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </TableCell>
+    </TableRow>
   );
 }
