@@ -1,32 +1,36 @@
 'use client';
 
 import { Pulverizacion } from '@/types/pulverizaciones.types';
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import PulverizacionItem from './pulverizacion-item';
+import { Masonry } from './masonry';
+import { useSidebar } from './ui/sidebar';
+import { ReloadIcon } from '@radix-ui/react-icons';
 
 interface Props {
   data: Pulverizacion[];
 }
 
 export default function PulverizacionesGridContainer({ data }: Props) {
+  useSidebar();
   return (
-    <ResponsiveMasonry
-      columnsCountBreakPoints={{ 350: 1, 768: 3, 1024: 4, 1280: 5, 1536: 6 }}
-    >
-      <Masonry gutter='16px'>
-        {data.length > 0 ? (
-          data.map((pulverizacion) => (
-            <PulverizacionItem
-              key={pulverizacion.id}
-              pulverizacion={pulverizacion}
-            />
-          ))
-        ) : (
-          <li className='col-span-full pt-4 text-center opacity-75 md:pt-0 md:text-start'>
-            No se encontraron pulverizaciones
-          </li>
-        )}
-      </Masonry>
-    </ResponsiveMasonry>
+    <Masonry
+      items={data}
+      config={{
+        columns: [1, 2, 3, 4, 5],
+        gap: [16, 16, 16, 16, 16],
+        media: [768, 1024, 1280, 1400, 1536],
+      }}
+      render={(pulverizacion) => (
+        <PulverizacionItem
+          key={pulverizacion.id}
+          pulverizacion={pulverizacion}
+        />
+      )}
+      placeholder={
+        <div className='grid h-full place-items-center'>
+          <ReloadIcon className='size-6 animate-spin' />
+        </div>
+      }
+    />
   );
 }

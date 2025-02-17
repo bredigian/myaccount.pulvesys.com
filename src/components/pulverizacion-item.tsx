@@ -14,7 +14,7 @@ interface Props {
 
 export default function PulverizacionItem({ pulverizacion }: Props) {
   return (
-    <li className='flex w-full items-start justify-between'>
+    <li className='flex items-start justify-between'>
       <Link
         href={`/panel/pulverizacion?id=${pulverizacion.id}`}
         className='w-full'
