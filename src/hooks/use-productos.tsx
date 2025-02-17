@@ -4,9 +4,11 @@ import { useDebouncedCallback } from 'use-debounce';
 import { useState } from 'react';
 
 export const useControllerAplicaciones = () => {
-  const [aplicaciones, setAplicaciones] = useState<Aplicacion[]>([
-    {} as Aplicacion,
-  ]);
+  const storedAplicaciones = localStorage.getItem('aplicaciones_temporal');
+
+  const [aplicaciones, setAplicaciones] = useState<Aplicacion[]>(
+    !storedAplicaciones ? [{} as Aplicacion] : JSON.parse(storedAplicaciones),
+  );
 
   const addAplicacion = () =>
     setAplicaciones((prev) => [...prev, {} as Aplicacion]);
@@ -21,6 +23,9 @@ export const useControllerAplicaciones = () => {
 
     setAplicaciones(updatedItems);
   };
+
+  const handleUpdateAplicacionesOnLocalStorage = () =>
+    localStorage.setItem('aplicaciones_temporal', JSON.stringify(aplicaciones));
 
   const handleChangeAplicacionDosis = useDebouncedCallback(
     (value: number, id: string) => {
@@ -40,12 +45,16 @@ export const useControllerAplicaciones = () => {
     !aplicacion.producto_id || !aplicacion.dosis ? true : false,
   );
 
+  const clearAll = () => setAplicaciones([{} as Aplicacion]);
+
   return {
     aplicaciones,
     addAplicacion,
     deleteAplicacion,
     handleChangeSelectValue,
+    handleUpdateAplicacionesOnLocalStorage,
     handleChangeAplicacionDosis,
     areEmptySelectedProducts,
+    clearAll,
   };
 };

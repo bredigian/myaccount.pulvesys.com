@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button } from './ui/button';
 import { Calendar } from './ui/calendar';
@@ -39,6 +39,18 @@ import { toast } from 'sonner';
 import { useControllerAplicaciones } from '@/hooks/use-productos';
 import { useRouter } from 'next/navigation';
 import { AllData } from '@/types/root.types';
+import { Cultivo } from '@/types/cultivos.types';
+import { Tratamiento } from '@/types/tratamientos.types';
+import { useDebouncedCallback } from 'use-debounce';
+import { DateTime } from 'luxon';
+
+interface PulverizacionExtended extends Pulverizacion {
+  campo_id: Campo['id'];
+  cultivo_id: Cultivo['id'];
+  tratamiento_id: Tratamiento['id'];
+  observacion: Pulverizacion['detalle']['observacion'];
+  lotes: Pulverizacion['detalle']['lotes'];
+}
 
 interface Props {
   handleOpen: () => void;
@@ -61,18 +73,80 @@ export default function AddOrEditPulverizacionForm({
 }: Props) {
   const { push } = useRouter();
 
+  const storedDate =
+    (
+      JSON.parse(
+        localStorage.getItem('pulverizacion_temporal') || '{}',
+      ) as PulverizacionExtended
+    ).fecha ?? undefined;
+
+  const storedUbicacion =
+    (
+      JSON.parse(
+        localStorage.getItem('pulverizacion_temporal') || '{}',
+      ) as PulverizacionExtended
+    ).campo_id ?? undefined;
+
+  const storedCultivo =
+    (
+      JSON.parse(
+        localStorage.getItem('pulverizacion_temporal') || '{}',
+      ) as PulverizacionExtended
+    ).cultivo_id ?? undefined;
+
+  const storedTratamiento =
+    (
+      JSON.parse(
+        localStorage.getItem('pulverizacion_temporal') || '{}',
+      ) as PulverizacionExtended
+    ).tratamiento_id ?? undefined;
+
+  const storedLotes =
+    (
+      JSON.parse(
+        localStorage.getItem('pulverizacion_temporal') || '{}',
+      ) as PulverizacionExtended
+    ).lotes ?? undefined;
+
+  const storedObservacion =
+    (
+      JSON.parse(
+        localStorage.getItem('pulverizacion_temporal') || '{}',
+      ) as PulverizacionExtended
+    ).observacion ?? undefined;
+
   const {
     control,
     register,
     handleSubmit,
     formState: { isSubmitting },
     watch,
-  } = useForm<Pulverizacion>({});
+    reset,
+  } = useForm<Pulverizacion>({
+    defaultValues: {
+      fecha: !storedDate
+        ? undefined
+        : DateTime.fromISO(storedDate as string)?.toJSDate(),
+      detalle: {
+        campo: { id: storedUbicacion },
+        cultivo: { id: storedCultivo },
+        tratamiento: { id: storedTratamiento },
+      },
+    },
+  });
+
+  const [key, setKey] = useState(`form-${crypto.randomUUID()}`);
 
   const calendarDialog = useDialog();
 
-  const [selectedCampo, setSelectedCampo] = useState<Campo>();
-  const [selectedLotes, setSelectedLotes] = useState<string[]>([]);
+  const [selectedCampo, setSelectedCampo] = useState<Campo | undefined>(
+    storedUbicacion
+      ? data.campos.find((item) => item.id === storedUbicacion)
+      : undefined,
+  );
+  const [selectedLotes, setSelectedLotes] = useState<string[]>(
+    storedLotes ?? [],
+  );
 
   const {
     aplicaciones,
@@ -81,6 +155,8 @@ export default function AddOrEditPulverizacionForm({
     deleteAplicacion,
     handleChangeAplicacionDosis,
     handleChangeSelectValue,
+    handleUpdateAplicacionesOnLocalStorage,
+    clearAll,
   } = useControllerAplicaciones();
 
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState<
@@ -151,6 +227,10 @@ export default function AddOrEditPulverizacionForm({
       await revalidate('pulverizaciones');
 
       setIsSubmitSuccessful(true);
+
+      localStorage.removeItem('pulverizacion_temporal');
+      localStorage.removeItem('aplicaciones_temporal');
+
       setTimeout(() => handleOpen(), 1000);
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
@@ -160,8 +240,55 @@ export default function AddOrEditPulverizacionForm({
   const cultivoSelector = useDialog();
   const tratamientoSelector = useDialog();
 
+  const handleLocalStorage = (
+    key: keyof PulverizacionExtended,
+    value: PulverizacionExtended[keyof PulverizacionExtended],
+  ) => {
+    const pulverizacionTemporal = localStorage.getItem(
+      'pulverizacion_temporal',
+    );
+    if (!pulverizacionTemporal)
+      localStorage.setItem(
+        'pulverizacion_temporal',
+        JSON.stringify({
+          [key]: key === 'lotes' ? [value] : value,
+        } as Partial<Pulverizacion>),
+      );
+    else {
+      const pulverizacion: PulverizacionExtended = JSON.parse(
+        pulverizacionTemporal,
+      );
+      const haveStoredLotes = pulverizacion.lotes ? true : false;
+
+      let updated: PulverizacionExtended = {
+        ...pulverizacion,
+        [key]:
+          key !== 'lotes'
+            ? value
+            : !haveStoredLotes
+              ? [value]
+              : pulverizacion?.lotes?.includes(value as string)
+                ? pulverizacion?.lotes?.filter((l) => l !== value)
+                : [...pulverizacion.lotes, value],
+      };
+      if (key === 'campo_id') updated = { ...updated, lotes: [] };
+
+      localStorage.setItem('pulverizacion_temporal', JSON.stringify(updated));
+    }
+  };
+
+  const handleObservacion = useDebouncedCallback(
+    (value: string) => handleLocalStorage('observacion', value),
+    300,
+  );
+
+  useEffect(() => {
+    handleUpdateAplicacionesOnLocalStorage();
+  }, [aplicaciones]);
+
   return (
     <form
+      key={key}
       onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
       className='grid max-h-[86dvh] grid-cols-10 gap-4 overflow-y-auto px-4 pb-4 md:px-0 md:pb-0'
       id='form-add-pulverizacion'
@@ -199,7 +326,10 @@ export default function AddOrEditPulverizacionForm({
               <Calendar
                 mode='single'
                 selected={field.value as Date}
-                onSelect={field.onChange}
+                onSelect={(e) => {
+                  handleLocalStorage('fecha', e);
+                  field.onChange(e);
+                }}
                 onDayClick={calendarDialog.handleOpen}
                 initialFocus={false}
               />
@@ -218,6 +348,7 @@ export default function AddOrEditPulverizacionForm({
                 data.campos?.find((campo) => campo.id === value),
               );
               setSelectedLotes([]);
+              handleLocalStorage('campo_id', value);
             }}
             {...field}
           >
@@ -269,6 +400,8 @@ export default function AddOrEditPulverizacionForm({
                     setSelectedLotes((prev) => [
                       ...prev.filter((selected) => selected !== lote.nombre),
                     ]);
+
+                  handleLocalStorage('lotes', lote.nombre as string);
                 }}
                 customStyle={{
                   backgroundColor: selectedLotes.includes(lote.nombre as string)
@@ -300,7 +433,10 @@ export default function AddOrEditPulverizacionForm({
           <Select
             open={cultivoSelector.open}
             onOpenChange={cultivoSelector.setOpen}
-            onValueChange={field.onChange}
+            onValueChange={(value) => {
+              field.onChange(value);
+              handleLocalStorage('cultivo_id', value);
+            }}
             {...field}
           >
             <SelectTrigger className='col-span-4'>
@@ -338,6 +474,7 @@ export default function AddOrEditPulverizacionForm({
       <Controller
         control={control}
         name='detalle.tratamiento.id'
+        defaultValue={watch('detalle.tratamiento.id')}
         rules={{
           required: { value: true, message: 'El tratamiento es requerido.' },
         }}
@@ -345,7 +482,10 @@ export default function AddOrEditPulverizacionForm({
           <Select
             open={tratamientoSelector.open}
             onOpenChange={tratamientoSelector.setOpen}
-            onValueChange={field.onChange}
+            onValueChange={(value) => {
+              field.onChange(value);
+              handleLocalStorage('tratamiento_id', value);
+            }}
             {...field}
           >
             <SelectTrigger className='col-span-6'>
@@ -422,6 +562,7 @@ export default function AddOrEditPulverizacionForm({
             <li key={`aplicacion-${index}`} className='grid grid-cols-10 gap-4'>
               <Select
                 onValueChange={(value) => handleChangeSelectValue(value, index)}
+                defaultValue={aplicacion.producto_id ?? undefined}
               >
                 <SelectTrigger className='col-span-5'>
                   <SelectValue placeholder='Producto' />
@@ -437,6 +578,13 @@ export default function AddOrEditPulverizacionForm({
                         <SelectItem
                           key={producto.id}
                           value={producto.id as string}
+                          disabled={
+                            aplicaciones.find(
+                              (a) => a.producto_id === producto.id,
+                            )
+                              ? true
+                              : false
+                          }
                         >
                           {producto.nombre}
                         </SelectItem>
@@ -455,6 +603,7 @@ export default function AddOrEditPulverizacionForm({
                     aplicacion.producto_id,
                   )
                 }
+                defaultValue={aplicacion.dosis ?? undefined}
               />
               <span className='col-span-2 self-center text-sm font-semibold opacity-60'>
                 {
@@ -478,6 +627,8 @@ export default function AddOrEditPulverizacionForm({
             message: 'La observación debe tener al menos 6 caracteres',
           },
         })}
+        defaultValue={storedObservacion}
+        onChange={(e) => handleObservacion(e.target.value)}
         className='col-span-full text-sm'
         placeholder='Observación'
       />
@@ -504,14 +655,32 @@ export default function AddOrEditPulverizacionForm({
             </>
           )}
         </Button>
-        <Button
-          type='button'
-          variant={'outline'}
-          onClick={handleOpen}
-          className='w-full md:w-fit'
-        >
-          Cerrar
-        </Button>
+        <div className='flex w-full items-center justify-between gap-4'>
+          <Button
+            type='reset'
+            onClick={() => {
+              localStorage.removeItem('pulverizacion_temporal');
+              localStorage.removeItem('aplicaciones_temporal');
+              reset({});
+              clearAll();
+              setSelectedCampo(undefined);
+              setKey(`form-${crypto.randomUUID()}`);
+              reset({});
+            }}
+            variant={'outline'}
+            className='w-full md:w-fit'
+          >
+            Limpiar
+          </Button>
+          <Button
+            type='button'
+            variant={'outline'}
+            onClick={handleOpen}
+            className='w-full md:w-fit'
+          >
+            Cerrar
+          </Button>
+        </div>
       </div>
     </form>
   );
