@@ -55,19 +55,17 @@ export const AddOrEditProductoDialog = ({
   const isMobile = useIsMobile();
 
   return isMobile ? (
-    <Drawer open={customOpen ?? open} onOpenChange={customSetOpen ?? setOpen}>
+    <Drawer
+      open={customOpen ?? open}
+      onOpenChange={customSetOpen ?? setOpen}
+      key={'add-producto-drawer'}
+    >
       {!hidden && (
         <DrawerTrigger asChild>
-          {!isEdit ? (
-            <Button>
-              Agregar
-              <PackagePlus />
-            </Button>
-          ) : (
-            <Button size={'icon'} variant={'outline'}>
-              <PackageOpen />
-            </Button>
-          )}
+          <Button size={!isEdit ? 'default' : 'sm'}>
+            {!isEdit ? 'Agregar' : 'Modificar'}
+            {!isEdit ? <PackagePlus /> : <PackageOpen />}
+          </Button>
         </DrawerTrigger>
       )}
       <DrawerContent>
@@ -87,19 +85,17 @@ export const AddOrEditProductoDialog = ({
       </DrawerContent>
     </Drawer>
   ) : (
-    <Dialog open={customOpen ?? open} onOpenChange={customSetOpen ?? setOpen}>
+    <Dialog
+      open={customOpen ?? open}
+      onOpenChange={customSetOpen ?? setOpen}
+      key={'add-producto-dialog'}
+    >
       {!hidden && (
         <DialogTrigger asChild>
-          {!isEdit ? (
-            <Button>
-              Agregar
-              <PackagePlus />
-            </Button>
-          ) : (
-            <Button size={'icon'} variant={'outline'}>
-              <PackageOpen />
-            </Button>
-          )}
+          <Button size={!isEdit ? 'default' : 'sm'}>
+            {!isEdit ? 'Agregar' : 'Modificar'}
+            {!isEdit ? <PackagePlus /> : <PackageOpen />}
+          </Button>
         </DialogTrigger>
       )}
       <DialogContent>
@@ -149,7 +145,8 @@ export const DeleteProductoDialog = ({ id }: { id: UUID }) => {
   return isMobile ? (
     <Drawer>
       <DrawerTrigger asChild>
-        <Button size={'icon'} variant={'destructive'}>
+        <Button size={'sm'} variant={'destructive'}>
+          Eliminar
           <PackageXIcon />
         </Button>
       </DrawerTrigger>
@@ -173,7 +170,8 @@ export const DeleteProductoDialog = ({ id }: { id: UUID }) => {
   ) : (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size={'icon'} variant={'destructive'}>
+        <Button size={'sm'} variant={'destructive'}>
+          Eliminar
           <PackageXIcon />
         </Button>
       </DialogTrigger>

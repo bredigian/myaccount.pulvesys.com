@@ -10,6 +10,14 @@ import Finder from './finder';
 import { Tratamiento } from '@/types/tratamientos.types';
 import TratamientoItem from './tratamiento-item';
 import { useState } from 'react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from './ui/table';
 
 type DataTabs = 'cultivos' | 'tratamientos';
 
@@ -52,33 +60,49 @@ export default function CultivosTratamientosTabs({
         value={'cultivos' as DataTabs}
         className='mt-6 flex w-full flex-col items-center gap-4 data-[state=inactive]:mt-0'
       >
-        <ul className='grid w-full gap-4 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10'>
-          {cultivos.length > 0 ? (
-            cultivos.map((cultivo) => (
-              <CultivoItem key={cultivo.id} data={cultivo} />
-            ))
-          ) : (
-            <li className='col-span-full pt-4 text-center opacity-75 md:pt-0 md:text-start'>
-              No se encontraron cultivos
-            </li>
-          )}
-        </ul>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nombre</TableHead>
+              <TableHead className='text-end'>Opciones</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {cultivos.length === 0 ? (
+              <TableRow className='h-12'>
+                <TableCell>No se encontraron cultivos</TableCell>
+              </TableRow>
+            ) : (
+              cultivos.map((cultivo) => (
+                <CultivoItem key={cultivo.id} data={cultivo} />
+              ))
+            )}
+          </TableBody>
+        </Table>
       </TabsContent>
       <TabsContent
         value={'tratamientos' as DataTabs}
         className='mt-6 flex w-full flex-col items-center gap-4'
       >
-        <ul className='grid w-full gap-4 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10'>
-          {tratamientos.length > 0 ? (
-            tratamientos.map((tratamiento) => (
-              <TratamientoItem key={tratamiento.id} data={tratamiento} />
-            ))
-          ) : (
-            <li className='col-span-full pt-4 text-center opacity-75 md:pt-0 md:text-start'>
-              No se encontraron tipos de tratamientos
-            </li>
-          )}
-        </ul>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nombre</TableHead>
+              <TableHead className='text-end'>Opciones</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {tratamientos.length === 0 ? (
+              <TableRow className='h-12'>
+                <TableCell>No se encontraron tratamientos</TableCell>
+              </TableRow>
+            ) : (
+              tratamientos.map((tratamiento) => (
+                <TratamientoItem key={tratamiento.id} data={tratamiento} />
+              ))
+            )}
+          </TableBody>
+        </Table>
       </TabsContent>
     </Tabs>
   );

@@ -3,6 +3,14 @@ import { RedirectType, redirect } from 'next/navigation';
 import ProductoItem from './producto-item';
 import { cookies } from 'next/headers';
 import { getProductos } from '@/services/productos.service';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from './ui/table';
 
 interface Props {
   query: string;
@@ -22,16 +30,25 @@ export default async function ProductosContainer({ query }: Props) {
       );
 
   return (
-    <ul className='grid w-full gap-4 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 2xl:grid-cols-10'>
-      {filteredData.length > 0 ? (
-        filteredData.map((producto) => (
-          <ProductoItem key={producto.id} data={producto} />
-        ))
-      ) : (
-        <li className='col-span-full pt-4 text-center opacity-75 md:pt-0 md:text-start'>
-          No se encontraron productos
-        </li>
-      )}
-    </ul>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Nombre</TableHead>
+          <TableHead>Unidad</TableHead>
+          <TableHead className='text-end'>Opciones</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {filteredData.length === 0 ? (
+          <TableRow className='h-12'>
+            <TableCell>No se encontraron productos</TableCell>
+          </TableRow>
+        ) : (
+          filteredData.map((producto) => (
+            <ProductoItem key={producto.id} producto={producto} />
+          ))
+        )}
+      </TableBody>
+    </Table>
   );
 }
