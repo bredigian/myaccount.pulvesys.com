@@ -119,7 +119,7 @@ export default function AddOrEditCampoForm({
         e.stopPropagation();
         handleSubmit(onSubmit, onInvalidSubmit)(e);
       }}
-      className='max-h-[86dvh] space-y-4 overflow-y-auto px-4 pb-4 md:px-0 md:pb-0'
+      className='space-y-4 px-4 pb-4 md:px-0 md:pb-0'
       id='form-add-campos'
     >
       <Input
@@ -134,7 +134,7 @@ export default function AddOrEditCampoForm({
         className='text-sm'
       />
 
-      <div className='flex w-full flex-col gap-4 md:max-h-[540px] md:justify-between'>
+      <div className='flex h-[60dvh] w-full flex-col gap-4 overflow-y-auto md:justify-between'>
         <div className='flex items-center justify-between'>
           <Label>Ubicación</Label>
           <aside className='flex items-center gap-2'>
@@ -220,14 +220,14 @@ export default function AddOrEditCampoForm({
           />
         </div>
         <MapboxMap
-          size='md:!grow !h-[40dvh]'
+          size='!grow'
           enable={enable}
           handleLote={handleLote as () => void}
           actualLote={lote}
           lotesCampo={lotes}
           lotesPulverizados={lotes}
         />
-        <ul className='flex items-center gap-2 overflow-x-auto md:flex-wrap md:overflow-x-visible'>
+        <ul className='relative flex max-h-[244px] flex-wrap items-center gap-2'>
           {lotes.length === 0 ? (
             <li className='rounded-md border-2 border-gray-200 bg-gray-50/50 px-3 py-1 text-xs font-semibold'>
               Sin lotes
