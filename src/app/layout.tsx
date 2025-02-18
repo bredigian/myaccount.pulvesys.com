@@ -10,9 +10,9 @@ const geistSans = Geist({
 });
 
 const APP_NAME = 'PulveSys';
-const APP_DEFAULT_TITLE = 'PulveSys: Sistema de Ordenes de Pulverización';
+const APP_DEFAULT_TITLE = 'PulveSys';
 const APP_TITLE_TEMPLATE = '%s | PulveSys';
-const APP_DESCRIPTION = 'Sistema de generación de ordenes de pulverización.';
+const APP_DESCRIPTION = 'Sistema de órdenes de pulverización.';
 
 export const metadata: Metadata = {
   applicationName: APP_NAME,

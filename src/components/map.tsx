@@ -164,7 +164,7 @@ export default function MapboxMap({
   return (
     <div
       className={cn(
-        'pointer-events-auto relative z-10 h-full w-full overflow-hidden rounded-lg',
+        'pointer-events-auto relative z-10 h-full w-full overflow-hidden rounded-lg duration-200 ease-in-out',
         size ?? '!h-[40dvh]',
         className,
       )}

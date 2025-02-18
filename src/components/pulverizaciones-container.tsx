@@ -2,7 +2,7 @@ import { RedirectType, redirect } from 'next/navigation';
 
 import { cookies } from 'next/headers';
 import { getPulverizaciones } from '@/services/pulverizaciones.service';
-import PulverizacionesGridContainer from './pulverizaciones-grid-container';
+import { PulverizacionesGridContainer } from './masonry-container';
 import { DateTime } from 'luxon';
 
 interface Props {

@@ -195,7 +195,7 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
 
       pdf
         .setFontSize(10)
-        .text('PulveSys: Sistema de Ordenes de Pulverización', 105, 42, {
+        .text('PulveSys: Sistema de órdenes de pulverización', 105, 42, {
           align: 'center',
         });
 
