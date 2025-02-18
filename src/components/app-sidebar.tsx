@@ -29,12 +29,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <Link href={'/'}>
                 <Image
                   src={logo}
-                  alt='Logo del Sistema de Ordenes de Pulverización'
+                  alt='Logo de PulveSys'
                   className='size-9 rounded-md'
                   id='primary_pulvesys_logo'
                 />
                 <div className='grid flex-1 text-left text-sm leading-tight'>
                   <span className='font-semibold'>PulveSys</span>
+                  <p className='truncate text-xs'>Órdenes de pulverización</p>
                 </div>
               </Link>
             </SidebarMenuButton>

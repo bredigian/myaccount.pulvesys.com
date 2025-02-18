@@ -3,18 +3,16 @@
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import PulverizacionItem from './pulverizacion-item';
 import { Masonry } from './masonry';
-import { useSidebar } from './ui/sidebar';
 import { ReloadIcon } from '@radix-ui/react-icons';
 
 interface Props {
   data: Pulverizacion[];
 }
 
-export default function PulverizacionesGridContainer({ data }: Props) {
-  useSidebar();
+export const PulverizacionesGridContainer = ({ data }: Props) => {
   return (
     <Masonry
-      items={data}
+      items={data as Pulverizacion[]}
       config={{
         columns: [1, 2, 3, 4, 5],
         gap: [16, 16, 16, 16, 16],
@@ -33,4 +31,4 @@ export default function PulverizacionesGridContainer({ data }: Props) {
       }
     />
   );
-}
+};
