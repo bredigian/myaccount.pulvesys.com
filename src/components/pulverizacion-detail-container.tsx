@@ -8,6 +8,7 @@ import {
 } from '@/components/pulverizacion-detail-dialog';
 import {
   Calendar,
+  FileWarning,
   Layers,
   Leaf,
   ListCheckIcon,
@@ -74,22 +75,32 @@ export default function PulverizacionDetailContainer({ data }: Props) {
       <div className='flex flex-col gap-6'>
         <div className='flex items-start justify-between gap-4'>
           <ul className='flex flex-wrap items-center justify-start gap-2'>
-            {lotesPulverizados?.map((lote) => (
-              <li
-                key={`badge-${lote.nombre}`}
-                style={{
-                  backgroundColor: `${lote.color as string}75`,
-                  borderColor: lote.color as string,
-                }}
-                className={cn(
-                  'inline-flex space-x-1 rounded-md border-2 px-3 py-1 text-xs font-semibold',
-                )}
+            {lotesPulverizados?.length === 0 ? (
+              <div
+                key={`${data.id}-lote-empty`}
+                className='flex items-center gap-1 overflow-hidden rounded-md border-2 bg-yellow-200 px-3 py-1 text-xs font-semibold hover:cursor-pointer'
               >
                 <Tag size={14} />
-                <span>{lote.nombre}</span>
-                <p>({lote.hectareas}ha)</p>
-              </li>
-            ))}
+                <span className='truncate'>Lote no disponible</span>
+              </div>
+            ) : (
+              lotesPulverizados?.map((lote) => (
+                <li
+                  key={`badge-${lote.nombre}`}
+                  style={{
+                    backgroundColor: `${lote.color as string}75`,
+                    borderColor: lote.color as string,
+                  }}
+                  className={cn(
+                    'inline-flex space-x-1 rounded-md border-2 px-3 py-1 text-xs font-semibold',
+                  )}
+                >
+                  <Tag size={14} />
+                  <span>{lote.nombre}</span>
+                  <p>({lote.hectareas}ha)</p>
+                </li>
+              ))
+            )}
           </ul>
           <Badge className='space-x-1'>
             <Calendar size={14} />
@@ -116,8 +127,18 @@ export default function PulverizacionDetailContainer({ data }: Props) {
                 <CardTitle>Detalle</CardTitle>
               </CardHeader>
               <CardContent className='flex flex-wrap items-center gap-4'>
-                <Badge variant={'secondary'} className='w-fit space-x-1'>
-                  <Layers size={14} />
+                <Badge
+                  variant={'secondary'}
+                  className={cn(
+                    'w-fit space-x-1',
+                    selectedHectareas === 0 && 'bg-yellow-200',
+                  )}
+                >
+                  {selectedHectareas === 0 ? (
+                    <FileWarning size={14} />
+                  ) : (
+                    <Layers size={14} />
+                  )}
                   <h6>{selectedHectareas}ha</h6>
                 </Badge>
                 <Badge variant={'secondary'} className='w-fit space-x-1'>
