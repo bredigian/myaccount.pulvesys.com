@@ -90,7 +90,7 @@ export const AddOrEditCampoDialog = ({
           )}
         </DrawerTrigger>
       )}
-      <DrawerContent className='z-[9999] h-auto'>
+      <DrawerContent className='h-auto'>
         <DrawerHeader>
           <DrawerTitle>
             {!isEdit ? 'Nueva ubicación' : 'Modificar ubicación'}
@@ -126,7 +126,7 @@ export const AddOrEditCampoDialog = ({
           )}
         </DialogTrigger>
       )}
-      <DialogContent className='z-[9999] h-auto'>
+      <DialogContent className='h-auto'>
         <DialogHeader>
           <DialogTitle>
             {!isEdit ? 'Nueva ubicación' : 'Modificar ubicación'}

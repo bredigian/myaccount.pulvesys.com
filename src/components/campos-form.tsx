@@ -1,7 +1,7 @@
 'use client';
 
 import { Campo, Coordinada, Lote } from '@/types/campos.types';
-import { Check, Eraser, Layers, MapPinPlusInside } from 'lucide-react';
+import { Check, Cloud, Eraser, Layers, MapPinPlusInside } from 'lucide-react';
 import { FieldErrors, useForm } from 'react-hook-form';
 import { addCampo, editCampo } from '@/services/campos.service';
 
@@ -17,7 +17,7 @@ import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDebouncedCallback } from 'use-debounce';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MapboxMap from './map';
 
 export default function AddOrEditCampoForm({
@@ -74,12 +74,10 @@ export default function AddOrEditCampoForm({
       if (!isEdit) await addCampo(PAYLOAD, access_token);
       else await editCampo(PAYLOAD, access_token);
 
-      if (!isEdit) await revalidate('campos');
-
       setIsSubmitSuccessful(true);
       setTimeout(() => handleOpen(), 1000);
 
-      if (isEdit) window.location.reload();
+      await revalidate('campos');
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
     }
@@ -112,6 +110,10 @@ export default function AddOrEditCampoForm({
   const handleLoteColor = useDebouncedCallback((value: string) => {
     setLote((prev) => ({ ...prev, color: value }));
   }, 300);
+
+  useEffect(() => {
+    setLotes(data?.Lote as Lote[]);
+  }, [data]);
 
   return (
     <form
@@ -220,6 +222,7 @@ export default function AddOrEditCampoForm({
           />
         </div>
         <MapboxMap
+          key={data?.Lote?.length}
           size='!grow'
           enable={enable}
           handleLote={handleLote as () => void}
@@ -227,7 +230,10 @@ export default function AddOrEditCampoForm({
           lotesCampo={lotes}
           lotesPulverizados={lotes}
         />
-        <ul className='relative flex max-h-[244px] flex-wrap items-center gap-2'>
+        <ul
+          key={`lotes-list-${data?.Lote?.length}`}
+          className='relative flex max-h-[244px] flex-wrap items-end gap-2'
+        >
           {lotes.length === 0 ? (
             <li className='rounded-md border-2 border-gray-200 bg-gray-50/50 px-3 py-1 text-xs font-semibold'>
               Sin lotes
@@ -243,16 +249,22 @@ export default function AddOrEditCampoForm({
                     prev.filter((l) => l.nombre !== lote.nombre),
                   )
                 }
+                isEditting={isEdit}
+                storedLotesQuantity={
+                  lotes.filter((l) => (l.id ? 1 : 0))?.length
+                }
               />
             ))
           )}
         </ul>
       </div>
       {isEdit && (
-        <p className='text-sm italic opacity-75'>
-          *Tenga en cuenta que la página se recargará una vez finalizada la
-          modificación
-        </p>
+        <div className='flex items-center gap-2'>
+          <div className='w-fit rounded-t-md border-2 border-primary bg-green-600 p-1'>
+            <Cloud size={14} />
+          </div>
+          <p className='text-sm italic'>* Almacenado en base de datos</p>
+        </div>
       )}
       <div className='flex flex-col items-center gap-2 md:flex-row-reverse md:items-end'>
         <Button
@@ -267,7 +279,7 @@ export default function AddOrEditCampoForm({
         >
           {isSubmitSuccessful ? (
             <>
-              Completado. {isEdit && 'Recargando...'} <Check />
+              Completado <Check />
             </>
           ) : !isSubmitting ? (
             !isEdit ? (

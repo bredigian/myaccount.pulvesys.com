@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Leaf, ListCheckIcon } from 'lucide-react';
+import { Leaf, ListCheckIcon, Tag } from 'lucide-react';
 
 import { Badge } from './ui/badge';
 import { DateTime } from 'luxon';
@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Lote } from '@/types/campos.types';
 import LoteItem from './lote-item';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
+import { cn } from '@/lib/utils';
 
 interface Props {
   pulverizacion: Pulverizacion;
@@ -38,13 +39,24 @@ export default function PulverizacionItem({ pulverizacion }: Props) {
           <CardContent className='space-y-4'>
             <div className='flex items-start justify-between'>
               <ul className='flex flex-wrap items-start gap-2 overflow-hidden'>
-                {pulverizacion.detalle.lotes.map((lote) => {
+                {pulverizacion?.detalle?.lotes?.map((lote, index) => {
                   const loteData = pulverizacion.detalle.campo?.Lote?.find(
                     (item) => item.nombre === lote,
                   ) as Lote;
 
-                  return (
-                    <LoteItem key={`lote-${loteData.id}`} lote={loteData} />
+                  return !loteData ? (
+                    <div
+                      key={`lote-empty-${index}`}
+                      className='flex items-center gap-1 overflow-hidden rounded-md border-2 bg-yellow-200 px-3 py-1 text-xs font-semibold hover:cursor-pointer'
+                    >
+                      <Tag size={14} />
+                      <span className='truncate'>Lote no disponible</span>
+                    </div>
+                  ) : (
+                    <LoteItem
+                      key={`lote-${loteData.id ?? 'empty'}`}
+                      lote={loteData}
+                    />
                   );
                 })}
               </ul>

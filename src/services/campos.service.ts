@@ -75,3 +75,22 @@ export const deleteCampo = async (id: UUID, access_token: string) => {
 
   return data as { count: number };
 };
+
+export const deleteLote = async (id: UUID, access_token: string) => {
+  const PATH = `${API_URL}/v1/campos/lote`;
+  const OPTIONS: RequestInit = {
+    method: 'DELETE',
+    body: JSON.stringify({ id }),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access_token}`,
+    },
+  };
+
+  const res = await fetch(PATH, OPTIONS);
+  const data: { count: number } | Error = await res.json();
+
+  if (!res.ok) throw new Error((data as Error)?.message);
+
+  return data as { count: number };
+};
