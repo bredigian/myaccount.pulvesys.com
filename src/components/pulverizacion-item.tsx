@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { Lote } from '@/types/campos.types';
 import LoteItem from './lote-item';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
-import { cn } from '@/lib/utils';
 
 interface Props {
   pulverizacion: Pulverizacion;
