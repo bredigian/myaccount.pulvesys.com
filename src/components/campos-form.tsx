@@ -112,7 +112,7 @@ export default function AddOrEditCampoForm({
   }, 300);
 
   useEffect(() => {
-    setLotes(data?.Lote as Lote[]);
+    if (isEdit) setLotes(data?.Lote as Lote[]);
   }, [data]);
 
   return (
@@ -234,7 +234,7 @@ export default function AddOrEditCampoForm({
           key={`lotes-list-${data?.Lote?.length}`}
           className='relative flex max-h-[244px] flex-wrap items-end gap-2'
         >
-          {lotes.length === 0 ? (
+          {lotes?.length === 0 ? (
             <li className='rounded-md border-2 border-gray-200 bg-gray-50/50 px-3 py-1 text-xs font-semibold'>
               Sin lotes
             </li>
