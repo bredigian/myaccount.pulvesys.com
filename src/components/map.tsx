@@ -104,7 +104,7 @@ export default function MapboxMap({
         geometry: {
           type: 'Polygon',
           coordinates: actualLote?.zona
-            ? [actualLote.zona.map((c) => [c.lng, c.lat])]
+            ? [actualLote?.zona?.map((c) => [c.lng, c.lat])]
             : [],
         },
         properties: {
@@ -117,7 +117,7 @@ export default function MapboxMap({
 
   const geoJSON: FeatureCollection = {
     type: 'FeatureCollection',
-    features: lotesCampo.map((lote) => {
+    features: lotesCampo?.map((lote) => {
       const coords = (lote.Coordinada ?? lote.zona)
         .map((coord) => [coord.lng, coord.lat])
         .filter(Boolean) as number[][];
@@ -143,7 +143,7 @@ export default function MapboxMap({
 
   const textGeoJSON: FeatureCollection = {
     type: 'FeatureCollection',
-    features: lotesCampo.map((lote) => {
+    features: lotesCampo?.map((lote) => {
       const centroide = calcularCentroide(
         (lote.Coordinada ?? lote.zona) as Coordinada[],
       );
