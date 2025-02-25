@@ -5,7 +5,7 @@ import { TableCell, TableRow } from './ui/table';
 export const PulverizacionItemSkeleton = () => {
   return (
     <li className='col-span-full flex items-start justify-between md:col-span-3 xl:col-span-2'>
-      <Card className='h-full w-full duration-200 ease-in-out hover:cursor-pointer hover:bg-secondary'>
+      <Card className='size-full duration-200 ease-in-out hover:bg-secondary'>
         <CardHeader>
           <CardTitle className='flex items-start justify-between gap-4'>
             <Skeleton className='h-4 w-full max-w-48' />
@@ -26,6 +26,33 @@ export const PulverizacionItemSkeleton = () => {
             <Skeleton className='h-3 w-24' />
             <Skeleton className='h-3 w-24' />
             <Skeleton className='h-3 w-24' />
+          </ul>
+        </CardContent>
+      </Card>
+    </li>
+  );
+};
+
+export const CampoItemSkeleton = () => {
+  return (
+    <li className='col-span-full flex items-start justify-between md:col-span-3 xl:col-span-2'>
+      <Card className='size-full'>
+        <CardHeader>
+          <CardTitle className='flex items-start justify-between gap-4'>
+            <Skeleton className='h-4 w-full max-w-48' />
+            <div className='flex items-center gap-2'>
+              <Skeleton className='size-8' />
+              <Skeleton className='size-8' />
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className='space-y-4'>
+          <Skeleton className='h-3 w-12' />
+          <Skeleton className='h-48 w-full' />
+          <ul className='flex flex-wrap items-start gap-2 overflow-hidden'>
+            {Array.from({ length: 3 }, (_, i) => (
+              <LoteItemSkeleton key={`lote-skeleton-${i}`} />
+            ))}
           </ul>
         </CardContent>
       </Card>
