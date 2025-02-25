@@ -60,10 +60,7 @@ export default function LogoutDialog() {
 
       setState('success');
 
-      setTimeout(() => {
-        push('/');
-        toast.success('La sesión ha sido cerrada');
-      }, 500);
+      setTimeout(() => push('/'), 500);
     } catch (e) {
       setState('error');
       if (e instanceof Error)
