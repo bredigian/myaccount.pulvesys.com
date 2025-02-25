@@ -2,6 +2,7 @@ import { AddOrEditCampoDialog } from '@/components/campos-dialog';
 import CamposContainer from '@/components/campos-container';
 import Finder from '@/components/finder';
 import { Suspense } from 'react';
+import { CamposMasonrySkeleton } from '@/components/masonry-skeleton';
 
 interface Props {
   searchParams: Promise<{
@@ -19,7 +20,7 @@ export default async function Campos({ searchParams }: Props) {
         <Finder />
         <AddOrEditCampoDialog />
       </aside>
-      <Suspense>
+      <Suspense fallback={<CamposMasonrySkeleton />}>
         <CamposContainer query={nombre} />
       </Suspense>
     </main>

@@ -3,9 +3,12 @@
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import PulverizacionItem from './pulverizacion-item';
 import { Masonry } from './masonry';
-import { ReloadIcon } from '@radix-ui/react-icons';
 import { Campo } from '@/types/campos.types';
 import CampoItem from './campo-item';
+import {
+  CamposMasonrySkeleton,
+  PulverizacionesMasonrySkeleton,
+} from './masonry-skeleton';
 
 export const PulverizacionesGridContainer = ({
   data,
@@ -26,11 +29,7 @@ export const PulverizacionesGridContainer = ({
           pulverizacion={pulverizacion}
         />
       )}
-      placeholder={
-        <div className='grid h-full place-items-center'>
-          <ReloadIcon className='size-6 animate-spin' />
-        </div>
-      }
+      placeholder={<PulverizacionesMasonrySkeleton />}
     />
   );
 };
@@ -47,11 +46,7 @@ export const CamposGridContainer = ({ data }: { data: Campo[] }) => {
       render={(pulverizacion) => (
         <CampoItem key={pulverizacion.id} data={pulverizacion} />
       )}
-      placeholder={
-        <div className='grid h-full place-items-center'>
-          <ReloadIcon className='size-6 animate-spin' />
-        </div>
-      }
+      placeholder={<CamposMasonrySkeleton />}
     />
   );
 };

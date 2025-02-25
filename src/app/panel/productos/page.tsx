@@ -2,6 +2,7 @@ import { AddOrEditProductoDialog } from '@/components/productos-dialog';
 import Finder from '@/components/finder';
 import ProductosContainer from '@/components/productos-container';
 import { Suspense } from 'react';
+import { ProductosContainerSkeleton } from '@/components/container-skeleton';
 
 interface Props {
   searchParams: Promise<{
@@ -19,7 +20,7 @@ export default async function Productos({ searchParams }: Props) {
         <Finder />
         <AddOrEditProductoDialog />
       </aside>
-      <Suspense>
+      <Suspense fallback={<ProductosContainerSkeleton />}>
         <ProductosContainer query={nombre} />
       </Suspense>
     </main>

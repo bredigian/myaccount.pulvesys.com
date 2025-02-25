@@ -1,3 +1,4 @@
+import { CultivosTratamientosContainerSkeleton } from '@/components/container-skeleton';
 import CultivosTratamientosContainer from '@/components/cultivos&tratamientos-container';
 import { Suspense } from 'react';
 
@@ -16,7 +17,7 @@ export default async function Cultivos({ searchParams }: Props) {
         Administra los cultivos y tratamientos que se utilizan en las
         pulverizaciones.
       </h2>
-      <Suspense>
+      <Suspense fallback={<CultivosTratamientosContainerSkeleton />}>
         <CultivosTratamientosContainer nombre={nombre || ''} />
       </Suspense>
     </main>

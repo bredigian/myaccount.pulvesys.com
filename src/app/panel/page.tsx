@@ -2,6 +2,7 @@ import Finder from '@/components/finder';
 import { PulverizacionesContainer } from '@/components/pulverizaciones-container';
 import { Suspense } from 'react';
 import FetchDataContainerForAddPulverizacionForm from '@/components/fetch-data-container';
+import { PulverizacionesMasonrySkeleton } from '@/components/masonry-skeleton';
 
 interface Props {
   searchParams: Promise<{ filter: string }>;
@@ -17,7 +18,7 @@ export default async function Pulverizaciones({ searchParams }: Props) {
         <Finder param='filter' placeholder='Filtrá por ubicación o por fecha' />
         <FetchDataContainerForAddPulverizacionForm />
       </aside>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<PulverizacionesMasonrySkeleton />}>
         <PulverizacionesContainer query={filter} />
       </Suspense>
     </main>

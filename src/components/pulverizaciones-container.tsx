@@ -30,5 +30,14 @@ export const PulverizacionesContainer = async ({ query }: Props) => {
             ?.includes(query.toLowerCase()),
       );
 
-  return <PulverizacionesGridContainer data={filteredData} />;
+  return filteredData.length > 0 ? (
+    <PulverizacionesGridContainer data={filteredData} />
+  ) : (
+    <ul>
+      <li>
+        No se encontraron resultados para{' '}
+        <span className='font-semibold italic'>{query}</span>
+      </li>
+    </ul>
+  );
 };
