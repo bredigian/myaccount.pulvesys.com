@@ -79,3 +79,16 @@ export const ProductoItemSkeleton = () => {
     </TableRow>
   );
 };
+
+export const CultivoTratamientoItemSkeleton = () => {
+  return (
+    <TableRow className='h-12'>
+      <TableCell>
+        <Skeleton className='h-3 w-full max-w-24' />
+      </TableCell>
+      <TableCell align='right'>
+        <Skeleton className='h-3 w-8' />
+      </TableCell>
+    </TableRow>
+  );
+};
