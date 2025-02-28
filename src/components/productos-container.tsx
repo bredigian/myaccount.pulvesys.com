@@ -21,7 +21,7 @@ export default async function ProductosContainer({ query }: Props) {
   if (!access_token) redirect('/', RedirectType.replace);
 
   const data = await getProductos(access_token.value);
-  if (data instanceof Error) return <p>{data?.message}</p>;
+  if ('error' in data) return <p>{data?.message}</p>;
 
   const filteredData = !query
     ? data
