@@ -11,10 +11,11 @@ interface Props {
 
 export default async function CultivosTratamientosContainer({ nombre }: Props) {
   const access_token = (await cookies()).get('access_token');
-  if (!access_token) redirect('/', RedirectType.replace);
+  const refresh_token = (await cookies()).get('refresh_token');
+  if (!access_token || !refresh_token) redirect('/', RedirectType.replace);
 
-  let cultivos = await getCultivos(access_token.value);
-  let tratamientos = await getTratamientos(access_token.value);
+  let cultivos = await getCultivos(access_token.value, refresh_token);
+  let tratamientos = await getTratamientos(access_token.value, refresh_token);
   if (cultivos instanceof Error || tratamientos instanceof Error)
     return <p>{((cultivos ?? tratamientos) as Error)?.message}</p>;
 

@@ -1,12 +1,20 @@
 import { API_URL } from '@/config/api';
+import { Token } from '@/types/auth.types';
 import { Tratamiento } from '@/types/tratamientos.types';
 import { UUID } from 'crypto';
 
-export const getTratamientos = async (access_token: string) => {
+export const getTratamientos = async (
+  access_token: string,
+  refresh_token: Token,
+) => {
   const PATH = `${API_URL}/v1/tratamientos`;
   const OPTIONS: RequestInit = {
     method: 'GET',
-    headers: { Authorization: `Bearer ${access_token}` },
+    credentials: 'include',
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+      Cookie: JSON.stringify(refresh_token),
+    },
     next: { tags: ['tratamientos'] },
   };
 
@@ -25,6 +33,7 @@ export const addTratamiento = async (
   const PATH = `${API_URL}/v1/tratamientos`;
   const OPTIONS: RequestInit = {
     method: 'POST',
+    credentials: 'include',
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
@@ -47,6 +56,7 @@ export const editTratamiento = async (
   const PATH = `${API_URL}/v1/tratamientos`;
   const OPTIONS: RequestInit = {
     method: 'PUT',
+    credentials: 'include',
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
@@ -66,6 +76,7 @@ export const deleteTratamiento = async (id: UUID, access_token: string) => {
   const PATH = `${API_URL}/v1/tratamientos`;
   const OPTIONS: RequestInit = {
     method: 'DELETE',
+    credentials: 'include',
     body: JSON.stringify({ id }),
     headers: {
       'Content-Type': 'application/json',

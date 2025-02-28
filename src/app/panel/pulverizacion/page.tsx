@@ -17,9 +17,14 @@ export default async function PulverizacionDetail({ searchParams }: Props) {
   if (!id) redirect('/panel', RedirectType.replace);
 
   const access_token = (await cookies()).get('access_token');
-  if (!access_token) redirect('/', RedirectType.replace);
+  const refresh_token = (await cookies()).get('refresh_token');
+  if (!access_token || !refresh_token) redirect('/', RedirectType.replace);
 
-  const data: Pulverizacion | Error = await getById(id, access_token.value);
+  const data: Pulverizacion | Error = await getById(
+    id,
+    access_token.value,
+    refresh_token,
+  );
 
   if (data instanceof Error) return <p className='px-4'>{data.message}</p>;
 

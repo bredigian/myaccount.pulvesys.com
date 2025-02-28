@@ -1,13 +1,17 @@
 import { API_URL } from '@/config/api';
+import { Token } from '@/types/auth.types';
 import { Campo } from '@/types/campos.types';
 import { UUID } from 'crypto';
 
-export const getCampos = async (access_token: string) => {
+export const getCampos = async (access_token: string, refresh_token: Token) => {
   const PATH = `${API_URL}/v1/campos`;
   const OPTIONS: RequestInit = {
     method: 'GET',
-    headers: { Authorization: `Bearer ${access_token}` },
-    cache: 'no-cache',
+    credentials: 'include',
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+      Cookie: JSON.stringify(refresh_token),
+    },
     next: { tags: ['campos'] },
   };
 
@@ -23,6 +27,7 @@ export const addCampo = async (payload: Campo, access_token: string) => {
   const PATH = `${API_URL}/v1/campos`;
   const OPTIONS: RequestInit = {
     method: 'POST',
+    credentials: 'include',
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
@@ -42,6 +47,7 @@ export const editCampo = async (payload: Campo, access_token: string) => {
   const PATH = `${API_URL}/v1/campos`;
   const OPTIONS: RequestInit = {
     method: 'PATCH',
+    credentials: 'include',
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
@@ -61,6 +67,7 @@ export const deleteCampo = async (id: UUID, access_token: string) => {
   const PATH = `${API_URL}/v1/campos`;
   const OPTIONS: RequestInit = {
     method: 'DELETE',
+    credentials: 'include',
     body: JSON.stringify({ id }),
     headers: {
       'Content-Type': 'application/json',
@@ -80,6 +87,7 @@ export const deleteLote = async (id: UUID, access_token: string) => {
   const PATH = `${API_URL}/v1/campos/lote`;
   const OPTIONS: RequestInit = {
     method: 'DELETE',
+    credentials: 'include',
     body: JSON.stringify({ id }),
     headers: {
       'Content-Type': 'application/json',
