@@ -238,12 +238,14 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
 
       autoTable(pdf, {
         theme: 'grid',
-        head: [['Lote', 'Hectáreas', 'Pulverizado']],
+        head: [['Lote', 'Hectáreas', 'Estado']],
         headStyles: { fillColor: '#243641' },
         body: data?.detalle.campo?.Lote?.map((lote) => [
           lote.nombre,
           `${lote.hectareas}ha`,
-          data.detalle.lotes.includes(lote?.nombre as string) ? 'Si' : 'No',
+          data.detalle.lotes.includes(lote?.nombre as string)
+            ? 'A pulverizar'
+            : 'Sin espec.',
         ]),
 
         margin: {
@@ -254,7 +256,7 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
         didParseCell: (data) => {
           if (data.section === 'body' && data.column.index === 2) {
             data.cell.styles.fillColor =
-              data.cell.raw === 'Si' ? [3, 223, 142] : [245, 203, 78];
+              data.cell.raw === 'A pulverizar' ? [3, 223, 142] : [245, 203, 78];
             data.cell.styles.textColor = [0, 0, 0];
           }
         },

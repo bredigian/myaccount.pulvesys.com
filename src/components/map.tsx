@@ -69,8 +69,27 @@ export default function MapboxMap({
       },
     ],
   };
+  const secondPointGeoJSON: FeatureCollection = {
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [
+            actualLote?.zona[1]?.lng as number,
+            actualLote?.zona[1]?.lat as number,
+          ],
+        },
+        properties: {
+          color: actualLote?.color,
+          opacity: 1,
+        },
+      },
+    ],
+  };
 
-  const lastLineGeoJSON: FeatureCollection = {
+  const firstLineGeoJSON: FeatureCollection = {
     type: 'FeatureCollection',
     features: [
       {
@@ -83,8 +102,8 @@ export default function MapboxMap({
               actualLote?.zona[0]?.lat as number,
             ],
             [
-              actualLote?.zona[actualLote?.zona.length - 1]?.lng as number,
-              actualLote?.zona[actualLote?.zona.length - 1]?.lat as number,
+              actualLote?.zona[1]?.lng as number,
+              actualLote?.zona[1]?.lat as number,
             ],
           ],
         },
@@ -160,6 +179,8 @@ export default function MapboxMap({
       };
     }),
   };
+
+  // console.log(area(actualGeoJSON));
 
   return (
     <div
@@ -281,12 +302,28 @@ export default function MapboxMap({
               />
             </Source>
             <Source
-              id='last-polygon-line-source'
+              id='second-point-marked-source'
               type='geojson'
-              data={lastLineGeoJSON}
+              data={secondPointGeoJSON}
             >
               <Layer
-                id='actual_lote-last-polygon-line'
+                id='actual_lote-second-marked-point'
+                type='circle'
+                paint={{
+                  'circle-color': ['get', 'color'],
+                  'circle-stroke-width': 1,
+                  'circle-opacity': 1,
+                  'circle-stroke-color': ['get', 'color'],
+                }}
+              />
+            </Source>
+            <Source
+              id='first-polygon-line-source'
+              type='geojson'
+              data={firstLineGeoJSON}
+            >
+              <Layer
+                id='actual_lote-first-polygon-line'
                 type='line'
                 paint={{
                   'line-color': ['get', 'color'],

@@ -20,6 +20,9 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import MapboxMap from './map';
 
+import { area, convertArea } from '@turf/turf';
+import { FeatureCollection } from 'geojson';
+
 export default function AddOrEditCampoForm({
   isEdit,
   data,
@@ -97,7 +100,14 @@ export default function AddOrEditCampoForm({
     color: '#000000',
   });
   const handleLote = (point: Coordinada) =>
-    setLote((prev) => ({ ...prev, zona: [...prev.zona, point] }));
+    setLote((prev) => {
+      if (prev.zona.length === 0) {
+        return { ...prev, zona: [point, point] };
+      }
+      const newArea = [...prev.zona];
+      newArea.splice(newArea.length - 1, 0, point);
+      return { ...prev, zona: newArea };
+    });
 
   const handleLoteName = (value: string) => {
     setLote((prev) => ({ ...prev, nombre: value }));
@@ -114,6 +124,31 @@ export default function AddOrEditCampoForm({
   useEffect(() => {
     if (isEdit) setLotes(data?.Lote as Lote[]);
   }, [data]);
+
+  useEffect(() => {
+    const actualGeoJSON: FeatureCollection = {
+      type: 'FeatureCollection',
+      features: [
+        {
+          type: 'Feature',
+          geometry: {
+            type: 'Polygon',
+            coordinates: lote?.zona
+              ? [lote?.zona?.map((c) => [c.lng, c.lat])]
+              : [],
+          },
+          properties: {
+            color: lote?.color,
+            opacity: 0.75,
+          },
+        },
+      ],
+    };
+
+    const selectedArea = convertArea(area(actualGeoJSON), 'meters', 'hectares');
+    if (selectedArea !== 0)
+      handleLoteHectareas(Number(selectedArea.toFixed(2)));
+  }, [lote.zona]);
 
   return (
     <form
@@ -159,6 +194,22 @@ export default function AddOrEditCampoForm({
                     return;
                   }
 
+                  let error = false;
+                  for (const l of lotes) {
+                    if (
+                      l.nombre?.toLowerCase() === lote?.nombre?.toLowerCase()
+                    ) {
+                      toast.error(
+                        'No puede haber dos lotes con el mismo nombre',
+                        { position: 'top-center' },
+                      );
+                      error = true;
+
+                      break;
+                    }
+                  }
+                  if (error) return;
+
                   addLote(lote as Lote);
                   setLote({
                     nombre: '',
@@ -188,6 +239,7 @@ export default function AddOrEditCampoForm({
                 setLote((prev) => ({
                   ...prev,
                   zona: [],
+                  hectareas: 0,
                 }))
               }
               disabled={!enable}
