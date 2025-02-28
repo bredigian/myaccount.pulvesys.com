@@ -386,9 +386,9 @@ export default function AddOrEditPulverizacionForm({
             Seleccione los lotes a pulverizar
           </Label>
           <ul className='col-span-full flex flex-wrap items-center gap-2'>
-            {(selectedCampo.Lote as Lote[]).map((lote) => (
+            {(selectedCampo.Lote as Lote[]).map((lote, idx) => (
               <LoteItem
-                key={`badge-${lote.nombre}`}
+                key={`badge_${idx}-${lote.nombre}`}
                 lote={lote}
                 onClick={() => {
                   if (!selectedLotes.includes(lote.nombre as string))
@@ -603,7 +603,7 @@ export default function AddOrEditPulverizacionForm({
                     aplicacion.producto_id,
                   )
                 }
-                defaultValue={aplicacion.dosis ?? undefined}
+                defaultValue={aplicacion?.dosis?.toString() ?? undefined}
               />
               <span className='col-span-2 self-center text-sm font-semibold opacity-60'>
                 {
