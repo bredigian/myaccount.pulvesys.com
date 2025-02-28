@@ -1,6 +1,5 @@
 import { RedirectType, redirect } from 'next/navigation';
 
-import { Pulverizacion } from '@/types/pulverizaciones.types';
 import PulverizacionDetailContainer from '@/components/pulverizacion-detail-container';
 import { UUID } from 'crypto';
 import { cookies } from 'next/headers';
@@ -19,9 +18,9 @@ export default async function PulverizacionDetail({ searchParams }: Props) {
   const access_token = (await cookies()).get('access_token');
   if (!access_token) redirect('/', RedirectType.replace);
 
-  const data: Pulverizacion | Error = await getById(id, access_token.value);
+  const data = await getById(id, access_token.value);
 
-  if (data instanceof Error) return <p className='px-4'>{data.message}</p>;
+  if ('error' in data) return <p className='px-4'>{data.message}</p>;
 
   return <PulverizacionDetailContainer data={data} />;
 }
