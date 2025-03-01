@@ -41,13 +41,10 @@ export default function SigninForm() {
 
   const onSubmit = async (values: UsuarioToSignin) => {
     try {
-      const { access_token, expireIn } = await signin({
+      await signin({
         ...values,
         nombre_usuario: (values?.nombre_usuario as string)?.trim(),
       });
-      // Cookies.set('access_token', access_token, {
-      //   expires: new Date(expireIn),
-      // });
 
       setSuccess(true);
       setTimeout(() => push('/panel'), 1000);
