@@ -27,51 +27,53 @@ export async function middleware(req: NextRequest) {
       return res;
     }
 
-    const {
-      expireIn,
-      userdata,
-      access_token: access_token_from_database,
-      refresh_token: refresh_token_from_database,
-      // environment,
-    } = sesion;
+    // const {
+    //   expireIn,
+    //   userdata,
+    //   access_token: access_token_from_database,
+    //   refresh_token: refresh_token_from_database,
+    //   // environment,
+    // } = sesion;
 
-    const updatedExpiresInString = new Date(expireIn);
+    // const updatedExpiresInString = new Date(expireIn);
 
     // const domain = Hostname[environment];
 
-    if (isHome)
-      return NextResponse.redirect(new URL('/panel', req.url), {
-        headers: {
-          'Set-Cookie': [
-            `userdata=${encodeURIComponent(JSON.stringify(userdata))}; Expires=${updatedExpiresInString.toUTCString()}`,
-            `access_token=${encodeURIComponent(JSON.stringify(access_token_from_database))}; Expires=${updatedExpiresInString.toUTCString()}`,
-            `refresh_token=${encodeURIComponent(JSON.stringify(refresh_token_from_database))}; Expires=${updatedExpiresInString.toUTCString()}; HttpOnly; Secure; SameSite=none`,
-          ].join(', '),
-        },
-      });
+    if (isHome) return NextResponse.redirect(new URL('/panel', req.url));
+    // return NextResponse.redirect(new URL('/panel', req.url), {
+    //   headers: {
+    //     'Set-Cookie': [
+    //       `userdata=${encodeURIComponent(JSON.stringify(userdata))}; Expires=${updatedExpiresInString.toUTCString()}`,
+    //       `access_token=${encodeURIComponent(JSON.stringify(access_token_from_database))}; Expires=${updatedExpiresInString.toUTCString()}`,
+    //       `refresh_token=${encodeURIComponent(JSON.stringify(refresh_token_from_database))}; Expires=${updatedExpiresInString.toUTCString()}; HttpOnly; Secure; SameSite=none`,
+    //     ].join(', '),
+    //   },
+    // });
 
-    const res = NextResponse.next();
+    return NextResponse.next();
 
-    res.cookies.set('userdata', JSON.stringify(userdata), {
-      expires: updatedExpiresInString,
-    });
-    res.cookies.set(
-      'refresh_token',
-      JSON.stringify(refresh_token_from_database),
-      {
-        httpOnly: true,
-        secure: true,
-        expires: updatedExpiresInString,
-        sameSite: 'none',
-      },
-    );
-    res.cookies.set(
-      'access_token',
-      JSON.stringify(access_token_from_database),
-      { expires: updatedExpiresInString },
-    );
+    // const res = NextResponse.next();
 
-    return res;
+    // res.cookies.set('userdata', JSON.stringify(userdata), {
+    //   expires: updatedExpiresInString,
+    // });
+    // res.cookies.set(
+    //   'refresh_token',
+    //   JSON.stringify(refresh_token_from_database),
+    //   {
+    //     httpOnly: true,
+    //     secure: true,
+    //     expires: updatedExpiresInString,
+    //     sameSite: 'none',
+    //   },
+    // );
+    // res.cookies.set(
+    //   'access_token',
+    //   JSON.stringify(access_token_from_database),
+    //   { expires: updatedExpiresInString },
+    // );
+
+    // return res;
   }
 
   if (!isHome) return NextResponse.redirect(new URL('/', req.url));
