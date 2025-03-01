@@ -12,10 +12,14 @@ export async function middleware(req: NextRequest) {
   const access_token = req.cookies.get('access_token');
   const refresh_token = req.cookies.get('refresh_token');
 
+  console.log('access_token from request: ', access_token);
+  console.log('refresh_token from request: ', refresh_token);
+
   if (access_token && refresh_token) {
     const sesion = await verifySesion(access_token.value, refresh_token);
 
     if (sesion instanceof Error) {
+      console.log('Session with ERROR: ', sesion);
       if (pathname.includes('/panel'))
         return NextResponse.redirect(new URL('/', req.url));
 
@@ -26,6 +30,8 @@ export async function middleware(req: NextRequest) {
 
       return res;
     }
+
+    console.log('Session is OK ✅', sesion);
 
     // const {
     //   expireIn,
