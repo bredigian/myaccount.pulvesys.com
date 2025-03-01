@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { verifySesion } from './services/auth.service';
-import { Hostname, TEnvironment } from './types/environment.types';
+import { Hostname } from './types/environment.types';
 
 export const credentials = 'include';
 
@@ -32,12 +32,12 @@ export async function middleware(req: NextRequest) {
       userdata,
       access_token: access_token_from_database,
       refresh_token: refresh_token_from_database,
+      environment,
     } = sesion;
 
     const updatedExpiresInString = new Date(expireIn);
 
-    const ENVIRONMENT = process.env.NODE_ENV as TEnvironment;
-    const domain = Hostname[ENVIRONMENT];
+    const domain = Hostname[environment];
 
     if (isHome)
       return NextResponse.redirect(new URL('/panel', req.url), {
