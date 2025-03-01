@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { verifySesion } from './services/auth.service';
-import { Hostname } from './types/environment.types';
+// import { Hostname } from './types/environment.types';
 
 export const credentials = 'include';
 
@@ -32,12 +32,12 @@ export async function middleware(req: NextRequest) {
       userdata,
       access_token: access_token_from_database,
       refresh_token: refresh_token_from_database,
-      environment,
+      // environment,
     } = sesion;
 
     const updatedExpiresInString = new Date(expireIn);
 
-    const domain = Hostname[environment];
+    // const domain = Hostname[environment];
 
     if (isHome)
       return NextResponse.redirect(new URL('/panel', req.url), {
@@ -45,7 +45,7 @@ export async function middleware(req: NextRequest) {
           'Set-Cookie': [
             `userdata=${encodeURIComponent(JSON.stringify(userdata))}; Expires=${updatedExpiresInString.toUTCString()}`,
             `access_token=${encodeURIComponent(JSON.stringify(access_token_from_database))}; Expires=${updatedExpiresInString.toUTCString()}`,
-            `refresh_token=${encodeURIComponent(JSON.stringify(refresh_token_from_database))}; Expires=${updatedExpiresInString.toUTCString()}; HttpOnly; Secure; SameSite=none; Domain=${domain}`,
+            `refresh_token=${encodeURIComponent(JSON.stringify(refresh_token_from_database))}; Expires=${updatedExpiresInString.toUTCString()}; HttpOnly; Secure; SameSite=none`,
           ].join(', '),
         },
       });
@@ -63,7 +63,6 @@ export async function middleware(req: NextRequest) {
         secure: true,
         expires: updatedExpiresInString,
         sameSite: 'none',
-        domain: domain,
       },
     );
     res.cookies.set(
