@@ -45,7 +45,6 @@ export default function SigninForm() {
         ...values,
         nombre_usuario: (values?.nombre_usuario as string)?.trim(),
       });
-      console.log('Signin successfully ✅', access_token, expireIn);
       // Cookies.set('access_token', access_token, {
       //   expires: new Date(expireIn),
       // });

@@ -1,5 +1,4 @@
 import { UUID } from 'crypto';
-import { TEnvironment } from './environment.types';
 
 export interface UsuarioToSignin {
   nombre_usuario: string | null;
@@ -18,5 +17,4 @@ export interface Sesion {
   refresh_token?: UUID;
   expireIn: Date;
   userdata: Usuario;
-  environment: TEnvironment;
 }
