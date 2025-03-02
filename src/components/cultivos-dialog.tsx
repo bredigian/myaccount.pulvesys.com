@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from './ui/dialog';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import {
   Drawer,
   DrawerClose,
@@ -21,7 +21,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from './ui/drawer';
-import { Edit, PlusSquare, Trash2 } from 'lucide-react';
+import { CheckIcon, Edit, PlusSquare, Trash2 } from 'lucide-react';
 
 import AddOrEditCultivoForm from './cultivos-form';
 import { Button } from './ui/button';
@@ -34,6 +34,9 @@ import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
+import { APIError } from '@/types/error.types';
+import { cn } from '@/lib/utils';
+import { ReloadIcon } from '@radix-ui/react-icons';
 
 export const AddOrEditCultivoDialog = ({
   isEdit,
@@ -109,11 +112,17 @@ export const AddOrEditCultivoDialog = ({
   );
 };
 
+type State = 'pending' | 'processing' | 'success' | 'error';
+
 export const DeleteCultivoDialog = ({ id }: { id: UUID }) => {
   const { push } = useRouter();
+  const [state, setState] = useState<State>('pending');
+
+  const { open, setOpen, handleOpen } = useDialog();
 
   const handleDelete = async () => {
     try {
+      setState('processing');
       const access_token = Cookies.get('access_token');
       if (!access_token) {
         toast.error('La sesión ha expirado', { position: 'top-center' });
@@ -122,19 +131,27 @@ export const DeleteCultivoDialog = ({ id }: { id: UUID }) => {
         return;
       }
       await deleteCultivo(id, access_token);
-      await revalidate('cultivos');
 
-      toast.success('El cultivo fue eliminado.');
+      setState('success');
+
+      setTimeout(async () => {
+        handleOpen();
+        await revalidate('cultivos');
+      }, 1000);
     } catch (error) {
-      if (error instanceof Error)
-        toast.error(error.message, { className: 'mb-[216px] md:mb-0' });
+      setState('error');
+      const { statusCode, message } = error as APIError;
+
+      toast.error(message, { position: 'top-center' });
+      const unauthorized = statusCode === 401 || statusCode === 403;
+      if (unauthorized) setTimeout(() => push('/'), 250);
     }
   };
 
   const isMobile = useIsMobile();
 
   return isMobile ? (
-    <Drawer>
+    <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <Button size={'sm'} variant={'destructive'}>
           Eliminar
@@ -149,8 +166,27 @@ export const DeleteCultivoDialog = ({ id }: { id: UUID }) => {
           </DrawerDescription>
         </DrawerHeader>
         <DrawerFooter className=''>
-          <Button variant={'destructive'} onClick={handleDelete}>
-            Eliminar
+          <Button
+            variant={'destructive'}
+            onClick={handleDelete}
+            disabled={state === 'success' || state === 'processing'}
+            className={cn(
+              state === 'success' && '!bg-green-700 disabled:opacity-100',
+            )}
+          >
+            {state === 'pending' || state === 'error' ? (
+              <>Eliminar</>
+            ) : state === 'processing' ? (
+              <>
+                Procesando <ReloadIcon className='animate-spin' />
+              </>
+            ) : (
+              state === 'success' && (
+                <>
+                  Eliminado <CheckIcon />
+                </>
+              )
+            )}
           </Button>
           <DrawerClose asChild>
             <Button variant={'outline'}>Cerrar</Button>
@@ -159,7 +195,7 @@ export const DeleteCultivoDialog = ({ id }: { id: UUID }) => {
       </DrawerContent>
     </Drawer>
   ) : (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size={'sm'} variant={'destructive'}>
           Eliminar
@@ -174,8 +210,27 @@ export const DeleteCultivoDialog = ({ id }: { id: UUID }) => {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className=''>
-          <Button variant={'destructive'} onClick={handleDelete}>
-            Eliminar
+          <Button
+            variant={'destructive'}
+            onClick={handleDelete}
+            disabled={state === 'success' || state === 'processing'}
+            className={cn(
+              state === 'success' && '!bg-green-700 disabled:opacity-100',
+            )}
+          >
+            {state === 'pending' || state === 'error' ? (
+              <>Eliminar</>
+            ) : state === 'processing' ? (
+              <>
+                Procesando <ReloadIcon className='animate-spin' />
+              </>
+            ) : (
+              state === 'success' && (
+                <>
+                  Eliminado <CheckIcon />
+                </>
+              )
+            )}
           </Button>
           <DialogClose asChild>
             <Button variant={'outline'}>Cerrar</Button>

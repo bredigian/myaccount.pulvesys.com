@@ -38,6 +38,8 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 
 import { AllData } from '@/types/root.types';
+import { APIError } from '@/types/error.types';
+import { useState } from 'react';
 
 interface Props {
   data: AllData;
@@ -213,11 +215,17 @@ export const AddOrEditPulverizacionDialog = ({ data }: Props) => {
   );
 };
 
+type State = 'pending' | 'processing' | 'success' | 'error';
+
 export const DeletePulverizacionDialog = ({ id }: { id: UUID }) => {
   const { push } = useRouter();
 
+  const [state, setState] = useState<State>('pending');
+  const { open, setOpen, handleOpen } = useDialog();
+
   const handleDelete = async () => {
     try {
+      setState('processing');
       const access_token = Cookies.get('access_token');
       if (!access_token) {
         toast.error('La sesión ha expirado', { position: 'top-center' });
@@ -229,19 +237,22 @@ export const DeletePulverizacionDialog = ({ id }: { id: UUID }) => {
       await deletePulverizacion(id, access_token);
       await revalidate('pulverizaciones');
 
-      toast.success('La pulverizacion fue eliminada.');
-
+      toast.success('La pulverización fue eliminada');
       push('/');
     } catch (error) {
-      if (error instanceof Error)
-        toast.error(error.message, { className: 'mb-[216px]' });
+      setState('error');
+      const { statusCode, message } = error as APIError;
+
+      toast.error(message, { position: 'top-center' });
+      const unauthorized = statusCode === 401 || statusCode === 403;
+      if (unauthorized) setTimeout(() => push('/'), 250);
     }
   };
 
   const isMobile = useIsMobile();
 
   return isMobile ? (
-    <Drawer>
+    <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <Button variant={'destructive'} size={'icon'}>
           <Trash2 />
@@ -265,7 +276,7 @@ export const DeletePulverizacionDialog = ({ id }: { id: UUID }) => {
       </DrawerContent>
     </Drawer>
   ) : (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant={'destructive'} size={'icon'}>
           <Trash2 />

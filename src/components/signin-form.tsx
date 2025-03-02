@@ -20,6 +20,7 @@ import { signin } from '@/services/auth.service';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { APIError } from '@/types/error.types';
 
 export default function SigninForm() {
   const {
@@ -49,7 +50,8 @@ export default function SigninForm() {
       setSuccess(true);
       setTimeout(() => push('/panel'), 1000);
     } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
+      const { message } = error as APIError;
+      toast.error(message);
     }
   };
 

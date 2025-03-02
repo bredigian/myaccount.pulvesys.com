@@ -31,6 +31,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { usuarioStore } from '@/store/usuario.store';
+import { APIError } from '@/types/error.types';
 
 type State = 'pending' | 'success' | 'error';
 
@@ -54,6 +55,7 @@ export default function LogoutDialog() {
       await signout(access_token);
 
       Cookies.remove('access_token');
+      Cookies.remove('refresh_token');
       Cookies.remove('userdata');
 
       clearUserdata();
@@ -61,10 +63,13 @@ export default function LogoutDialog() {
       setState('success');
 
       setTimeout(() => push('/'), 500);
-    } catch (e) {
+    } catch (error) {
       setState('error');
-      if (e instanceof Error)
-        toast.error(e.message, { position: 'top-center' });
+      const { statusCode, message } = error as APIError;
+
+      toast.error(message, { position: 'top-center' });
+      const unauthorized = statusCode === 401 || statusCode === 403;
+      if (unauthorized) setTimeout(() => push('/'), 250);
     }
   };
 
