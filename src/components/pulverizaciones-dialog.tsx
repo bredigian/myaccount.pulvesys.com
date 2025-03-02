@@ -20,7 +20,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from './ui/drawer';
-import { Droplet, Trash2 } from 'lucide-react';
+import { CheckIcon, Droplet, Trash2 } from 'lucide-react';
 import { Dialog as TDialog, useDialog } from '@/hooks/use-dialog';
 
 import { AddOrEditCampoDialog } from './campos-dialog';
@@ -40,6 +40,8 @@ import { useRouter } from 'next/navigation';
 import { AllData } from '@/types/root.types';
 import { APIError } from '@/types/error.types';
 import { useState } from 'react';
+import { cn } from '@/lib/utils';
+import { ReloadIcon } from '@radix-ui/react-icons';
 
 interface Props {
   data: AllData;
@@ -221,7 +223,7 @@ export const DeletePulverizacionDialog = ({ id }: { id: UUID }) => {
   const { push } = useRouter();
 
   const [state, setState] = useState<State>('pending');
-  const { open, setOpen, handleOpen } = useDialog();
+  const { open, setOpen } = useDialog();
 
   const handleDelete = async () => {
     try {
@@ -235,9 +237,10 @@ export const DeletePulverizacionDialog = ({ id }: { id: UUID }) => {
       }
 
       await deletePulverizacion(id, access_token);
+      setState('success');
+      toast.success('La pulverización fue eliminada');
       await revalidate('pulverizaciones');
 
-      toast.success('La pulverización fue eliminada');
       push('/');
     } catch (error) {
       setState('error');
@@ -266,8 +269,27 @@ export const DeletePulverizacionDialog = ({ id }: { id: UUID }) => {
           </DrawerDescription>
         </DrawerHeader>
         <DrawerFooter>
-          <Button variant={'destructive'} onClick={handleDelete}>
-            Eliminar
+          <Button
+            variant={'destructive'}
+            onClick={handleDelete}
+            disabled={state === 'success' || state === 'processing'}
+            className={cn(
+              state === 'success' && '!bg-green-700 disabled:opacity-100',
+            )}
+          >
+            {state === 'pending' || state === 'error' ? (
+              <>Eliminar</>
+            ) : state === 'processing' ? (
+              <>
+                Procesando <ReloadIcon className='animate-spin' />
+              </>
+            ) : (
+              state === 'success' && (
+                <>
+                  Eliminado <CheckIcon />
+                </>
+              )
+            )}
           </Button>
           <DrawerClose asChild>
             <Button variant={'outline'}>Cerrar</Button>
@@ -290,8 +312,27 @@ export const DeletePulverizacionDialog = ({ id }: { id: UUID }) => {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant={'destructive'} onClick={handleDelete}>
-            Eliminar
+          <Button
+            variant={'destructive'}
+            onClick={handleDelete}
+            disabled={state === 'success' || state === 'processing'}
+            className={cn(
+              state === 'success' && '!bg-green-700 disabled:opacity-100',
+            )}
+          >
+            {state === 'pending' || state === 'error' ? (
+              <>Eliminar</>
+            ) : state === 'processing' ? (
+              <>
+                Procesando <ReloadIcon className='animate-spin' />
+              </>
+            ) : (
+              state === 'success' && (
+                <>
+                  Eliminado <CheckIcon />
+                </>
+              )
+            )}
           </Button>
           <DialogClose asChild>
             <Button variant={'outline'}>Cerrar</Button>
