@@ -1,13 +1,21 @@
 import { API_URL } from '@/config/api';
+import { Token } from '@/types/auth.types';
 import { APIError } from '@/types/error.types';
 import { Producto } from '@/types/productos.types';
 import { UUID } from 'crypto';
 
-export const getProductos = async (access_token: string) => {
+export const getProductos = async (
+  access_token: string,
+  refresh_token: Token,
+) => {
   const PATH = `${API_URL}/v1/productos`;
   const OPTIONS: RequestInit = {
     method: 'GET',
-    headers: { Authorization: `Bearer ${access_token}` },
+    credentials: 'include',
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+      Cookie: JSON.stringify(refresh_token),
+    },
     next: { tags: ['productos'] },
   };
 
@@ -22,6 +30,7 @@ export const addProducto = async (payload: Producto, access_token: string) => {
   const PATH = `${API_URL}/v1/productos`;
   const OPTIONS: RequestInit = {
     method: 'POST',
+    credentials: 'include',
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
@@ -40,6 +49,7 @@ export const editProducto = async (payload: Producto, access_token: string) => {
   const PATH = `${API_URL}/v1/productos`;
   const OPTIONS: RequestInit = {
     method: 'PUT',
+    credentials: 'include',
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
@@ -58,6 +68,7 @@ export const deleteProducto = async (id: UUID, access_token: string) => {
   const PATH = `${API_URL}/v1/productos`;
   const OPTIONS: RequestInit = {
     method: 'DELETE',
+    credentials: 'include',
     body: JSON.stringify({ id }),
     headers: {
       'Content-Type': 'application/json',

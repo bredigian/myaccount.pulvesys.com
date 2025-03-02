@@ -1,6 +1,7 @@
 import { Sesion, UsuarioToSignin } from '@/types/usuario.types';
 
 import { API_URL } from '@/config/api';
+import { Token } from '@/types/auth.types';
 import { APIError } from '@/types/error.types';
 
 export const signin = async (payload: UsuarioToSignin) => {
@@ -8,6 +9,7 @@ export const signin = async (payload: UsuarioToSignin) => {
     method: 'POST',
     body: JSON.stringify(payload),
     headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
   };
   const PATH = `${API_URL}/v1/auth/signin`;
 
@@ -18,13 +20,18 @@ export const signin = async (payload: UsuarioToSignin) => {
   return data as Sesion;
 };
 
-export const verifySesion = async (token: string) => {
+export const verifySesion = async (
+  access_token: string,
+  refresh_token: Token,
+) => {
   const options: RequestInit = {
     method: 'GET',
+    credentials: 'include',
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${access_token}`,
+      Cookie: JSON.stringify(refresh_token),
     },
-    next: { tags: ['sesion'], revalidate: 3600 },
+    cache: 'no-cache',
   };
   const PATH = `${API_URL}/v1/auth/sesion`;
 
@@ -42,6 +49,7 @@ interface SignoutResponse {
 export const signout = async (token: string) => {
   const options: RequestInit = {
     method: 'DELETE',
+    credentials: 'include',
     headers: { Authorization: `Bearer ${token}` },
   };
   const PATH = `${API_URL}/v1/auth/sesion`;

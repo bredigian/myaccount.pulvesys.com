@@ -12,12 +12,13 @@ import { AddOrEditPulverizacionDialog } from './pulverizaciones-dialog';
 
 export default async function FetchDataContainerForAddPulverizacionForm() {
   const access_token = (await cookies()).get('access_token');
-  if (!access_token) redirect('/', RedirectType.replace);
+  const refresh_token = (await cookies()).get('refresh_token');
+  if (!access_token || !refresh_token) redirect('/', RedirectType.replace);
 
-  const campos = await getCampos(access_token.value);
-  const cultivos = await getCultivos(access_token.value);
-  const tratamientos = await getTratamientos(access_token.value);
-  const productos = await getProductos(access_token.value);
+  const campos = await getCampos(access_token.value, refresh_token);
+  const cultivos = await getCultivos(access_token.value, refresh_token);
+  const tratamientos = await getTratamientos(access_token.value, refresh_token);
+  const productos = await getProductos(access_token.value, refresh_token);
 
   if (
     'error' in campos ||

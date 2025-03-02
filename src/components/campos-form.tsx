@@ -22,6 +22,7 @@ import MapboxMap from './map';
 
 import { area, convertArea } from '@turf/turf';
 import { FeatureCollection } from 'geojson';
+import { APIError } from '@/types/error.types';
 
 export default function AddOrEditCampoForm({
   isEdit,
@@ -82,7 +83,11 @@ export default function AddOrEditCampoForm({
 
       await revalidate('campos');
     } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
+      const { statusCode, message } = error as APIError;
+
+      toast.error(message, { position: 'top-center' });
+      const unauthorized = statusCode === 401 || statusCode === 403;
+      if (unauthorized) setTimeout(() => push('/'), 250);
     }
   };
 

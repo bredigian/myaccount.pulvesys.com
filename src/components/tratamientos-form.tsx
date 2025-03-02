@@ -16,6 +16,7 @@ import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { APIError } from '@/types/error.types';
 
 export default function AddOrEditTratamientoForm({
   isEdit,
@@ -66,7 +67,11 @@ export default function AddOrEditTratamientoForm({
       setIsSubmitSuccessful(true);
       setTimeout(() => handleOpen(), 1000);
     } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
+      const { statusCode, message } = error as APIError;
+
+      toast.error(message, { position: 'top-center' });
+      const unauthorized = statusCode === 401 || statusCode === 403;
+      if (unauthorized) setTimeout(() => push('/'), 250);
     }
   };
 

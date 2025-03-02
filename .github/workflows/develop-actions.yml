@@ -1,0 +1,36 @@
+name: PulveSys Beta App CI/CD
+on:
+  push:
+    branches: ['develop']
+jobs:
+  build_run:
+    runs-on: self-hosted
+    env:
+      NEXT_PUBLIC_API_URL: ${{secrets.NEXT_PUBLIC_DEVELOPMENT_API_URL}}
+      NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{secrets.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}}
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Stop current PM2 beta process
+        run: pm2 stop beta.pulvesys.com
+      - name: Stop current PM2 production process
+        run: pm2 stop pulvesys.com
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4.1.0
+        with:
+          version: 10
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm i
+      - name: Build beta app
+        run: pnpm run build
+      - name: Reload production proxy server
+        run: pm2 reload pulvesys.com --update-env
+      - name: Reload beta proxy server
+        run: pm2 reload beta.pulvesys.com --update-env

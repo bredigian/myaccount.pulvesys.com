@@ -10,9 +10,10 @@ interface Props {
 
 export default async function CamposContainer({ query }: Props) {
   const access_token = (await cookies()).get('access_token');
-  if (!access_token) redirect('/', RedirectType.replace);
+  const refresh_token = (await cookies()).get('refresh_token');
+  if (!access_token || !refresh_token) redirect('/', RedirectType.replace);
 
-  const data = await getCampos(access_token.value);
+  const data = await getCampos(access_token.value, refresh_token);
   if ('error' in data) return <p>{data?.message}</p>;
 
   const filteredData = !query

@@ -11,7 +11,7 @@ import {
 import { FieldErrors, useForm } from 'react-hook-form';
 
 import { Button } from './ui/button';
-import Cookies from 'js-cookie';
+// import Cookies from 'js-cookie';
 import { Input } from './ui/input';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { UsuarioToSignin } from '@/types/usuario.types';
@@ -20,6 +20,7 @@ import { signin } from '@/services/auth.service';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { APIError } from '@/types/error.types';
 
 export default function SigninForm() {
   const {
@@ -41,18 +42,16 @@ export default function SigninForm() {
 
   const onSubmit = async (values: UsuarioToSignin) => {
     try {
-      const { access_token, expireIn } = await signin({
+      await signin({
         ...values,
         nombre_usuario: (values?.nombre_usuario as string)?.trim(),
-      });
-      Cookies.set('access_token', access_token, {
-        expires: new Date(expireIn),
       });
 
       setSuccess(true);
       setTimeout(() => push('/panel'), 1000);
     } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
+      const { message } = error as APIError;
+      toast.error(message);
     }
   };
 

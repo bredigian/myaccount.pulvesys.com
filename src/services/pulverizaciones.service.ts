@@ -1,14 +1,22 @@
 import { API_URL } from '@/config/api';
 import { AplicacionConConsumo } from '@/types/aplicaciones.types';
+import { Token } from '@/types/auth.types';
 import { APIError } from '@/types/error.types';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { UUID } from 'crypto';
 
-export const getPulverizaciones = async (access_token: string) => {
+export const getPulverizaciones = async (
+  access_token: string,
+  refresh_token: Token,
+) => {
   const PATH = `${API_URL}/v1/pulverizaciones`;
   const OPTIONS: RequestInit = {
     method: 'GET',
-    headers: { Authorization: `Bearer ${access_token}` },
+    credentials: 'include',
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+      Cookie: JSON.stringify(refresh_token),
+    },
     next: { tags: ['pulverizaciones'] },
   };
 
@@ -22,11 +30,16 @@ export const getPulverizaciones = async (access_token: string) => {
 export const getById = async (
   id: Pulverizacion['id'],
   access_token: string,
+  refresh_token: Token,
 ) => {
   const PATH = `${API_URL}/v1/pulverizaciones/detalle?id=${id}`;
   const OPTIONS: RequestInit = {
     method: 'GET',
-    headers: { Authorization: `Bearer ${access_token}` },
+    credentials: 'include',
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+      Cookie: JSON.stringify(refresh_token),
+    },
     next: { tags: ['pulverizaciones'] },
   };
 
@@ -44,6 +57,7 @@ export const addPulverizacion = async (
   const PATH = `${API_URL}/v1/pulverizaciones`;
   const OPTIONS: RequestInit = {
     method: 'POST',
+    credentials: 'include',
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
@@ -65,6 +79,7 @@ export const editPulverizacion = async (
   const PATH = `${API_URL}/v1/pulverizaciones`;
   const OPTIONS: RequestInit = {
     method: 'PUT',
+    credentials: 'include',
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
@@ -86,6 +101,7 @@ export const editAplicacionConsumo = async (
   const PATH = `${API_URL}/v1/pulverizaciones/aplicacion`;
   const OPTIONS: RequestInit = {
     method: 'PATCH',
+    credentials: 'include',
     body: JSON.stringify(payload),
     headers: {
       'Content-Type': 'application/json',
@@ -104,6 +120,7 @@ export const deletePulverizacion = async (id: UUID, access_token: string) => {
   const PATH = `${API_URL}/v1/pulverizaciones`;
   const OPTIONS: RequestInit = {
     method: 'DELETE',
+    credentials: 'include',
     body: JSON.stringify({ id }),
     headers: {
       'Content-Type': 'application/json',
