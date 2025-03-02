@@ -1,5 +1,6 @@
 import { API_URL } from '@/config/api';
 import { Token } from '@/types/auth.types';
+import { APIError } from '@/types/error.types';
 import { Producto } from '@/types/productos.types';
 import { UUID } from 'crypto';
 
@@ -19,9 +20,8 @@ export const getProductos = async (
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Producto[] | Error = await res.json();
-
-  if (!res.ok) return new Error((data as Error)?.message);
+  const data: Producto[] | APIError = await res.json();
+  if (!res.ok) return data as APIError;
 
   return data as Producto[];
 };
@@ -39,9 +39,8 @@ export const addProducto = async (payload: Producto, access_token: string) => {
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Producto | Error = await res.json();
-
-  if (!res.ok) throw new Error((data as Error)?.message);
+  const data: Producto | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
 
   return data as Producto;
 };
@@ -59,9 +58,8 @@ export const editProducto = async (payload: Producto, access_token: string) => {
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Producto | Error = await res.json();
-
-  if (!res.ok) throw new Error((data as Error)?.message);
+  const data: Producto | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
 
   return data as Producto;
 };
@@ -79,9 +77,8 @@ export const deleteProducto = async (id: UUID, access_token: string) => {
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: { count: number } | Error = await res.json();
-
-  if (!res.ok) throw new Error((data as Error)?.message);
+  const data: { count: number } | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
 
   return data as { count: number };
 };

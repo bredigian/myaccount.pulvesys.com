@@ -14,7 +14,7 @@ export async function middleware(req: NextRequest) {
   if (access_token && refresh_token) {
     const sesion = await verifySesion(access_token.value, refresh_token);
 
-    if (sesion instanceof Error) {
+    if ('error' in sesion) {
       if (pathname.includes('/panel'))
         return NextResponse.redirect(new URL('/', req.url));
 

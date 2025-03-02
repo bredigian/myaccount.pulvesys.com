@@ -1,5 +1,6 @@
 import { API_URL } from '@/config/api';
 import { Token } from '@/types/auth.types';
+import { APIError } from '@/types/error.types';
 import { Tratamiento } from '@/types/tratamientos.types';
 import { UUID } from 'crypto';
 
@@ -19,9 +20,8 @@ export const getTratamientos = async (
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Tratamiento[] | Error = await res.json();
-
-  if (!res.ok) return new Error((data as Error)?.message);
+  const data: Tratamiento[] | APIError = await res.json();
+  if (!res.ok) return data as APIError;
 
   return data as Tratamiento[];
 };
@@ -42,9 +42,8 @@ export const addTratamiento = async (
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Tratamiento | Error = await res.json();
-
-  if (!res.ok) throw new Error((data as Error)?.message);
+  const data: Tratamiento | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
 
   return data as Tratamiento;
 };
@@ -65,9 +64,8 @@ export const editTratamiento = async (
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Tratamiento | Error = await res.json();
-
-  if (!res.ok) throw new Error((data as Error)?.message);
+  const data: Tratamiento | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
 
   return data as Tratamiento;
 };
@@ -85,9 +83,8 @@ export const deleteTratamiento = async (id: UUID, access_token: string) => {
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: { count: number } | Error = await res.json();
-
-  if (!res.ok) throw new Error((data as Error)?.message);
+  const data: { count: number } | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
 
   return data as { count: number };
 };

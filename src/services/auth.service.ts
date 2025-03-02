@@ -2,6 +2,7 @@ import { Sesion, UsuarioToSignin } from '@/types/usuario.types';
 
 import { API_URL } from '@/config/api';
 import { Token } from '@/types/auth.types';
+import { APIError } from '@/types/error.types';
 
 export const signin = async (payload: UsuarioToSignin) => {
   const OPTIONS: RequestInit = {
@@ -13,9 +14,8 @@ export const signin = async (payload: UsuarioToSignin) => {
   const PATH = `${API_URL}/v1/auth/signin`;
 
   const res = await fetch(PATH, OPTIONS);
-  const data = await res.json();
-
-  if (!res.ok) throw new Error((data as Error).message);
+  const data: Sesion | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
 
   return data as Sesion;
 };
@@ -34,12 +34,17 @@ export const verifySesion = async (
     cache: 'no-cache',
   };
   const PATH = `${API_URL}/v1/auth/sesion`;
+
   const res = await fetch(PATH, options);
-  const data = await res.json();
-  if (!res.ok) return new Error((data as Error).message);
+  const data: Sesion | APIError = await res.json();
+  if (!res.ok) return data as APIError;
 
   return data as Sesion;
 };
+
+interface SignoutResponse {
+  ok: boolean;
+}
 
 export const signout = async (token: string) => {
   const options: RequestInit = {
@@ -50,8 +55,8 @@ export const signout = async (token: string) => {
   const PATH = `${API_URL}/v1/auth/sesion`;
 
   const res = await fetch(PATH, options);
-  const data = await res.json();
-  if (!res.ok) throw new Error((data as Error).message);
+  const data: SignoutResponse | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
 
-  return { ok: true };
+  return { ok: true } as SignoutResponse;
 };

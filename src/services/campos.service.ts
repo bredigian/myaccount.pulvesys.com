@@ -1,6 +1,7 @@
 import { API_URL } from '@/config/api';
 import { Token } from '@/types/auth.types';
 import { Campo } from '@/types/campos.types';
+import { APIError } from '@/types/error.types';
 import { UUID } from 'crypto';
 
 export const getCampos = async (access_token: string, refresh_token: Token) => {
@@ -16,9 +17,8 @@ export const getCampos = async (access_token: string, refresh_token: Token) => {
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Campo[] | Error = await res.json();
-
-  if (!res.ok) return new Error((data as Error)?.message);
+  const data: Campo[] | APIError = await res.json();
+  if (!res.ok) return data as APIError;
 
   return data as Campo[];
 };
@@ -36,9 +36,8 @@ export const addCampo = async (payload: Campo, access_token: string) => {
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Campo | Error = await res.json();
-
-  if (!res.ok) throw new Error((data as Error)?.message);
+  const data: Campo | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
 
   return data as Campo;
 };
@@ -56,9 +55,8 @@ export const editCampo = async (payload: Campo, access_token: string) => {
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Campo | Error = await res.json();
-
-  if (!res.ok) throw new Error((data as Error)?.message);
+  const data: Campo | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
 
   return data as Campo;
 };
@@ -76,9 +74,8 @@ export const deleteCampo = async (id: UUID, access_token: string) => {
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: { count: number } | Error = await res.json();
-
-  if (!res.ok) throw new Error((data as Error)?.message);
+  const data: { count: number } | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
 
   return data as { count: number };
 };
@@ -96,9 +93,8 @@ export const deleteLote = async (id: UUID, access_token: string) => {
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: { count: number } | Error = await res.json();
-
-  if (!res.ok) throw new Error((data as Error)?.message);
+  const data: { count: number } | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
 
   return data as { count: number };
 };

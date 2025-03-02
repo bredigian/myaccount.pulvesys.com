@@ -21,10 +21,10 @@ export default async function FetchDataContainerForAddPulverizacionForm() {
   const productos = await getProductos(access_token.value, refresh_token);
 
   if (
-    campos instanceof Error ||
-    cultivos instanceof Error ||
-    tratamientos instanceof Error ||
-    productos instanceof Error
+    'error' in campos ||
+    'error' in cultivos ||
+    'error' in tratamientos ||
+    'error' in productos
   )
     return (
       <Button type='button' disabled>

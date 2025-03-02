@@ -1,6 +1,7 @@
 import { API_URL } from '@/config/api';
 import { AplicacionConConsumo } from '@/types/aplicaciones.types';
 import { Token } from '@/types/auth.types';
+import { APIError } from '@/types/error.types';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { UUID } from 'crypto';
 
@@ -20,9 +21,8 @@ export const getPulverizaciones = async (
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Pulverizacion[] | Error = await res.json();
-
-  if (!res.ok) return new Error((data as Error)?.message);
+  const data: Pulverizacion[] | APIError = await res.json();
+  if (!res.ok) return data as APIError;
 
   return data as Pulverizacion[];
 };
@@ -44,9 +44,8 @@ export const getById = async (
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Pulverizacion | Error = await res.json();
-
-  if (!res.ok) return new Error((data as Error)?.message);
+  const data: Pulverizacion | APIError = await res.json();
+  if (!res.ok) return data as APIError;
 
   return data as Pulverizacion;
 };
@@ -67,9 +66,8 @@ export const addPulverizacion = async (
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Pulverizacion | Error = await res.json();
-
-  if (!res.ok) throw new Error((data as Error)?.message);
+  const data: Pulverizacion | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
 
   return data as Pulverizacion;
 };
@@ -90,9 +88,8 @@ export const editPulverizacion = async (
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Pulverizacion | Error = await res.json();
-
-  if (!res.ok) throw new Error((data as Error)?.message);
+  const data: Pulverizacion | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
 
   return data as Pulverizacion;
 };
@@ -113,9 +110,8 @@ export const editAplicacionConsumo = async (
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Pulverizacion | Error = await res.json();
-
-  if (!res.ok) throw new Error((data as Error)?.message);
+  const data: Pulverizacion | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
 
   return data as Pulverizacion;
 };
@@ -133,9 +129,8 @@ export const deletePulverizacion = async (id: UUID, access_token: string) => {
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: { count: number } | Error = await res.json();
-
-  if (!res.ok) throw new Error((data as Error)?.message);
+  const data: { count: number } | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
 
   return data as { count: number };
 };

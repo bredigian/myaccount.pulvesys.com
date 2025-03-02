@@ -43,6 +43,7 @@ import { Cultivo } from '@/types/cultivos.types';
 import { Tratamiento } from '@/types/tratamientos.types';
 import { useDebouncedCallback } from 'use-debounce';
 import { DateTime } from 'luxon';
+import { APIError } from '@/types/error.types';
 
 interface PulverizacionExtended extends Pulverizacion {
   campo_id: Campo['id'];
@@ -233,7 +234,11 @@ export default function AddOrEditPulverizacionForm({
 
       setTimeout(() => handleOpen(), 1000);
     } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
+      const { statusCode, message } = error as APIError;
+
+      toast.error(message);
+      const unauthorized = statusCode === 401 || statusCode === 403;
+      if (unauthorized) setTimeout(() => push('/'), 250);
     }
   };
 
