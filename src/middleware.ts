@@ -10,7 +10,7 @@ export async function middleware(req: NextRequest) {
   if (access_token) {
     const sesion = await verifySesion(access_token.value);
 
-    if (sesion instanceof Error) {
+    if ('error' in sesion) {
       if (pathname.includes('/panel'))
         return NextResponse.redirect(new URL('/', req.url));
 
