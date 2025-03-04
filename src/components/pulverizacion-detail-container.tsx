@@ -43,13 +43,13 @@ interface Props {
 }
 
 export default function PulverizacionDetailContainer({ data }: Props) {
-  const selectedHectareas = data.detalle.campo?.Lote?.filter((lote) =>
+  const selectedHectareas = data?.detalle?.campo?.Lote?.filter((lote) =>
     data.detalle.lotes.includes(lote.nombre as string),
   ).reduce((acc, lote) => acc + (lote?.hectareas as number), 0);
 
   const { nombre, apellido } = usuarioStore();
 
-  const lotesPulverizados = data.detalle.campo?.Lote?.filter((lote) =>
+  const lotesPulverizados = data?.detalle?.campo?.Lote?.filter((lote) =>
     data.detalle.lotes.includes(lote?.nombre as string),
   );
 
@@ -59,7 +59,7 @@ export default function PulverizacionDetailContainer({ data }: Props) {
         <div className='flex items-center gap-4'>
           <BackToPulverizacionesButton />
           <h1 className='text-2xl font-semibold'>
-            {data.detalle.campo?.nombre}
+            {data?.detalle?.campo?.nombre}
           </h1>
         </div>
         <aside className='flex items-center gap-2'>
@@ -116,7 +116,7 @@ export default function PulverizacionDetailContainer({ data }: Props) {
         </div>
         <div className='flex w-full flex-col gap-6 lg:flex-row'>
           <MapboxMap
-            lotesCampo={data.detalle.campo?.Lote as Lote[]}
+            lotesCampo={data?.detalle?.campo?.Lote as Lote[]}
             lotesPulverizados={lotesPulverizados as Lote[]}
             customZoom={13}
             size='!h-[40dvh] lg:!h-[78.5vh]'
@@ -143,28 +143,28 @@ export default function PulverizacionDetailContainer({ data }: Props) {
                 </Badge>
                 <Badge variant={'secondary'} className='w-fit space-x-1'>
                   <Leaf size={14} />
-                  <h6>{data.detalle.cultivo?.nombre}</h6>
+                  <h6>{data?.detalle?.cultivo?.nombre}</h6>
                 </Badge>
                 <Badge variant={'secondary'} className='w-fit space-x-1'>
                   <ListCheckIcon size={14} />
-                  <h6>{data.detalle.tratamiento?.nombre}</h6>
+                  <h6>{data?.detalle?.tratamiento?.nombre}</h6>
                 </Badge>
                 <Badge
                   variant={'secondary'}
                   className={cn(
                     'flex w-fit items-center gap-1',
-                    data.detalle.observacion
+                    data?.detalle?.observacion
                       ? '!bg-yellow-200'
                       : 'bg-secondary',
                   )}
                 >
-                  {data.detalle.observacion ? (
+                  {data?.detalle?.observacion ? (
                     <MessageCircleWarning size={14} className='flex-shrink-0' />
                   ) : (
                     <MessageCircleOff size={14} className='flex-shrink-0' />
                   )}
                   <h6 className='break-words'>
-                    {data.detalle.observacion || 'Sin observaciones'}
+                    {data?.detalle?.observacion || 'Sin observaciones'}
                   </h6>
                 </Badge>
               </CardContent>
@@ -175,10 +175,11 @@ export default function PulverizacionDetailContainer({ data }: Props) {
               </CardHeader>
               <CardContent className='flex flex-wrap items-center gap-4 overflow-y-auto'>
                 <ul className='w-full space-y-4'>
-                  {data.Aplicacion?.map((aplicacion) => {
-                    const consumo: ConsumoProducto = data.ConsumoProducto?.find(
-                      (item) => item.producto_id === aplicacion.producto?.id,
-                    ) as ConsumoProducto;
+                  {data?.Aplicacion?.map((aplicacion) => {
+                    const consumo: ConsumoProducto =
+                      data?.ConsumoProducto?.find(
+                        (item) => item.producto_id === aplicacion.producto?.id,
+                      ) as ConsumoProducto;
 
                     const defaultValues: AplicacionConConsumo = {
                       consumo_id: consumo.id,
