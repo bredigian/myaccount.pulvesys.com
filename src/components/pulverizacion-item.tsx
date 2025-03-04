@@ -16,8 +16,9 @@ export default function PulverizacionItem({ pulverizacion }: Props) {
   return (
     <li className='flex items-start justify-between'>
       <Link
-        href={`/panel/pulverizacion?id=${pulverizacion.id}`}
+        href={`/panel/pulverizacion/${pulverizacion.id}`}
         className='w-full'
+        prefetch={false}
       >
         <Card className='h-full w-full duration-200 ease-in-out hover:cursor-pointer hover:bg-secondary'>
           <CardHeader>

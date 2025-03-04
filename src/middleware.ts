@@ -2,22 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { verifySesion } from './services/auth.service';
 
-export const credentials = 'include';
-
 export async function middleware(req: NextRequest) {
+  const access_token_from_request = req.cookies.get('access_token');
+  const refresh_token_from_request = req.cookies.get('refresh_token');
+
   const { pathname } = req.nextUrl;
-  const isHome = pathname === '/';
 
-  const access_token = req.cookies.get('access_token');
-  const refresh_token = req.cookies.get('refresh_token');
-
-  if (access_token && refresh_token) {
-    const sesion = await verifySesion(access_token.value, refresh_token);
+  if (access_token_from_request && refresh_token_from_request) {
+    const sesion = await verifySesion(
+      access_token_from_request.value,
+      refresh_token_from_request,
+    );
 
     if ('error' in sesion) {
-      if (pathname.includes('/panel'))
-        return NextResponse.redirect(new URL('/', req.url));
-
       const res = NextResponse.next();
       res.cookies.delete('access_token');
       res.cookies.delete('refresh_token');
@@ -26,12 +23,45 @@ export async function middleware(req: NextRequest) {
       return res;
     }
 
-    if (isHome) return NextResponse.redirect(new URL('/panel', req.url));
+    const { access_token, refresh_token, expireIn, userdata, domain } = sesion;
 
-    return NextResponse.next();
+    const expireDate = new Date(expireIn);
+
+    if (pathname.includes('/panel')) {
+      const res = NextResponse.next();
+      res.cookies.set('access_token', access_token, {
+        expires: expireDate,
+        domain,
+      });
+      res.cookies.set('refresh_token', refresh_token as string, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        expires: expireDate,
+        domain,
+      });
+      res.cookies.set('userdata', JSON.stringify(userdata), {
+        expires: expireDate,
+        domain,
+      });
+
+      return res;
+    }
+
+    return NextResponse.redirect(new URL('/panel', req.url), {
+      headers: {
+        'Set-Cookie': [
+          `access_token=${access_token}; Expires=${expireDate}; Domain=${domain};`,
+          `refresh_token=${refresh_token}; Expires=${expireDate}; HttpOnly; Secure; Domain=${domain}; SameSite=None;`,
+          `userdata=${JSON.stringify(userdata)}; Expires=${expireDate}; Domain=${domain};`,
+        ].join(', '),
+      },
+    });
   }
 
-  if (!isHome) return NextResponse.redirect(new URL('/', req.url));
+  if (pathname.includes('/panel'))
+    return NextResponse.redirect(new URL('/', req.url));
+
   return NextResponse.next();
 }
 
@@ -39,8 +69,9 @@ export const config = {
   matcher: [
     '/',
     '/panel',
+    '/panel/pulverizacion',
+    '/panel/pulverizacion/:id',
     '/panel/productos',
-    '/panel/tratamiento',
     '/panel/campos',
     '/panel/cultivos&tratamientos',
   ],
