@@ -14,7 +14,20 @@ export async function middleware(req: NextRequest) {
       refresh_token_from_request,
     );
 
+    console.log(sesion);
+
     if ('error' in sesion) {
+      if (pathname.includes('/panel')) {
+        return NextResponse.redirect(new URL('/', req.url), {
+          headers: {
+            'Set-Cookie': [
+              `access_token=;`,
+              `refresh_token=;`,
+              `userdata=;`,
+            ].join(', '),
+          },
+        });
+      }
       const res = NextResponse.next();
       res.cookies.delete('access_token');
       res.cookies.delete('refresh_token');
