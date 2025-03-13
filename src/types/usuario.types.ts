@@ -32,4 +32,5 @@ export interface Sesion {
   refresh_token?: UUID;
   expireIn: Date;
   userdata: Usuario;
+  domain: string;
 }

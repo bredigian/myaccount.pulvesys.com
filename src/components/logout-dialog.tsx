@@ -53,15 +53,9 @@ export default function LogoutDialog() {
       }
 
       await signout(access_token);
-
-      Cookies.remove('access_token');
-      Cookies.remove('refresh_token');
-      Cookies.remove('userdata');
-
       clearUserdata();
 
       setState('success');
-
       setTimeout(() => push('/'), 500);
     } catch (error) {
       setState('error');
