@@ -33,4 +33,4 @@ jobs:
       - name: Reload production proxy server
         run: pm2 reload pulvesys.com --update-env
       - name: Reload beta proxy server
-        run: pm2 reload beta.pulvesys.com --update-env
+        run: pm2 reload beta.pulvesys.com
