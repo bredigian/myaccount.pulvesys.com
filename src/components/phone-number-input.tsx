@@ -24,7 +24,7 @@ const CustomInput = ({ value, onChange, ...props }: Props) => (
     <Input
       id='phone_number_input'
       value={value}
-      onChange={onChange}
+      onChange={(e) => onChange(e.target.value)}
       {...props}
       className='w-full pl-9 text-sm lg:text-base'
       placeholder='Nro. de teléfono'

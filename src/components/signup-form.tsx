@@ -21,7 +21,6 @@ import { PLANES_DATA } from '@/data/plans';
 import { Badge } from './ui/badge';
 import Link from 'next/link';
 import { Label } from './ui/label';
-import { useDebouncedCallback } from 'use-debounce';
 
 const PLANES = Object.entries(ROLES)
   .map(([key, value]) => ({
@@ -35,7 +34,7 @@ export default function SignupForm() {
     register,
     handleSubmit,
     control,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting },
     watch,
   } = useForm<UsuarioToSignup>();
 
