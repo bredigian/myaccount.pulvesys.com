@@ -11,7 +11,6 @@ import {
 import { FieldErrors, useForm } from 'react-hook-form';
 
 import { Button } from './ui/button';
-// import Cookies from 'js-cookie';
 import { Input } from './ui/input';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { UsuarioToSignin } from '@/types/usuario.types';
@@ -21,6 +20,7 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { APIError } from '@/types/error.types';
+import Link from 'next/link';
 
 export default function SigninForm() {
   const {
@@ -103,28 +103,35 @@ export default function SigninForm() {
           {!showPassword ? <EyeClosed /> : <Eye />}
         </Button>
       </div>
-      <Button
-        type='submit'
-        className={cn(
-          'w-full disabled:opacity-100 lg:text-base',
-          !success ? 'bg-primary' : '!bg-green-700',
-        )}
-        disabled={isSubmitting || success}
-      >
-        {success ? (
-          <>
-            Bienvenido <ShieldCheck className='lg:!size-5' />
-          </>
-        ) : !isSubmitting ? (
-          <>
-            Iniciar sesión <LogIn className='lg:!size-5' />
-          </>
-        ) : (
-          <>
-            Autenticando <ReloadIcon className='animate-spin lg:!size-5' />
-          </>
-        )}
-      </Button>
+      <div className='flex w-full flex-col items-center gap-2'>
+        <Button
+          type='submit'
+          className={cn(
+            'w-full disabled:opacity-100 lg:text-base',
+            !success ? 'bg-primary' : '!bg-green-700',
+          )}
+          disabled={isSubmitting || success}
+        >
+          {success ? (
+            <>
+              Bienvenido <ShieldCheck className='lg:!size-5' />
+            </>
+          ) : !isSubmitting ? (
+            <>
+              Iniciar sesión <LogIn className='lg:!size-5' />
+            </>
+          ) : (
+            <>
+              Autenticando <ReloadIcon className='animate-spin lg:!size-5' />
+            </>
+          )}
+        </Button>
+        <Link href={'/registrarse'} className='w-full'>
+          <Button type='button' variant={'outline'} className='w-full'>
+            Registrarse
+          </Button>
+        </Link>
+      </div>
     </form>
   );
 }
