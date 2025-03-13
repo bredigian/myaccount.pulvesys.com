@@ -20,6 +20,8 @@ import PhoneNumberInput from './phone-number-input';
 import { PLANES_DATA } from '@/data/plans';
 import { Badge } from './ui/badge';
 import Link from 'next/link';
+import { Label } from './ui/label';
+import { useDebouncedCallback } from 'use-debounce';
 
 const PLANES = Object.entries(ROLES)
   .map(([key, value]) => ({
@@ -100,9 +102,15 @@ export default function SignupForm() {
 
   return (
     <form
-      className='grid h-full w-full grid-cols-4 gap-4'
+      className='grid h-full w-full grid-cols-8 gap-4'
       onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
     >
+      <Label
+        htmlFor='nombre_input'
+        className='col-span-full mb-2 self-start md:text-base'
+      >
+        Completa el siguiente formulario
+      </Label>
       <Input
         {...register('nombre', {
           required: {
@@ -113,7 +121,7 @@ export default function SignupForm() {
         })}
         id='nombre_input'
         placeholder='Nombre'
-        className='col-span-full text-sm lg:text-base'
+        className='col-span-full text-sm md:col-span-4 lg:text-base'
         type='text'
       />
       <Input
@@ -125,7 +133,7 @@ export default function SignupForm() {
           minLength: { value: 3, message: 'Debe tener al menos 3 caracteres.' },
         })}
         placeholder='Apellido'
-        className='col-span-full text-sm lg:text-base'
+        className='col-span-full text-sm md:col-span-4 lg:text-base'
         type='text'
       />
 
@@ -153,7 +161,7 @@ export default function SignupForm() {
           },
         })}
         placeholder='Correo electrónico'
-        className='col-span-full text-sm lg:text-base'
+        className='col-span-full text-sm md:col-span-5 lg:col-span-4 lg:text-base xl:col-span-5'
         type='text'
       />
       <Controller
@@ -224,7 +232,7 @@ export default function SignupForm() {
           }}
           render={({ field }) => (
             <Select onValueChange={field.onChange}>
-              <SelectTrigger className='col-span-3 !mt-0 text-sm'>
+              <SelectTrigger className='col-span-3 !mt-0 text-sm lg:text-base'>
                 <SelectValue placeholder='Seleccione un plan' />
               </SelectTrigger>
               <SelectContent className='col-span-3' align='start'>
@@ -242,7 +250,9 @@ export default function SignupForm() {
             <CardHeader>
               <CardTitle className='flex w-full items-center justify-between'>
                 <h4>{selectedPlan?.value}</h4>
-                <Badge>${selectedPlan?.price.toLocaleString('es-AR')}</Badge>
+                <Badge className='lg:text-base'>
+                  ${selectedPlan?.price.toLocaleString('es-AR')}
+                </Badge>
               </CardTitle>
               <CardDescription>{selectedPlan?.description}</CardDescription>
             </CardHeader>

@@ -127,8 +127,12 @@ export default function SigninForm() {
           )}
         </Button>
         <Link href={'/registrarse'} className='w-full'>
-          <Button type='button' variant={'outline'} className='w-full'>
-            Registrarse
+          <Button
+            type='button'
+            variant={'outline'}
+            className='w-full lg:text-base'
+          >
+            Crear una cuenta
           </Button>
         </Link>
       </div>

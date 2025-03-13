@@ -26,7 +26,7 @@ const CustomInput = ({ value, onChange, ...props }: Props) => (
       value={value}
       onChange={onChange}
       {...props}
-      className='w-full pl-9 text-sm'
+      className='w-full pl-9 text-sm lg:text-base'
       placeholder='Nro. de teléfono'
     />
   </div>
@@ -34,7 +34,7 @@ const CustomInput = ({ value, onChange, ...props }: Props) => (
 
 export default function PhoneNumberInput({ value, onChange }: Props) {
   return (
-    <div className='relative col-span-full flex h-fit items-center'>
+    <div className='relative col-span-full flex h-fit items-center md:col-span-3 lg:col-span-4 xl:col-span-3'>
       <PhoneInput
         onChange={(val) => {
           if (!val) return;
