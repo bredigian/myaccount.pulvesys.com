@@ -13,8 +13,6 @@ jobs:
         node-version: [22.x]
     steps:
       - uses: actions/checkout@v4
-      - name: Stop current PM2 production process
-        run: pm2 stop pulvesys.com
       - name: Setup pnpm
         uses: pnpm/action-setup@v4.1.0
         with:
