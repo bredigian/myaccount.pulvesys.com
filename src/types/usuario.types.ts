@@ -25,6 +25,7 @@ export interface Usuario extends UsuarioToSignin {
   nombre: string | null;
   apellido: string | null;
   Sesion?: Sesion[];
+  rol: keyof typeof ROLES | null;
 }
 
 export interface Sesion {

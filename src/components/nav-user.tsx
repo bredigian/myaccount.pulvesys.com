@@ -7,7 +7,7 @@ import LogoutDialog from './logout-dialog';
 import { usuarioStore } from '@/store/usuario.store';
 
 export function NavUser() {
-  const { nombre_usuario, nombre, apellido } = usuarioStore();
+  const { nombre_usuario, nombre, apellido, rol } = usuarioStore();
   const avatar = nombre
     ?.charAt(0)
     .concat(apellido?.charAt(0) as string)
@@ -15,8 +15,8 @@ export function NavUser() {
 
   return (
     <SidebarMenu>
-      <SidebarMenuItem className='flex items-center justify-between p-2'>
-        <div className='flex items-center gap-2'>
+      <SidebarMenuItem className='flex items-center justify-between gap-4 p-2'>
+        <div className='flex items-start gap-2'>
           <Avatar className='h-8 w-8 rounded-lg'>
             <AvatarFallback>{avatar}</AvatarFallback>
           </Avatar>

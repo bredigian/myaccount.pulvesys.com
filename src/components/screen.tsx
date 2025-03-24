@@ -7,6 +7,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { ENTERPRISE_ROUTES, ROUTES } from '@/routes';
 import { ReactNode, useEffect } from 'react';
 import {
   SidebarInset,
@@ -16,7 +17,6 @@ import {
 
 import { AppSidebar } from '@/components/app-sidebar';
 import Link from 'next/link';
-import { ROUTES } from '@/routes';
 import { Separator } from '@/components/ui/separator';
 import { Usuario } from '@/types/usuario.types';
 import { usePathname } from 'next/navigation';
@@ -30,7 +30,10 @@ interface Props {
 export default function Screen({ children, userdata }: Props) {
   const pathname = usePathname();
   const isPulverizacionDetail = pathname === '/panel/pulverizacion';
-  const HEADER_TITLE = ROUTES.find((route) => route.url === pathname);
+  const isEnterpriseRoute = pathname.includes('empresa');
+  const HEADER_TITLE = (!isEnterpriseRoute ? ROUTES : ENTERPRISE_ROUTES).find(
+    (route) => route.url === pathname,
+  );
 
   const { nombre_usuario, setUserdata } = usuarioStore();
 
@@ -50,7 +53,11 @@ export default function Screen({ children, userdata }: Props) {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className='hidden md:block'>
-                  <Link href='/panel'>Administración</Link>
+                  {!isEnterpriseRoute ? (
+                    <Link href='/panel'>Administración</Link>
+                  ) : (
+                    <Link href={'/empresa'}>Empresa</Link>
+                  )}
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className='hidden md:block' />
                 {!isPulverizacionDetail ? (

@@ -180,8 +180,6 @@ export default function MapboxMap({
     }),
   };
 
-  // console.log(area(actualGeoJSON));
-
   return (
     <div
       className={cn(

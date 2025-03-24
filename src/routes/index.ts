@@ -1,6 +1,25 @@
-import { Droplets, Leaf, MapIcon, Package } from 'lucide-react';
+import {
+  CreditCard,
+  Droplets,
+  LayoutDashboard,
+  Leaf,
+  LucideProps,
+  MapIcon,
+  Package,
+  Users,
+} from 'lucide-react';
+import { ForwardRefExoticComponent, ReactNode, RefAttributes } from 'react';
 
-export const ROUTES = [
+type Route = {
+  title: string;
+  url: `/${string}`;
+  icon: ForwardRefExoticComponent<
+    Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
+  >;
+  isActive?: boolean;
+};
+
+export const ROUTES: Route[] = [
   {
     title: 'Pulverizaciones',
     url: '/panel',
@@ -21,5 +40,23 @@ export const ROUTES = [
     title: 'Ubicaciones',
     url: '/panel/campos',
     icon: MapIcon,
+  },
+];
+
+export const ENTERPRISE_ROUTES: Route[] = [
+  {
+    title: 'Panel',
+    url: '/empresa',
+    icon: LayoutDashboard,
+  },
+  {
+    title: 'Usuarios',
+    url: '/empresa/usuarios',
+    icon: Users,
+  },
+  {
+    title: 'Pagos & Facturación',
+    url: '/empresa/facturacion',
+    icon: CreditCard,
   },
 ];

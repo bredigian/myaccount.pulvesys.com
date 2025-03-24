@@ -10,16 +10,18 @@ export const usuarioStore = create<UsuarioStore>((set) => ({
   nombre_usuario: null,
   nombre: null,
   apellido: null,
+  rol: null,
 
   setUserdata(userdata: Partial<Usuario>) {
     set({
       nombre_usuario: userdata.nombre_usuario,
       nombre: userdata.nombre,
       apellido: userdata.apellido,
+      rol: userdata.rol,
     });
   },
 
   clearUserdata() {
-    set({ nombre_usuario: null, nombre: null, apellido: null });
+    set({ nombre_usuario: null, nombre: null, apellido: null, rol: null });
   },
 }));

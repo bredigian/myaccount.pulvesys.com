@@ -13,7 +13,6 @@ interface Props {
 
 export default async function PulverizacionDetail({ params }: Props) {
   const { id } = await params;
-  console.log(id);
   if (!id) redirect('/panel', RedirectType.replace);
 
   const access_token = (await cookies()).get('access_token');
