@@ -3,6 +3,7 @@ import Finder from '@/components/finder';
 import { MAX_USERS } from '@/data/max_users';
 import { Suspense } from 'react';
 import UsuariosContainer from '@/components/usuarios-container';
+import { UsuariosContainerSkeleton } from '@/components/container-skeleton';
 
 interface Props {
   searchParams: Promise<{ filter: string }>;
@@ -21,7 +22,7 @@ export default async function PanelUsuariosEmpresa({ searchParams }: Props) {
         <Finder param='filter' placeholder='Buscar' />
         <AddOrEditUsuarioDialog />
       </aside>
-      <Suspense fallback={<>Loading...</>}>
+      <Suspense fallback={<UsuariosContainerSkeleton />}>
         <UsuariosContainer filter={filter} />
       </Suspense>
     </main>

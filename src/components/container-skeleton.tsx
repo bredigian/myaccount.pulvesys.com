@@ -1,9 +1,11 @@
 import {
   CultivoTratamientoItemSkeleton,
   ProductoItemSkeleton,
+  UsuarioItemSkeleton,
 } from './skeleton';
-import { Skeleton } from './ui/skeleton';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from './ui/table';
+
+import { Skeleton } from './ui/skeleton';
 
 export const ProductosContainerSkeleton = () => {
   return (
@@ -18,6 +20,29 @@ export const ProductosContainerSkeleton = () => {
       <TableBody>
         {Array.from({ length: 20 }, (_, i) => (
           <ProductoItemSkeleton key={`producto-item-skeleton-${i}`} />
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
+
+export const UsuariosContainerSkeleton = () => {
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Nombre</TableHead>
+          <TableHead>Apellido</TableHead>
+          <TableHead>Correo electrónico</TableHead>
+          <TableHead>Nombre de usuario</TableHead>
+          <TableHead>Nro. de teléfono</TableHead>
+          <TableHead>ID</TableHead>
+          <TableHead className='text-end'>Opciones</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {Array.from({ length: 20 }, (_, i) => (
+          <UsuarioItemSkeleton key={`usuario-item-skeleton-${i}`} />
         ))}
       </TableBody>
     </Table>
