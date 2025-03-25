@@ -22,6 +22,7 @@ export interface UsuarioToSignup extends UsuarioToSignin {
 
 export interface Usuario extends UsuarioToSignup {
   id?: string;
+  empresa_id?: string;
   Sesion?: Sesion[];
 }
 
