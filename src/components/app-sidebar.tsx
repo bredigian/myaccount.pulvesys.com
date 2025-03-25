@@ -2,7 +2,12 @@
 
 import * as React from 'react';
 
-import { ENTERPRISE_ROUTES, ROUTES } from '@/routes';
+import {
+  ENTERPRISE_ROUTES,
+  EXTRAS_ROUTES,
+  ROUTES,
+  SUBSCRIPTION_ROUTES,
+} from '@/routes';
 import {
   Sidebar,
   SidebarContent,
@@ -15,8 +20,7 @@ import {
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { NavEnterpise } from './nav-enterprise';
-import { NavMain } from '@/components/nav-main';
+import { NavSection } from '@/components/nav-section';
 import { NavUser } from '@/components/nav-user';
 import { ROLES } from '@/types/usuario.types';
 import logo from '../../public/logo.png';
@@ -53,8 +57,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={ROUTES} />
-        {rol === 'EMPRESA' && <NavEnterpise items={ENTERPRISE_ROUTES} />}
+        <NavSection title='Administración' items={ROUTES} />
+        {rol === 'EMPRESA' && (
+          <NavSection title='Empresa' items={ENTERPRISE_ROUTES} />
+        )}
+        <NavSection title='Suscripción' items={SUBSCRIPTION_ROUTES} />
+        <NavSection title='Extra' items={EXTRAS_ROUTES} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

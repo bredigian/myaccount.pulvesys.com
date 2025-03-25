@@ -1,6 +1,7 @@
 import {
   CreditCard,
   Droplets,
+  History,
   LayoutDashboard,
   Leaf,
   LucideProps,
@@ -54,9 +55,20 @@ export const ENTERPRISE_ROUTES: Route[] = [
     url: '/empresa/usuarios',
     icon: Users,
   },
+];
+
+export const SUBSCRIPTION_ROUTES: Route[] = [
   {
     title: 'Pagos & Facturación',
-    url: '/empresa/facturacion',
+    url: '/facturacion',
     icon: CreditCard,
+  },
+];
+
+export const EXTRAS_ROUTES: Route[] = [
+  {
+    title: 'Historial',
+    url: '/historial',
+    icon: History,
   },
 ];

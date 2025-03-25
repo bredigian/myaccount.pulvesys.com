@@ -13,9 +13,11 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export function NavEnterpise({
+export function NavSection({
+  title,
   items,
 }: {
+  title: string;
   items: {
     title: string;
     url: string;
@@ -32,7 +34,7 @@ export function NavEnterpise({
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Empresa</SidebarGroupLabel>
+      <SidebarGroupLabel>{title}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
           const isActive = item.url === pathname;

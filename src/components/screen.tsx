@@ -7,7 +7,12 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { ENTERPRISE_ROUTES, ROUTES } from '@/routes';
+import {
+  ENTERPRISE_ROUTES,
+  EXTRAS_ROUTES,
+  ROUTES,
+  SUBSCRIPTION_ROUTES,
+} from '@/routes';
 import { ReactNode, useEffect } from 'react';
 import {
   SidebarInset,
@@ -31,9 +36,17 @@ export default function Screen({ children, userdata }: Props) {
   const pathname = usePathname();
   const isPulverizacionDetail = pathname === '/panel/pulverizacion';
   const isEnterpriseRoute = pathname.includes('empresa');
-  const HEADER_TITLE = (!isEnterpriseRoute ? ROUTES : ENTERPRISE_ROUTES).find(
-    (route) => route.url === pathname,
-  );
+  const isSubscriptionRoute = pathname.includes('facturacion');
+  const isExtraRoute = pathname.includes('historial');
+  const HEADER_TITLE = (
+    isEnterpriseRoute
+      ? ENTERPRISE_ROUTES
+      : isSubscriptionRoute
+        ? SUBSCRIPTION_ROUTES
+        : isExtraRoute
+          ? EXTRAS_ROUTES
+          : ROUTES
+  ).find((route) => route.url === pathname);
 
   const { nombre_usuario, setUserdata } = usuarioStore();
 
@@ -53,10 +66,14 @@ export default function Screen({ children, userdata }: Props) {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className='hidden md:block'>
-                  {!isEnterpriseRoute ? (
-                    <Link href='/panel'>Administración</Link>
+                  {isEnterpriseRoute ? (
+                    <Link href='/panel'>Empresa</Link>
+                  ) : isSubscriptionRoute ? (
+                    <Link href={'/facturacion'}>Suscripción</Link>
+                  ) : isExtraRoute ? (
+                    <Link href={'/historial'}>Extra</Link>
                   ) : (
-                    <Link href={'/empresa'}>Empresa</Link>
+                    <Link href={'/panel'}>Administración</Link>
                   )}
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className='hidden md:block' />
