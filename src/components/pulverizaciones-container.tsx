@@ -1,9 +1,9 @@
 import { RedirectType, redirect } from 'next/navigation';
 
+import { DateTime } from 'luxon';
+import { PulverizacionesGridContainer } from './masonry-container';
 import { cookies } from 'next/headers';
 import { getPulverizaciones } from '@/services/pulverizaciones.service';
-import { PulverizacionesGridContainer } from './masonry-container';
-import { DateTime } from 'luxon';
 
 interface Props {
   query: string;
@@ -16,6 +16,9 @@ export const PulverizacionesContainer = async ({ query }: Props) => {
 
   const data = await getPulverizaciones(access_token.value, refresh_token);
   if ('error' in data) return <p>{data?.message}</p>;
+
+  if (data.length === 0)
+    return <p>No has registrado ninguna pulverización aún.</p>;
 
   const filteredData = !query
     ? data
