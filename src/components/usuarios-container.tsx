@@ -26,8 +26,17 @@ export default async function UsuariosContainer({ filter }: Props) {
 
   const filteredData = !filter
     ? data
-    : data.filter((item) =>
-        item?.nombre?.toLowerCase().includes(filter.toLowerCase()),
+    : data.filter(
+        (item) =>
+          item?.nombre
+            ?.concat(item?.apellido)
+            .toLowerCase()
+            .includes(filter.replaceAll(' ', '').toLowerCase()) ||
+          item.email.toLowerCase().includes(filter.trim().toLowerCase()) ||
+          item.nombre_usuario
+            ?.toLowerCase()
+            .includes(filter.trim().toLowerCase()) ||
+          item.nro_telefono.includes(filter),
       );
 
   return (
