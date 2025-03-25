@@ -1,12 +1,15 @@
 import 'react-phone-number-input/style.css';
-import PhoneInput from 'react-phone-number-input';
-import { Input } from './ui/input';
+
 import Image from 'next/image';
+import { Input } from './ui/input';
+import PhoneInput from 'react-phone-number-input';
 import argentinaFlag from '@/assets/ar.svg';
+import { cn } from '@/lib/utils';
 
 interface Props {
   onChange: (value: string) => void;
   value: string;
+  className?: string;
 }
 
 const CustomInput = ({ value, onChange, ...props }: Props) => (
@@ -32,9 +35,18 @@ const CustomInput = ({ value, onChange, ...props }: Props) => (
   </div>
 );
 
-export default function PhoneNumberInput({ value, onChange }: Props) {
+export default function PhoneNumberInput({
+  value,
+  onChange,
+  className,
+}: Props) {
   return (
-    <div className='relative col-span-full flex h-fit items-center md:col-span-3 lg:col-span-4 xl:col-span-3'>
+    <div
+      className={cn(
+        'relative col-span-full flex h-fit items-center md:col-span-3 lg:col-span-4 xl:col-span-3',
+        className,
+      )}
+    >
       <PhoneInput
         onChange={(val) => {
           if (!val) return;

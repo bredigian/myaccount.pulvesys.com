@@ -8,7 +8,7 @@ import {
   Package,
   Users,
 } from 'lucide-react';
-import { ForwardRefExoticComponent, ReactNode, RefAttributes } from 'react';
+import { ForwardRefExoticComponent, RefAttributes } from 'react';
 
 type Route = {
   title: string;

@@ -20,12 +20,9 @@ export interface UsuarioToSignup extends UsuarioToSignin {
   rol: keyof typeof ROLES;
 }
 
-export interface Usuario extends UsuarioToSignin {
+export interface Usuario extends UsuarioToSignup {
   id?: string;
-  nombre: string | null;
-  apellido: string | null;
   Sesion?: Sesion[];
-  rol: keyof typeof ROLES | null;
 }
 
 export interface Sesion {

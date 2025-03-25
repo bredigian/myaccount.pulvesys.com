@@ -1,27 +1,40 @@
 import {
   Sesion,
+  Usuario,
   UsuarioToSignin,
   UsuarioToSignup,
 } from '@/types/usuario.types';
 
+import { APIError } from '@/types/error.types';
 import { API_URL } from '@/config/api';
 import { Token } from '@/types/auth.types';
-import { APIError } from '@/types/error.types';
 
-export const signup = async (payload: UsuarioToSignup) => {
+// Servicio utilizado tanto para signup como para agregar un nuevo usuario como EMPRESA
+export const signup = async (
+  payload: UsuarioToSignup,
+  customPath?: string,
+  access_token?: string,
+) => {
   const OPTIONS: RequestInit = {
     method: 'POST',
     body: JSON.stringify(payload),
-    headers: { 'Content-Type': 'application/json' },
+    headers: !access_token
+      ? {
+          'Content-Type': 'application/json',
+        }
+      : {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
+        },
     credentials: 'include',
   };
-  const PATH = `${API_URL}/v1/auth/signup`;
+  const PATH = `${API_URL}/v1/${customPath ?? 'auth/signup'}`;
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Sesion | APIError = await res.json();
+  const data: Sesion | Usuario | APIError = await res.json();
   if (!res.ok) throw data as APIError;
 
-  return data as Sesion;
+  return customPath ? (data as Usuario) : (data as Sesion);
 };
 
 export const signin = async (payload: UsuarioToSignin) => {
