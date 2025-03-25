@@ -55,7 +55,6 @@ export default function PulverizacionDetailContainer({ data }: Props) {
     data.detalle.lotes.includes(lote?.nombre as string),
   );
 
-  console.log(data);
   const isFromEmployer =
     data.usuario?.rol === 'INDIVIDUAL' && data.usuario.empresa_id;
 
