@@ -1,6 +1,7 @@
 import { FieldErrors, useForm } from 'react-hook-form';
 import { addCultivo, editCultivo } from '@/services/cultivos.service';
 
+import { APIError } from '@/types/error.types';
 import { Button } from './ui/button';
 import { Check } from 'lucide-react';
 import Cookies from 'js-cookie';
@@ -12,7 +13,6 @@ import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { APIError } from '@/types/error.types';
 
 export default function AddOrEditCultivoForm({
   isEdit,
@@ -59,6 +59,7 @@ export default function AddOrEditCultivoForm({
       if (!isEdit) await addCultivo(PAYLOAD, access_token);
       else await editCultivo(PAYLOAD, access_token);
       await revalidate('cultivos');
+      await revalidate('historial');
 
       setIsSubmitSuccessful(true);
       setTimeout(() => handleOpen(), 1000);
