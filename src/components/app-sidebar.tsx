@@ -71,6 +71,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSection title='Extra' items={EXTRAS_ROUTES} />
       </SidebarContent>
       <SidebarFooter>
+        <NavSettings />
         <NavUser />
       </SidebarFooter>
     </Sidebar>

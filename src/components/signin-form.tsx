@@ -10,8 +10,10 @@ import {
 } from 'lucide-react';
 import { FieldErrors, useForm } from 'react-hook-form';
 
+import { APIError } from '@/types/error.types';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
+import Link from 'next/link';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { UsuarioToSignin } from '@/types/usuario.types';
 import { cn } from '@/lib/utils';
@@ -19,8 +21,6 @@ import { signin } from '@/services/auth.service';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { APIError } from '@/types/error.types';
-import Link from 'next/link';
 
 export default function SigninForm() {
   const {
@@ -42,13 +42,15 @@ export default function SigninForm() {
 
   const onSubmit = async (values: UsuarioToSignin) => {
     try {
-      await signin({
+      const { userdata } = await signin({
         ...values,
         nombre_usuario: (values?.nombre_usuario as string)?.trim(),
       });
 
+      const { rol } = userdata;
+
       setSuccess(true);
-      setTimeout(() => push('/panel'), 1000);
+      setTimeout(() => push(rol === 'EMPRESA' ? '/empresa' : '/panel'), 1000);
     } catch (error) {
       const { message } = error as APIError;
       toast.error(message);

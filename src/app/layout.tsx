@@ -3,6 +3,7 @@ import './globals.css';
 import type { Metadata, Viewport } from 'next';
 
 import { Geist } from 'next/font/google';
+import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from 'sonner';
 
 const geistSans = Geist({
@@ -46,10 +47,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang='en' suppressHydrationWarning>
       <body className={`${geistSans.className} antialiased`}>
-        {children}
-        <Toaster />
+        <ThemeProvider attribute={'class'} defaultTheme='system' enableSystem>
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
