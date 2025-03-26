@@ -1,6 +1,12 @@
 'use client';
 
-import { Card, CardDescription, CardHeader, CardTitle } from './ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from './ui/card';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { Eye, EyeClosed, LogIn, ShieldCheck } from 'lucide-react';
 import { ROLES, UsuarioToSignup } from '@/types/usuario.types';
@@ -100,191 +106,215 @@ export default function SignupForm() {
   );
 
   return (
-    <form
-      className='grid h-full w-full grid-cols-8 gap-4'
-      onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
-    >
-      <Label
-        htmlFor='nombre_input'
-        className='col-span-full mb-2 self-start md:text-base'
-      >
-        Completa el siguiente formulario
-      </Label>
-      <Input
-        {...register('nombre', {
-          required: {
-            value: true,
-            message: 'El nombre es requerido.',
-          },
-          minLength: { value: 3, message: 'Debe tener al menos 3 caracteres.' },
-        })}
-        id='nombre_input'
-        placeholder='Nombre'
-        className='col-span-full text-sm md:col-span-4 lg:text-base'
-        type='text'
-      />
-      <Input
-        {...register('apellido', {
-          required: {
-            value: true,
-            message: 'El apellido es requerido.',
-          },
-          minLength: { value: 3, message: 'Debe tener al menos 3 caracteres.' },
-        })}
-        placeholder='Apellido'
-        className='col-span-full text-sm md:col-span-4 lg:text-base'
-        type='text'
-      />
-
-      <Input
-        {...register('nombre_usuario', {
-          required: {
-            value: true,
-            message: 'El nombre de usuario es requerido.',
-          },
-          minLength: { value: 6, message: 'Debe tener al menos 6 caracteres.' },
-        })}
-        placeholder='Usuario'
-        className='col-span-full text-sm lg:text-base'
-        type='text'
-      />
-      <Input
-        {...register('email', {
-          required: {
-            value: true,
-            message: 'El correo es requerido.',
-          },
-          pattern: {
-            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            message: 'El correo no es válido.',
-          },
-        })}
-        placeholder='Correo electrónico'
-        className='col-span-full text-sm md:col-span-5 lg:col-span-4 lg:text-base xl:col-span-5'
-        type='text'
-      />
-      <Controller
-        control={control}
-        name='nro_telefono'
-        rules={{ required: { value: true, message: 'El nro. es requerido' } }}
-        render={({ field }) => (
-          <PhoneNumberInput onChange={field.onChange} value={field.value} />
-        )}
-      />
-      <div className='group relative col-span-full flex h-fit items-center'>
-        <Input
-          {...register('contrasena', {
-            required: {
-              value: true,
-              message: 'La contraseña es requerida.',
-            },
-          })}
-          type={!showPassword ? 'password' : 'text'}
-          placeholder='Contraseña'
-          className='text-sm lg:text-base'
-        />
-        <Button
-          type='button'
-          variant='link'
-          className='absolute end-0 opacity-60 group-focus-within:opacity-100 peer-[:not(:placeholder-shown)]:opacity-100'
-          size='icon'
-          onClick={handleShowPassword}
+    <Card className='w-full'>
+      <CardHeader>
+        <CardTitle>
+          <Label
+            htmlFor='nombre_input'
+            className='col-span-full mb-2 self-start md:text-base'
+          >
+            Completa el siguiente formulario
+          </Label>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form
+          className='grid h-full w-full grid-cols-8 gap-4'
+          onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
         >
-          {!showPassword ? <EyeClosed /> : <Eye />}
-        </Button>
-      </div>
-      <div className='col-span-full flex h-fit flex-col items-start gap-2'>
-        <div className={'group relative flex w-full items-center'}>
           <Input
-            {...register('confirmar_contrasena', {
+            {...register('nombre', {
               required: {
                 value: true,
-                message: 'Debes confirmar la contraseña.',
+                message: 'El nombre es requerido.',
               },
-              validate: (value) =>
-                value === password || 'Las contraseñas no coinciden',
+              minLength: {
+                value: 3,
+                message: 'Debe tener al menos 3 caracteres.',
+              },
             })}
-            type={!showPassword ? 'password' : 'text'}
-            placeholder='Confirmar contraseña'
-            className='text-sm lg:text-base'
+            id='nombre_input'
+            placeholder='Nombre'
+            className='col-span-full text-sm md:col-span-4 lg:text-base'
+            type='text'
           />
+          <Input
+            {...register('apellido', {
+              required: {
+                value: true,
+                message: 'El apellido es requerido.',
+              },
+              minLength: {
+                value: 3,
+                message: 'Debe tener al menos 3 caracteres.',
+              },
+            })}
+            placeholder='Apellido'
+            className='col-span-full text-sm md:col-span-4 lg:text-base'
+            type='text'
+          />
+
+          <Input
+            {...register('nombre_usuario', {
+              required: {
+                value: true,
+                message: 'El nombre de usuario es requerido.',
+              },
+              minLength: {
+                value: 6,
+                message: 'Debe tener al menos 6 caracteres.',
+              },
+            })}
+            placeholder='Usuario'
+            className='col-span-full text-sm lg:text-base'
+            type='text'
+          />
+          <Input
+            {...register('email', {
+              required: {
+                value: true,
+                message: 'El correo es requerido.',
+              },
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: 'El correo no es válido.',
+              },
+            })}
+            placeholder='Correo electrónico'
+            className='col-span-full text-sm md:col-span-5 lg:col-span-4 lg:text-base xl:col-span-5'
+            type='text'
+          />
+          <Controller
+            control={control}
+            name='nro_telefono'
+            rules={{
+              required: { value: true, message: 'El nro. es requerido' },
+            }}
+            render={({ field }) => (
+              <PhoneNumberInput onChange={field.onChange} value={field.value} />
+            )}
+          />
+          <div className='group relative col-span-full flex h-fit items-center'>
+            <Input
+              {...register('contrasena', {
+                required: {
+                  value: true,
+                  message: 'La contraseña es requerida.',
+                },
+              })}
+              type={!showPassword ? 'password' : 'text'}
+              placeholder='Contraseña'
+              className='text-sm lg:text-base'
+            />
+            <Button
+              type='button'
+              variant='link'
+              className='absolute end-0 opacity-60 group-focus-within:opacity-100 peer-[:not(:placeholder-shown)]:opacity-100'
+              size='icon'
+              onClick={handleShowPassword}
+            >
+              {!showPassword ? <EyeClosed /> : <Eye />}
+            </Button>
+          </div>
+          <div className='col-span-full flex h-fit flex-col items-start gap-2'>
+            <div className={'group relative flex w-full items-center'}>
+              <Input
+                {...register('confirmar_contrasena', {
+                  required: {
+                    value: true,
+                    message: 'Debes confirmar la contraseña.',
+                  },
+                  validate: (value) =>
+                    value === password || 'Las contraseñas no coinciden',
+                })}
+                type={!showPassword ? 'password' : 'text'}
+                placeholder='Confirmar contraseña'
+                className='text-sm lg:text-base'
+              />
+              <Button
+                type='button'
+                variant='link'
+                className='absolute end-0 opacity-60 group-focus-within:opacity-100 peer-[:not(:placeholder-shown)]:opacity-100'
+                size='icon'
+                onClick={handleShowPassword}
+              >
+                {!showPassword ? <EyeClosed /> : <Eye />}
+              </Button>
+            </div>
+            {hasErrorConfirmPassword && (
+              <p className='text-xs text-red-500'>
+                Las contraseñas no coinciden
+              </p>
+            )}
+          </div>
+          <section className='col-span-full my-4 flex flex-col gap-4'>
+            <Controller
+              control={control}
+              name='rol'
+              rules={{
+                required: { value: true, message: 'El plan es requerido' },
+              }}
+              render={({ field }) => (
+                <Select onValueChange={field.onChange}>
+                  <SelectTrigger className='col-span-3 !mt-0 text-sm lg:text-base'>
+                    <SelectValue placeholder='Seleccione un plan' />
+                  </SelectTrigger>
+                  <SelectContent className='col-span-3' align='start'>
+                    {PLANES.map((plan) => (
+                      <SelectItem key={plan.label} value={plan.value}>
+                        {plan.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {selectedRol && (
+              <Card className='bg-secondary'>
+                <CardHeader>
+                  <CardTitle className='flex w-full items-center justify-between'>
+                    <h4>{selectedPlan?.value}</h4>
+                    <Badge className='lg:text-base'>
+                      ${selectedPlan?.price.toLocaleString('es-AR')}
+                    </Badge>
+                  </CardTitle>
+                  <CardDescription>{selectedPlan?.description}</CardDescription>
+                </CardHeader>
+              </Card>
+            )}
+          </section>
           <Button
-            type='button'
-            variant='link'
-            className='absolute end-0 opacity-60 group-focus-within:opacity-100 peer-[:not(:placeholder-shown)]:opacity-100'
-            size='icon'
-            onClick={handleShowPassword}
+            type='submit'
+            className={cn(
+              'col-span-full self-end disabled:opacity-100 lg:text-base',
+              !success
+                ? 'bg-primary'
+                : '!bg-green-700 text-primary-foreground dark:text-primary',
+            )}
+            disabled={isSubmitting || success}
           >
-            {!showPassword ? <EyeClosed /> : <Eye />}
+            {success ? (
+              <>
+                Completado <ShieldCheck className='lg:!size-5' />
+              </>
+            ) : !isSubmitting ? (
+              <>
+                Registrarse <LogIn className='lg:!size-5' />
+              </>
+            ) : (
+              <>
+                Procesando <ReloadIcon className='animate-spin lg:!size-5' />
+              </>
+            )}
           </Button>
-        </div>
-        {hasErrorConfirmPassword && (
-          <p className='text-xs text-red-500'>Las contraseñas no coinciden</p>
-        )}
-      </div>
-      <section className='col-span-full my-4 flex flex-col gap-4'>
-        <Controller
-          control={control}
-          name='rol'
-          rules={{
-            required: { value: true, message: 'El plan es requerido' },
-          }}
-          render={({ field }) => (
-            <Select onValueChange={field.onChange}>
-              <SelectTrigger className='col-span-3 !mt-0 text-sm lg:text-base'>
-                <SelectValue placeholder='Seleccione un plan' />
-              </SelectTrigger>
-              <SelectContent className='col-span-3' align='start'>
-                {PLANES.map((plan) => (
-                  <SelectItem key={plan.label} value={plan.value}>
-                    {plan.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-        />
-        {selectedRol && (
-          <Card className='bg-secondary'>
-            <CardHeader>
-              <CardTitle className='flex w-full items-center justify-between'>
-                <h4>{selectedPlan?.value}</h4>
-                <Badge className='lg:text-base'>
-                  ${selectedPlan?.price.toLocaleString('es-AR')}
-                </Badge>
-              </CardTitle>
-              <CardDescription>{selectedPlan?.description}</CardDescription>
-            </CardHeader>
-          </Card>
-        )}
-      </section>
-      <Button
-        type='submit'
-        className={cn(
-          'col-span-full self-end disabled:opacity-100 lg:text-base',
-          !success
-            ? 'bg-primary'
-            : '!bg-green-700 text-primary-foreground dark:text-primary',
-        )}
-        disabled={isSubmitting || success}
-      >
-        {success ? (
-          <>
-            Completado <ShieldCheck className='lg:!size-5' />
-          </>
-        ) : !isSubmitting ? (
-          <>
-            Registrarse <LogIn className='lg:!size-5' />
-          </>
-        ) : (
-          <>
-            Procesando <ReloadIcon className='animate-spin lg:!size-5' />
-          </>
-        )}
-      </Button>
-      <Link href={'/'} className='col-span-full text-center text-sm underline'>
-        ¿Ya tenés una cuenta? Inicia sesión
-      </Link>
-    </form>
+          <Link
+            href={'/'}
+            className='col-span-full w-fit justify-self-center text-center text-sm underline'
+          >
+            ¿Ya tenés una cuenta? Inicia sesión
+          </Link>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
