@@ -21,13 +21,15 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { NavSection } from '@/components/nav-section';
+import { NavSettings } from './nav-settings';
 import { NavUser } from '@/components/nav-user';
 import { ROLES } from '@/types/usuario.types';
 import logo from '../../public/logo.png';
 import { usuarioStore } from '@/store/usuario.store';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { rol } = usuarioStore();
+  const { rol, isEmployer } = usuarioStore();
+  console.log(isEmployer);
 
   return (
     <Sidebar variant='inset' {...props}>
@@ -45,8 +47,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <div className='grid flex-1 text-left text-sm leading-tight'>
                   <span className='flex items-center gap-2 font-semibold'>
                     PulveSys
-                    <h2 className='w-fit rounded-md bg-primary/60 px-2 py-1 text-xs font-normal text-primary-foreground'>
-                      {ROLES[rol as keyof typeof ROLES]}
+                    <h2 className='w-fit rounded-md bg-primary/60 px-1.5 py-0.5 text-xs font-normal text-primary-foreground'>
+                      {isEmployer
+                        ? 'Empleado'
+                        : ROLES[rol as keyof typeof ROLES]}
                     </h2>
                   </span>
                   <p className='truncate text-xs'>Órdenes de pulverización</p>
@@ -57,11 +61,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavSection title='Administración' items={ROUTES} />
         {rol === 'EMPRESA' && (
-          <NavSection title='Empresa' items={ENTERPRISE_ROUTES} />
+          <NavSection title='Inicio' items={ENTERPRISE_ROUTES} />
         )}
-        <NavSection title='Suscripción' items={SUBSCRIPTION_ROUTES} />
+        <NavSection title='Administración' items={ROUTES} />
+        {!isEmployer && (
+          <NavSection title='Suscripción' items={SUBSCRIPTION_ROUTES} />
+        )}
         <NavSection title='Extra' items={EXTRAS_ROUTES} />
       </SidebarContent>
       <SidebarFooter>

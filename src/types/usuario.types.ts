@@ -24,6 +24,8 @@ export interface Usuario extends UsuarioToSignup {
   id?: string;
   empresa_id?: string;
   Sesion?: Sesion[];
+
+  isEmployer: boolean;
 }
 
 export interface Sesion {

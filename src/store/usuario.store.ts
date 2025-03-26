@@ -1,7 +1,13 @@
-import { Usuario } from '@/types/usuario.types';
+import { ROLES, Usuario } from '@/types/usuario.types';
+
 import { create } from 'zustand';
 
-interface UsuarioStore extends Usuario {
+interface UsuarioStore {
+  nombre_usuario: string | null;
+  nombre: string | null;
+  apellido: string | null;
+  rol: keyof typeof ROLES | null;
+  isEmployer: boolean | null;
   setUserdata: (userdata: Usuario) => void;
   clearUserdata: () => void;
 }
@@ -11,6 +17,7 @@ export const usuarioStore = create<UsuarioStore>((set) => ({
   nombre: null,
   apellido: null,
   rol: null,
+  isEmployer: null,
 
   setUserdata(userdata: Partial<Usuario>) {
     set({
@@ -18,10 +25,17 @@ export const usuarioStore = create<UsuarioStore>((set) => ({
       nombre: userdata.nombre,
       apellido: userdata.apellido,
       rol: userdata.rol,
+      isEmployer: userdata.isEmployer,
     });
   },
 
   clearUserdata() {
-    set({ nombre_usuario: null, nombre: null, apellido: null, rol: null });
+    set({
+      nombre_usuario: null,
+      nombre: null,
+      apellido: null,
+      rol: null,
+      isEmployer: null,
+    });
   },
 }));
