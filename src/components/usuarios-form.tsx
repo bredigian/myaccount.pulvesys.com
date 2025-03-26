@@ -1,4 +1,4 @@
-import { Check, Eye, EyeClosed, UserCheck } from 'lucide-react';
+import { Check, Eye, EyeClosed } from 'lucide-react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 
 import { APIError } from '@/types/error.types';

@@ -7,7 +7,7 @@ import LogoutDialog from './logout-dialog';
 import { usuarioStore } from '@/store/usuario.store';
 
 export function NavUser() {
-  const { nombre_usuario, nombre, apellido, rol } = usuarioStore();
+  const { nombre_usuario, nombre, apellido } = usuarioStore();
   const avatar = nombre
     ?.charAt(0)
     .concat(apellido?.charAt(0) as string)

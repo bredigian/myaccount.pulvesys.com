@@ -21,7 +21,7 @@ export default async function UsuariosContainer({ filter }: Props) {
   const refresh_token = (await cookies()).get('refresh_token');
   if (!access_token || !refresh_token) redirect('/', RedirectType.replace);
 
-  let data = await getUsuariosByEmpresaId(access_token.value, refresh_token);
+  const data = await getUsuariosByEmpresaId(access_token.value, refresh_token);
   if ('error' in data) return <p>{data?.message}</p>;
 
   const filteredData = !filter
