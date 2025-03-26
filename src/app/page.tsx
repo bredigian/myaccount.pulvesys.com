@@ -1,7 +1,8 @@
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import SigninForm from '@/components/signin-form';
-import logo from '../../public/logo_dalle.webp';
+import dark from '../../public/logo_for_dark.webp';
+import light from '../../public/logo_for_light.webp';
 
 interface Props {
   searchParams: Promise<{ session: string; expired: boolean }>;
@@ -17,11 +18,16 @@ export default async function Home({ searchParams }: Props) {
       )}
       <div className='flex flex-col items-center gap-4'>
         <Image
-          src={logo}
+          src={dark}
           alt='Logo de PulveSys'
-          className='size-36 rounded-xl lg:size-64'
+          className='hidden size-36 rounded-xl dark:block lg:size-64'
         />
-        <h1 className='font-semibold opacity-75'>PulveSys</h1>
+        <Image
+          src={light}
+          alt='Logo de PulveSys'
+          className='block size-36 rounded-xl dark:hidden lg:size-64'
+        />
+        {/* <h1 className='font-semibold opacity-75'>PulveSys</h1> */}
       </div>
       <SigninForm />
     </main>

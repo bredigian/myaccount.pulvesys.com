@@ -1,6 +1,7 @@
 import Image from 'next/image';
-import logo from '../../../public/logo_dalle.webp';
 import SignupForm from '@/components/signup-form';
+import dark from '../../../public/logo_for_dark.webp';
+import light from '../../../public/logo_for_light.webp';
 
 export default function Signup() {
   return (
@@ -18,9 +19,14 @@ export default function Signup() {
         </header>
         <div className='flex size-28 shrink-0 flex-col items-center gap-4 md:size-32 lg:size-40'>
           <Image
-            src={logo}
+            src={dark}
             alt='Logo de PulveSys'
-            className='size-full rounded-xl'
+            className='hidden size-full rounded-xl dark:block'
+          />
+          <Image
+            src={light}
+            alt='Logo de PulveSys'
+            className='block size-full rounded-xl dark:hidden'
           />
         </div>
       </section>

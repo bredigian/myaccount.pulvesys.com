@@ -24,12 +24,12 @@ import { NavSection } from '@/components/nav-section';
 import { NavSettings } from './nav-settings';
 import { NavUser } from '@/components/nav-user';
 import { ROLES } from '@/types/usuario.types';
-import logo from '../../public/logo.png';
+import dark from '../../public/logo_for_dark.webp';
+import light from '../../public/logo_for_light.webp';
 import { usuarioStore } from '@/store/usuario.store';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { rol, isEmployer } = usuarioStore();
-  console.log(isEmployer);
 
   return (
     <Sidebar variant='inset' {...props}>
@@ -39,9 +39,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size='lg' asChild>
               <Link href={'/'}>
                 <Image
-                  src={logo}
+                  src={dark}
                   alt='Logo de PulveSys'
-                  className='size-9 rounded-md'
+                  className='hidden size-9 rounded-md dark:block'
+                  id='primary_pulvesys_logo'
+                />
+                <Image
+                  src={light}
+                  alt='Logo de PulveSys'
+                  className='block size-9 rounded-md dark:hidden'
                   id='primary_pulvesys_logo'
                 />
                 <div className='grid flex-1 text-left text-sm leading-tight'>
