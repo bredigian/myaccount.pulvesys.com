@@ -15,7 +15,12 @@ export async function middleware(req: NextRequest) {
     );
 
     if ('error' in sesion) {
-      if (pathname.includes('/panel') || pathname.includes('/empresa')) {
+      if (
+        pathname.includes('/panel') ||
+        pathname.includes('/empresa') ||
+        pathname.includes('/facturacion') ||
+        pathname.includes('/historial')
+      ) {
         return NextResponse.redirect(new URL('/', req.url), {
           headers: {
             'Set-Cookie': [
@@ -38,7 +43,12 @@ export async function middleware(req: NextRequest) {
 
     const expireDate = new Date(expireIn);
 
-    if (pathname.includes('/panel') || pathname.includes('/empresa')) {
+    if (
+      pathname.includes('/panel') ||
+      pathname.includes('/empresa') ||
+      pathname.includes('/facturacion') ||
+      pathname.includes('/historial')
+    ) {
       const res = NextResponse.next();
       res.cookies.set('access_token', access_token, {
         expires: expireDate,
@@ -70,7 +80,12 @@ export async function middleware(req: NextRequest) {
     });
   }
 
-  if (pathname.includes('/panel') || pathname.includes('/empresa'))
+  if (
+    pathname.includes('/panel') ||
+    pathname.includes('/empresa') ||
+    pathname.includes('/facturacion') ||
+    pathname.includes('/historial')
+  )
     return NextResponse.redirect(new URL('/', req.url));
 
   return NextResponse.next();
@@ -87,6 +102,7 @@ export const config = {
     '/panel/cultivos&tratamientos',
     '/empresa',
     '/empresa/usuarios',
-    '/empresa/facturacion',
+    '/facturacion',
+    '/historial',
   ],
 };

@@ -14,7 +14,7 @@ export default function HistorialItem({ data }: Props) {
   const { id, createdAt, usuario, type, description } = data;
   const nombreCompleto = usuario
     ? usuario?.nombre?.concat(' ').concat(usuario?.apellido as string)
-    : '-';
+    : 'No disponible';
 
   const { rol } = usuarioStore();
 
