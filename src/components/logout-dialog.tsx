@@ -88,7 +88,8 @@ export default function LogoutDialog() {
             onClick={handleLogout}
             className={cn(
               'disabled:opacity-100',
-              state === 'success' && '!bg-green-700',
+              state === 'success' &&
+                '!bg-green-700 text-primary-foreground dark:text-primary',
             )}
           >
             {state === undefined ? (
@@ -131,7 +132,8 @@ export default function LogoutDialog() {
             onClick={handleLogout}
             className={cn(
               'disabled:opacity-100',
-              state === 'success' && '!bg-green-700',
+              state === 'success' &&
+                '!bg-green-700 text-primary-foreground dark:text-primary',
             )}
           >
             {state === undefined ? (

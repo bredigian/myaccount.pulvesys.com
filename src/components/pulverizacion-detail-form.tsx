@@ -106,7 +106,9 @@ export default function EditConsumoProductoForm({
           type='submit'
           className={cn(
             'w-full disabled:opacity-100',
-            !isSubmitSuccessful ? 'bg-primary' : '!bg-green-700',
+            !isSubmitSuccessful
+              ? 'bg-primary'
+              : '!bg-green-700 text-primary-foreground dark:text-primary',
           )}
           form='form-add-pulverizacion'
         >

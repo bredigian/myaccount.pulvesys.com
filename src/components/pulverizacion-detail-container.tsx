@@ -70,8 +70,8 @@ export default function PulverizacionDetailContainer({ data }: Props) {
         <aside className='flex items-center gap-2'>
           <SharePulverizacionDialog
             data={data}
-            nombre={nombre}
-            apellido={apellido}
+            nombre={nombre as string}
+            apellido={apellido as string}
           />
           <ShowPulverizacionInfoDialog data={data} />
           <DeletePulverizacionDialog id={data.id as UUID} />
@@ -118,15 +118,6 @@ export default function PulverizacionDetailContainer({ data }: Props) {
               ))
             )}
           </ul>
-          {/* <section className='flex flex-col items-end gap-2'>
-            {isFromEmployer && (
-              <span className='text-sm'>
-                Creada por{' '}
-                <strong>
-                  {data.usuario?.nombre} {data.usuario?.apellido}
-                </strong>
-              </span>
-            )} */}
           <Badge className='space-x-1'>
             <Calendar size={14} />
             <p className='text-sm font-normal'>
@@ -138,7 +129,6 @@ export default function PulverizacionDetailContainer({ data }: Props) {
               )}
             </p>
           </Badge>
-          {/* </section> */}
         </div>
         <div className='flex w-full flex-col gap-6 lg:flex-row'>
           <MapboxMap
@@ -156,7 +146,7 @@ export default function PulverizacionDetailContainer({ data }: Props) {
                 <Badge
                   variant={'secondary'}
                   className={cn(
-                    'w-fit space-x-1',
+                    'w-fit space-x-1 text-primary',
                     selectedHectareas === 0 && 'bg-yellow-200',
                   )}
                 >
@@ -178,7 +168,7 @@ export default function PulverizacionDetailContainer({ data }: Props) {
                 <Badge
                   variant={'secondary'}
                   className={cn(
-                    'flex w-fit items-center gap-1',
+                    'flex w-fit items-center gap-1 text-primary dark:text-primary-foreground',
                     data?.detalle?.observacion
                       ? '!bg-yellow-200'
                       : 'bg-secondary',

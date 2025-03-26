@@ -1,5 +1,6 @@
 'use client';
 
+import { CheckIcon, Edit, MapPinPlus, MapPinX } from 'lucide-react';
 import {
   Dialog,
   DialogClose,
@@ -21,22 +22,21 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from './ui/drawer';
-import { CheckIcon, Edit, MapPinPlus, MapPinX } from 'lucide-react';
 
+import { APIError } from '@/types/error.types';
 import AddOrEditCampoForm from './campos-form';
 import { Button } from './ui/button';
 import { Campo } from '@/types/campos.types';
 import Cookies from 'js-cookie';
+import { ReloadIcon } from '@radix-ui/react-icons';
 import { UUID } from 'crypto';
+import { cn } from '@/lib/utils';
 import { deleteCampo } from '@/services/campos.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
-import { APIError } from '@/types/error.types';
-import { cn } from '@/lib/utils';
-import { ReloadIcon } from '@radix-ui/react-icons';
 
 export const AddOrEditCampoDialog = ({
   isEdit,
@@ -207,7 +207,8 @@ export const DeleteCampoDialog = ({ id }: { id: UUID }) => {
             onClick={handleDelete}
             disabled={state === 'success' || state === 'processing'}
             className={cn(
-              state === 'success' && '!bg-green-700 disabled:opacity-100',
+              state === 'success' &&
+                '!bg-green-700 text-primary-foreground disabled:opacity-100 dark:text-primary',
             )}
           >
             {state === 'pending' || state === 'error' ? (
@@ -250,7 +251,8 @@ export const DeleteCampoDialog = ({ id }: { id: UUID }) => {
             onClick={handleDelete}
             disabled={state === 'success' || state === 'processing'}
             className={cn(
-              state === 'success' && '!bg-green-700 disabled:opacity-100',
+              state === 'success' &&
+                '!bg-green-700 text-primary-foreground disabled:opacity-100 dark:text-primary',
             )}
           >
             {state === 'pending' || state === 'error' ? (

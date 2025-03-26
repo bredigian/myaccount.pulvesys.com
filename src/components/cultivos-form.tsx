@@ -98,7 +98,9 @@ export default function AddOrEditCultivoForm({
           className={cn(
             'w-full md:w-fit',
             isDirty ? 'disabled:opacity-100' : 'disabled:opacity-75',
-            !isSubmitSuccessful ? 'bg-primary' : '!bg-green-700',
+            !isSubmitSuccessful
+              ? 'bg-primary'
+              : '!bg-green-700 text-primary-foreground dark:text-primary',
           )}
         >
           {isSubmitSuccessful ? (

@@ -4,25 +4,24 @@ import { Campo, Coordinada, Lote } from '@/types/campos.types';
 import { Check, Cloud, Eraser, Layers, MapPinPlusInside } from 'lucide-react';
 import { FieldErrors, useForm } from 'react-hook-form';
 import { addCampo, editCampo } from '@/services/campos.service';
+import { area, convertArea } from '@turf/turf';
+import { useEffect, useState } from 'react';
 
+import { APIError } from '@/types/error.types';
 import { Button } from './ui/button';
 import ColorPicker from './color-picker';
 import Cookies from 'js-cookie';
+import { FeatureCollection } from 'geojson';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import LoteItem from './lote-item';
+import MapboxMap from './map';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDebouncedCallback } from 'use-debounce';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import MapboxMap from './map';
-
-import { area, convertArea } from '@turf/turf';
-import { FeatureCollection } from 'geojson';
-import { APIError } from '@/types/error.types';
 
 export default function AddOrEditCampoForm({
   isEdit,
@@ -317,7 +316,7 @@ export default function AddOrEditCampoForm({
       </div>
       {isEdit && (
         <div className='flex items-center gap-2'>
-          <div className='w-fit rounded-t-md border-2 border-primary bg-green-600 p-1'>
+          <div className='w-fit rounded-t-md border-2 border-primary bg-green-600 p-1 dark:border-primary-foreground'>
             <Cloud size={14} />
           </div>
           <p className='text-sm italic'>* Almacenado en base de datos</p>
@@ -330,7 +329,9 @@ export default function AddOrEditCampoForm({
           className={cn(
             'w-full md:w-fit',
             !enable && 'disabled:opacity-100',
-            !isSubmitSuccessful ? 'bg-primary' : '!bg-green-700',
+            !isSubmitSuccessful
+              ? 'bg-primary'
+              : '!bg-green-700 text-primary-foreground dark:text-primary',
           )}
           form='form-add-campos'
         >

@@ -1,8 +1,9 @@
-import { CSSProperties } from 'react';
-import { Lote } from '@/types/campos.types';
 import { Cloud, Tag, Trash } from 'lucide-react';
-import { cn } from '@/lib/utils';
+
+import { CSSProperties } from 'react';
 import { DeleteStoredLoteDialog } from './lotes-dialog';
+import { Lote } from '@/types/campos.types';
+import { cn } from '@/lib/utils';
 
 interface Props {
   lote: Lote;
@@ -28,16 +29,19 @@ export default function LoteItem({
   const isStored = lote.id ? true : false;
 
   return (
-    <li className='flex w-fit flex-col items-start overflow-hidden'>
+    <li className='relative flex w-fit flex-col items-start overflow-hidden'>
       {isEditting && isStored && (
         <div
-          className='translate-x-0.5 translate-y-0.5 rounded-t-md border-2 border-primary bg-green-600 p-1'
+          className='z-1 translate-x-0.5 translate-y-0.5 rounded-t-md border-2 border-primary bg-green-600 p-1 dark:border-primary-foreground'
           style={{ borderBottomColor: lote.color as string }}
         >
           <Cloud size={14} />
         </div>
       )}
-      <div className='flex w-full items-center rounded-md' onClick={onClick}>
+      <div
+        className='z-10 flex w-full items-center rounded-md'
+        onClick={onClick}
+      >
         <div
           style={
             customStyle ?? {
@@ -46,7 +50,7 @@ export default function LoteItem({
             }
           }
           className={cn(
-            'flex max-w-full items-center gap-1 rounded-md border-2 px-3 py-1 text-xs font-semibold hover:cursor-pointer',
+            'flex max-w-full items-center gap-1 rounded-md border-2 px-3 py-1 text-xs font-semibold',
             showButtonClear &&
               (hasMinimumLotesQuantity || !isStored) &&
               'rounded-r-none border-r-0',
@@ -67,7 +71,7 @@ export default function LoteItem({
                 borderColor: lote.color as string,
                 backgroundColor: `${lote.color}75` as string,
               }}
-              className='h-full rounded-md rounded-l-none border-2 px-2 py-[5px] text-black'
+              className='h-full rounded-md rounded-l-none border-2 px-2 py-[5px] text-primary'
               onClick={deleteLote}
             >
               <Trash size={14} />

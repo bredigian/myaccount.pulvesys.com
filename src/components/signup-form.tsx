@@ -1,26 +1,26 @@
 'use client';
 
-import { Eye, EyeClosed, LogIn, ShieldCheck } from 'lucide-react';
+import { Card, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
+import { Eye, EyeClosed, LogIn, ShieldCheck } from 'lucide-react';
+import { ROLES, UsuarioToSignup } from '@/types/usuario.types';
+import { Select, SelectContent, SelectItem, SelectTrigger } from './ui/select';
 
+import { APIError } from '@/types/error.types';
+import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
+import { Label } from './ui/label';
+import Link from 'next/link';
+import { PLANES_DATA } from '@/data/plans';
+import PhoneNumberInput from './phone-number-input';
 import { ReloadIcon } from '@radix-ui/react-icons';
-import { ROLES, UsuarioToSignup } from '@/types/usuario.types';
+import { SelectValue } from '@radix-ui/react-select';
 import { cn } from '@/lib/utils';
 import { signup } from '@/services/auth.service';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { APIError } from '@/types/error.types';
-import { Select, SelectContent, SelectItem, SelectTrigger } from './ui/select';
-import { SelectValue } from '@radix-ui/react-select';
-import { Card, CardDescription, CardHeader, CardTitle } from './ui/card';
-import PhoneNumberInput from './phone-number-input';
-import { PLANES_DATA } from '@/data/plans';
-import { Badge } from './ui/badge';
-import Link from 'next/link';
-import { Label } from './ui/label';
 
 const PLANES = Object.entries(ROLES)
   .map(([key, value]) => ({
@@ -262,7 +262,9 @@ export default function SignupForm() {
         type='submit'
         className={cn(
           'col-span-full self-end disabled:opacity-100 lg:text-base',
-          !success ? 'bg-primary' : '!bg-green-700',
+          !success
+            ? 'bg-primary'
+            : '!bg-green-700 text-primary-foreground dark:text-primary',
         )}
         disabled={isSubmitting || success}
       >

@@ -5,11 +5,11 @@ import { Campo, Lote } from '@/types/campos.types';
 import { Card, CardContent } from './ui/card';
 
 import { Badge } from './ui/badge';
+import { Label } from './ui/label';
 import LoteItem from './lote-item';
 import MapboxMap from './map';
-import { UUID } from 'crypto';
-import { Label } from './ui/label';
 import { Switch } from './ui/switch';
+import { UUID } from 'crypto';
 import { useState } from 'react';
 
 interface Props {
@@ -20,7 +20,7 @@ export default function CampoItem({ data }: Props) {
   const totalHectareas = data.Lote?.reduce(
     (acc, lote) => acc + (lote?.hectareas as number),
     0,
-  );
+  ).toFixed(2);
 
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(!show);

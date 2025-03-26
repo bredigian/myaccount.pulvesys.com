@@ -365,7 +365,8 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
             onClick={handleShareByPDF}
             disabled={state === 'exporting' || state === 'exported'}
             className={cn(
-              state === 'exported' && '!bg-green-700 disabled:opacity-100',
+              state === 'exported' &&
+                '!bg-green-700 text-primary-foreground disabled:opacity-100 dark:text-primary',
             )}
           >
             {state === 'pending' ? (
@@ -419,7 +420,8 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
             onClick={handleShareByPDF}
             disabled={state === 'exporting' || state === 'exported'}
             className={cn(
-              state === 'exported' && '!bg-green-700 disabled:opacity-100',
+              state === 'exported' &&
+                '!bg-green-700 text-primary-foreground disabled:opacity-100 dark:text-primary',
             )}
           >
             {state === 'pending' ? (

@@ -110,7 +110,9 @@ export default function SigninForm() {
           type='submit'
           className={cn(
             'w-full disabled:opacity-100 lg:text-base',
-            !success ? 'bg-primary' : '!bg-green-700',
+            !success
+              ? 'bg-primary'
+              : '!bg-green-700 text-primary-foreground dark:text-primary',
           )}
           disabled={isSubmitting || success}
         >
