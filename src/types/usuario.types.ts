@@ -1,3 +1,4 @@
+import { Plan } from './planes.types';
 import { UUID } from 'crypto';
 
 export enum ROLES {
@@ -17,6 +18,7 @@ export interface UsuarioToSignup extends UsuarioToSignin {
   apellido: string;
   email: string;
   nro_telefono: string;
+  plan_id: Plan['id'];
   rol: keyof typeof ROLES;
 }
 
@@ -26,6 +28,7 @@ export interface Usuario extends UsuarioToSignup {
   Sesion?: Sesion[];
 
   isEmployer: boolean;
+  isSubscriptionActive?: boolean;
 }
 
 export interface Sesion {

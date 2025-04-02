@@ -1,9 +1,12 @@
 import Image from 'next/image';
 import SignupForm from '@/components/signup-form';
 import dark from '../../../public/logo_for_dark.webp';
+import { getPlanes } from '@/services/planes.service';
 import light from '../../../public/logo_for_light.webp';
 
-export default function Signup() {
+export default async function Signup() {
+  const data = await getPlanes();
+
   return (
     <main className='flex min-h-dvh w-full flex-col items-center justify-start gap-8 p-8 lg:flex-row lg:gap-24 xl:mx-auto xl:max-w-screen-xl'>
       <section className='flex w-full items-start justify-between gap-4 md:gap-8 lg:flex-col'>
@@ -30,7 +33,7 @@ export default function Signup() {
           />
         </div>
       </section>
-      <SignupForm />
+      {'error' in data ? <p>{data.message}</p> : <SignupForm planes={data} />}
     </main>
   );
 }

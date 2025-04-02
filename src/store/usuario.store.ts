@@ -8,6 +8,7 @@ interface UsuarioStore {
   apellido: string | null;
   rol: keyof typeof ROLES | null;
   isEmployer: boolean | null;
+  isSubscriptionActive: boolean | null;
   setUserdata: (userdata: Usuario) => void;
   clearUserdata: () => void;
 }
@@ -18,6 +19,7 @@ export const usuarioStore = create<UsuarioStore>((set) => ({
   apellido: null,
   rol: null,
   isEmployer: null,
+  isSubscriptionActive: null,
 
   setUserdata(userdata: Partial<Usuario>) {
     set({
@@ -26,6 +28,7 @@ export const usuarioStore = create<UsuarioStore>((set) => ({
       apellido: userdata.apellido,
       rol: userdata.rol,
       isEmployer: userdata.isEmployer,
+      isSubscriptionActive: userdata.isSubscriptionActive,
     });
   },
 
@@ -36,6 +39,7 @@ export const usuarioStore = create<UsuarioStore>((set) => ({
       apellido: null,
       rol: null,
       isEmployer: null,
+      isSubscriptionActive: null,
     });
   },
 }));

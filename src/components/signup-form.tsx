@@ -18,8 +18,8 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import Link from 'next/link';
-import { PLANES_DATA } from '@/data/plans';
 import PhoneNumberInput from './phone-number-input';
+import { Plan } from '@/types/planes.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { SelectValue } from '@radix-ui/react-select';
 import { cn } from '@/lib/utils';
@@ -28,14 +28,11 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-const PLANES = Object.entries(ROLES)
-  .map(([key, value]) => ({
-    label: `Plan ${value}`,
-    value: key,
-  }))
-  .filter((plan) => plan.value !== 'ADMIN');
+interface Props {
+  planes: Plan[];
+}
 
-export default function SignupForm() {
+export default function SignupForm({ planes }: Props) {
   const {
     register,
     handleSubmit,
@@ -44,7 +41,7 @@ export default function SignupForm() {
     watch,
   } = useForm<UsuarioToSignup>();
 
-  const selectedRol = watch('rol');
+  const selectedPlan = watch('plan_id');
 
   const { push } = useRouter();
 
@@ -65,8 +62,8 @@ export default function SignupForm() {
       toast.error(errors.confirmar_contrasena?.message, {
         position: 'top-center',
       });
-    else if (errors?.rol)
-      toast.error(errors.rol?.message, { position: 'top-center' });
+    else if (errors?.plan_id)
+      toast.error(errors.plan_id?.message, { position: 'top-center' });
   };
 
   const [success, setSuccess] = useState(false);
@@ -99,11 +96,7 @@ export default function SignupForm() {
     ? false
     : confirmPassword !== password;
 
-  const selectedPlan = PLANES_DATA.find(
-    (plan) =>
-      (plan.value as keyof typeof ROLES) ===
-      (selectedRol as keyof typeof ROLES),
-  );
+  const selectedPlanData = planes.find((plan) => plan.id === selectedPlan);
 
   return (
     <Card className='w-full'>
@@ -250,7 +243,7 @@ export default function SignupForm() {
           <section className='col-span-full my-4 flex flex-col gap-4'>
             <Controller
               control={control}
-              name='rol'
+              name='plan_id'
               rules={{
                 required: { value: true, message: 'El plan es requerido' },
               }}
@@ -260,25 +253,27 @@ export default function SignupForm() {
                     <SelectValue placeholder='Seleccione un plan' />
                   </SelectTrigger>
                   <SelectContent className='col-span-3' align='start'>
-                    {PLANES.map((plan) => (
-                      <SelectItem key={plan.label} value={plan.value}>
-                        {plan.label}
+                    {planes.map((plan) => (
+                      <SelectItem key={plan.nombre} value={plan.id}>
+                        {plan.nombre}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               )}
             />
-            {selectedRol && (
+            {selectedPlanData && (
               <Card className='bg-secondary'>
                 <CardHeader>
                   <CardTitle className='flex w-full items-center justify-between'>
-                    <h4>{selectedPlan?.value}</h4>
+                    <h4>{selectedPlanData?.nombre}</h4>
                     <Badge className='lg:text-base'>
-                      ${selectedPlan?.price.toLocaleString('es-AR')}
+                      ${selectedPlanData?.valor.toLocaleString('es-AR')}
                     </Badge>
                   </CardTitle>
-                  <CardDescription>{selectedPlan?.description}</CardDescription>
+                  <CardDescription>
+                    {selectedPlanData?.descripcion}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             )}
