@@ -14,16 +14,17 @@ export enum STATUS {
 }
 
 export enum SUBSCRIPTION_MESSAGE {
-  welcome = '',
-  warning = '',
-  cancelled = '',
-  disabled = '',
+  welcome = 'Bienvenido a PulveSys',
+  warning = 'Atención',
+  cancelled = 'Tu suscripción fué cancelada',
+  disabled = 'disabled',
 }
 
 export interface Suscripcion {
   id: UUID;
   plan: Plan;
   fecha_fin: Date | string;
+  next_payment_date?: Date | string;
   free_trial: boolean;
   status: keyof typeof STATUS;
   message_info: keyof typeof SUBSCRIPTION_MESSAGE;

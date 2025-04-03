@@ -1,9 +1,4 @@
-import {
-  CalendarSync,
-  CalendarXIcon,
-  ChevronRight,
-  DollarSign,
-} from 'lucide-react';
+import { CalendarSync, CalendarXIcon, ChevronRight, Gift } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -64,7 +59,7 @@ export default async function FacturacionContainer() {
         <Badge
           variant={status === 'cancelled' ? 'destructive' : 'default'}
           className={cn(
-            'w-fit',
+            'w-fit text-primary dark:text-primary-foreground',
             status === 'pending'
               ? 'bg-yellow-200'
               : status === 'authorized'
@@ -77,10 +72,16 @@ export default async function FacturacionContainer() {
         <h5 className='flex items-start gap-1 text-sm'>
           {!willFinish ? (
             <>
-              <CalendarSync size={16} />
+              {free_trial ? (
+                <Gift size={16} className='mt-0.5 shrink-0' />
+              ) : (
+                <CalendarSync size={16} className='mt-0.5 shrink-0' />
+              )}
               <p className='flex items-center gap-1'>
-                Se renueva el
-                {endDateString}
+                {free_trial
+                  ? 'Tenés una prueba gratuita hasta '
+                  : 'Se renueva '}
+                el {endDateString}
               </p>
             </>
           ) : (

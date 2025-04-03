@@ -1,4 +1,5 @@
 import { Plan } from './planes.types';
+import { Suscripcion } from './suscripciones.types';
 import { UUID } from 'crypto';
 
 export enum ROLES {
@@ -28,7 +29,7 @@ export interface Usuario extends UsuarioToSignup {
   Sesion?: Sesion[];
 
   isEmployer: boolean;
-  isSubscriptionActive?: boolean;
+  suscripcion: Partial<Suscripcion>;
 }
 
 export interface Sesion {

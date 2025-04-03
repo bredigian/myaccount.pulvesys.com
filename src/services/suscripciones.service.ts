@@ -1,4 +1,8 @@
-import { PayloadInitPoint, Suscripcion } from '@/types/suscripciones.types';
+import {
+  PayloadInitPoint,
+  SUBSCRIPTION_MESSAGE,
+  Suscripcion,
+} from '@/types/suscripciones.types';
 
 import { APIError } from '@/types/error.types';
 import { API_URL } from '@/config/api';
@@ -46,4 +50,26 @@ export const generateInitPoint = async (
   if (!res.ok) throw data as APIError;
 
   return data as { init_point: string };
+};
+
+export const handleInformationMessage = async (
+  message_info: keyof typeof SUBSCRIPTION_MESSAGE,
+  access_token: string,
+) => {
+  const PATH = `${API_URL}/v1/suscripciones/mensaje`;
+  const OPTIONS: RequestInit = {
+    method: 'PATCH',
+    credentials: 'include',
+    body: JSON.stringify({ message_info }),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access_token}`,
+    },
+  };
+
+  const res = await fetch(PATH, OPTIONS);
+  const data: Suscripcion | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
+
+  return data as Suscripcion;
 };

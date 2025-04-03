@@ -32,9 +32,7 @@ export default function AddOrEditUsuarioForm({
     handleSubmit,
     formState: { isSubmitting, isDirty },
     watch,
-  } = useForm<UsuarioToSignup>({
-    defaultValues: isEdit ? { nombre: data?.nombre } : { rol: 'INDIVIDUAL' },
-  });
+  } = useForm<UsuarioToSignup>();
 
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState<
     boolean | undefined
@@ -66,8 +64,6 @@ export default function AddOrEditUsuarioForm({
       toast.error(errors.confirmar_contrasena?.message, {
         position: 'top-center',
       });
-    else if (errors?.rol)
-      toast.error(errors.rol?.message, { position: 'top-center' });
   };
   const onSubmit = async (values: UsuarioToSignup) => {
     try {

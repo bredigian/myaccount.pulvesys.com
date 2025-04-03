@@ -22,6 +22,7 @@ import {
 
 import { AppSidebar } from '@/components/app-sidebar';
 import Link from 'next/link';
+import ScreenDialog from './screen-dialog';
 import { Separator } from '@/components/ui/separator';
 import { Usuario } from '@/types/usuario.types';
 import { usePathname } from 'next/navigation';
@@ -48,56 +49,66 @@ export default function Screen({ children, userdata }: Props) {
           : ROUTES
   ).find((route) => route.url === pathname);
 
-  const { nombre_usuario, setUserdata } = usuarioStore();
+  const { nombre_usuario, suscripcion, setUserdata } = usuarioStore();
 
   useEffect(() => {
     if (!nombre_usuario) if (userdata) setUserdata(userdata);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const { message_info, next_payment_date } = suscripcion || {};
+
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset className='overflow-x-hidden'>
-        <header className='flex h-16 shrink-0 items-center gap-2'>
-          <div className='flex items-center gap-2 px-4'>
-            <SidebarTrigger className='-ml-1' />
-            <Separator orientation='vertical' className='mr-2 h-4' />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className='hidden md:block'>
-                  {isEnterpriseRoute ? (
-                    <Link href='/panel'>Empresa</Link>
-                  ) : isSubscriptionRoute ? (
-                    <Link href={'/facturacion'}>Suscripción</Link>
-                  ) : isExtraRoute ? (
-                    <Link href={'/historial'}>Extra</Link>
-                  ) : (
-                    <Link href={'/panel'}>Administración</Link>
-                  )}
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className='hidden md:block' />
-                {!isPulverizacionDetail ? (
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>{HEADER_TITLE?.title}</BreadcrumbPage>
+    <>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset className='overflow-x-hidden'>
+          <header className='flex h-16 shrink-0 items-center gap-2'>
+            <div className='flex items-center gap-2 px-4'>
+              <SidebarTrigger className='-ml-1' />
+              <Separator orientation='vertical' className='mr-2 h-4' />
+              <Breadcrumb>
+                <BreadcrumbList>
+                  <BreadcrumbItem className='hidden md:block'>
+                    {isEnterpriseRoute ? (
+                      <Link href='/panel'>Empresa</Link>
+                    ) : isSubscriptionRoute ? (
+                      <Link href={'/facturacion'}>Suscripción</Link>
+                    ) : isExtraRoute ? (
+                      <Link href={'/historial'}>Extra</Link>
+                    ) : (
+                      <Link href={'/panel'}>Administración</Link>
+                    )}
                   </BreadcrumbItem>
-                ) : (
-                  <>
-                    <BreadcrumbItem className='hidden md:block'>
-                      <Link href='/panel'>Pulverizaciones</Link>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator className='hidden md:block' />
+                  <BreadcrumbSeparator className='hidden md:block' />
+                  {!isPulverizacionDetail ? (
                     <BreadcrumbItem>
-                      <BreadcrumbPage>Detalle</BreadcrumbPage>
+                      <BreadcrumbPage>{HEADER_TITLE?.title}</BreadcrumbPage>
                     </BreadcrumbItem>
-                  </>
-                )}
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-        </header>
-        {children}
-      </SidebarInset>
-    </SidebarProvider>
+                  ) : (
+                    <>
+                      <BreadcrumbItem className='hidden md:block'>
+                        <Link href='/panel'>Pulverizaciones</Link>
+                      </BreadcrumbItem>
+                      <BreadcrumbSeparator className='hidden md:block' />
+                      <BreadcrumbItem>
+                        <BreadcrumbPage>Detalle</BreadcrumbPage>
+                      </BreadcrumbItem>
+                    </>
+                  )}
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
+          </header>
+          {children}
+        </SidebarInset>
+        {message_info && message_info !== 'disabled' && (
+          <ScreenDialog
+            message_info={message_info}
+            next_payment_date={next_payment_date as string}
+          />
+        )}
+      </SidebarProvider>
+    </>
   );
 }
