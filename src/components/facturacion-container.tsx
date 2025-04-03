@@ -22,7 +22,12 @@ export default async function FacturacionContainer() {
   if (!access_token || !refresh_token) redirect('/', RedirectType.replace);
 
   const data = await getSuscripcion(access_token.value, refresh_token);
-  if ('error' in data) return <p>{data?.message}</p>;
+  if ('error' in data) {
+    const { statusCode } = data;
+
+    if (statusCode === 404) redirect('/', RedirectType.replace);
+    else return <p>{data?.message}</p>;
+  }
 
   const { plan, fecha_fin, status, free_trial, createdAt, updatedAt } = data;
 

@@ -40,6 +40,17 @@ export async function middleware(req: NextRequest) {
     }
 
     const { access_token, refresh_token, expireIn, userdata, domain } = sesion;
+    if (pathname.includes('/facturacion') || pathname.includes('/empresa')) {
+      const { isEmployer } = userdata;
+      if (isEmployer) return NextResponse.redirect(new URL('/', req.url));
+    }
+
+    if (pathname.includes('/empresa')) {
+      const { rol, empresa_id } = userdata;
+
+      if (rol === 'INDIVIDUAL' && !empresa_id)
+        return NextResponse.redirect(new URL('/', req.url));
+    }
 
     const expireDate = new Date(expireIn);
 
