@@ -42,6 +42,10 @@ export async function middleware(req: NextRequest) {
     const { access_token, refresh_token, expireIn, userdata, domain } = sesion;
 
     const { isEmployer, suscripcion } = userdata;
+
+    if (pathname.includes('/suscripcion-expirada') && !isEmployer)
+      return NextResponse.redirect(new URL('/facturacion', req.url));
+
     const { free_trial, next_payment_date } = suscripcion;
 
     const now = Date.now();
@@ -131,5 +135,6 @@ export const config = {
     '/empresa/usuarios',
     '/facturacion',
     '/historial',
+    '/suscripcion-expirada',
   ],
 };
