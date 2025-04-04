@@ -12,10 +12,12 @@ import {
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 export function NavSection({
   title,
   items,
+  isDisabled,
 }: {
   title: string;
   items: {
@@ -28,6 +30,7 @@ export function NavSection({
       url: string;
     }[];
   }[];
+  isDisabled?: boolean;
 }) {
   const pathname = usePathname();
   const { isMobile, setOpenMobile } = useSidebar();
@@ -40,21 +43,36 @@ export function NavSection({
           const isActive = item.url === pathname;
 
           return (
-            <SidebarMenuItem key={item.title}>
+            <SidebarMenuItem
+              key={item.title}
+              className={cn(isDisabled && 'cursor-not-allowed opacity-35')}
+            >
               <SidebarMenuButton
                 asChild
                 tooltip={item.title}
                 isActive={isActive}
+                disabled={isDisabled}
+                className={cn(
+                  isDisabled &&
+                    'hover:bg-inherit hover:text-inherit active:bg-inherit active:text-inherit',
+                )}
               >
-                <Link
-                  href={item.url}
-                  onClick={() => {
-                    if (isMobile) setOpenMobile(false);
-                  }}
-                >
-                  <item.icon />
-                  <span>{item.title}</span>
-                </Link>
+                {!isDisabled ? (
+                  <Link
+                    href={item.url}
+                    onClick={() => {
+                      if (isMobile) setOpenMobile(false);
+                    }}
+                  >
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </Link>
+                ) : (
+                  <span>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </span>
+                )}
               </SidebarMenuButton>
             </SidebarMenuItem>
           );

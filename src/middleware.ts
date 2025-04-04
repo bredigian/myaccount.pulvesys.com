@@ -40,8 +40,24 @@ export async function middleware(req: NextRequest) {
     }
 
     const { access_token, refresh_token, expireIn, userdata, domain } = sesion;
+
+    const { isEmployer, suscripcion } = userdata;
+    const { free_trial, next_payment_date } = suscripcion;
+
+    const now = Date.now();
+    const endDate = new Date(next_payment_date as string).getTime();
+
+    const isFreeTrialExpired = !free_trial && now > endDate;
+    if (!pathname.includes('/facturacion'))
+      if (isFreeTrialExpired)
+        return NextResponse.redirect(
+          new URL(
+            !isEmployer ? '/facturacion' : '/suscripcion-expirada',
+            req.url,
+          ),
+        );
+
     if (pathname.includes('/facturacion') || pathname.includes('/empresa')) {
-      const { isEmployer } = userdata;
       if (isEmployer) return NextResponse.redirect(new URL('/', req.url));
     }
 

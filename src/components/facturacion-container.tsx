@@ -1,4 +1,10 @@
-import { CalendarSync, CalendarXIcon, ChevronRight, Gift } from 'lucide-react';
+import {
+  CalendarIcon,
+  CalendarSync,
+  CalendarXIcon,
+  ChevronRight,
+  Gift,
+} from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -36,6 +42,8 @@ export default async function FacturacionContainer() {
     { locale: 'es-AR' },
   );
   const willFinish = !free_trial && status === 'cancelled';
+  const isExpired =
+    status === 'cancelled' && Date.now() > new Date(fecha_fin).getTime();
 
   return (
     <Card>
@@ -64,7 +72,7 @@ export default async function FacturacionContainer() {
         <Badge
           variant={status === 'cancelled' ? 'destructive' : 'default'}
           className={cn(
-            'w-fit text-primary dark:text-primary-foreground',
+            'w-fit text-primary hover:text-primary-foreground dark:text-primary-foreground',
             status === 'pending'
               ? 'bg-yellow-200'
               : status === 'authorized'
@@ -75,7 +83,12 @@ export default async function FacturacionContainer() {
           {STATUS[status]}
         </Badge>
         <h5 className='flex items-start gap-1 text-sm'>
-          {!willFinish ? (
+          {isExpired ? (
+            <>
+              <CalendarIcon size={16} className='mt-0.5 shrink-0' />
+              <p>La suscripción finalizo el {endDateString}</p>
+            </>
+          ) : !willFinish ? (
             <>
               {free_trial ? (
                 <Gift size={16} className='mt-0.5 shrink-0' />

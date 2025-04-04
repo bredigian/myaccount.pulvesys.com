@@ -29,7 +29,14 @@ import light from '../../public/logo_for_light.webp';
 import { usuarioStore } from '@/store/usuario.store';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { rol, isEmployer } = usuarioStore();
+  const { rol, isEmployer, suscripcion } = usuarioStore();
+
+  const { free_trial, next_payment_date } = suscripcion || {};
+
+  const now = Date.now();
+  const endSuscripcionDate = new Date(next_payment_date as string).getTime();
+
+  const isFreeTrialExpired = !free_trial && now > endSuscripcionDate;
 
   return (
     <Sidebar variant='inset' {...props}>
@@ -68,13 +75,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         {rol === 'EMPRESA' && (
-          <NavSection title='Inicio' items={ENTERPRISE_ROUTES} />
+          <NavSection
+            title='Inicio'
+            items={ENTERPRISE_ROUTES}
+            isDisabled={isFreeTrialExpired}
+          />
         )}
-        <NavSection title='Administración' items={ROUTES} />
+        <NavSection
+          title='Administración'
+          items={ROUTES}
+          isDisabled={isFreeTrialExpired}
+        />
         {!isEmployer && (
           <NavSection title='Suscripción' items={SUBSCRIPTION_ROUTES} />
         )}
-        <NavSection title='Extra' items={EXTRAS_ROUTES} />
+        <NavSection
+          title='Extra'
+          items={EXTRAS_ROUTES}
+          isDisabled={isFreeTrialExpired}
+        />
       </SidebarContent>
       <SidebarFooter>
         <NavSettings />
