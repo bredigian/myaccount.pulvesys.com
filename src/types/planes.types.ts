@@ -6,4 +6,5 @@ export interface Plan {
   nombre: keyof typeof ROLES;
   descripcion: string[];
   valor: number;
+  valor_actual?: number;
 }

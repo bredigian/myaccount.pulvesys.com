@@ -21,6 +21,7 @@ export const getSuscripcion = async (
       Cookie: JSON.stringify(refresh_token),
     },
     next: { tags: ['suscripciones'] },
+    cache: 'no-cache',
   };
 
   const res = await fetch(PATH, OPTIONS);
@@ -61,6 +62,24 @@ export const handleInformationMessage = async (
     method: 'PATCH',
     credentials: 'include',
     body: JSON.stringify({ message_info }),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access_token}`,
+    },
+  };
+
+  const res = await fetch(PATH, OPTIONS);
+  const data: Suscripcion | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
+
+  return data as Suscripcion;
+};
+
+export const unsuscribe = async (access_token: string) => {
+  const PATH = `${API_URL}/v1/suscripciones`;
+  const OPTIONS: RequestInit = {
+    method: 'DELETE',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${access_token}`,

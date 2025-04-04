@@ -22,6 +22,7 @@ import Cookies from 'js-cookie';
 import { DateTime } from 'luxon';
 import { SUBSCRIPTION_MESSAGE } from '@/types/suscripciones.types';
 import { handleInformationMessage } from '@/services/suscripciones.service';
+import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -58,6 +59,7 @@ export default function ScreenDialog({
         return;
       }
       await handleInformationMessage('disabled', access_token);
+      await revalidate('suscripciones');
     } catch (error) {
       console.error(error);
     }

@@ -37,6 +37,11 @@ export default async function FacturacionContainer() {
 
   const { plan, fecha_fin, status, free_trial, createdAt, updatedAt } = data;
 
+  const now = Date.now();
+  const endSuscripcionDate = new Date(fecha_fin as string).getTime();
+
+  const isFreeTrialExpired = !free_trial && now > endSuscripcionDate;
+
   const endDateString = DateTime.fromISO(fecha_fin as string).toLocaleString(
     DateTime.DATE_FULL,
     { locale: 'es-AR' },
@@ -86,7 +91,12 @@ export default async function FacturacionContainer() {
           {isExpired ? (
             <>
               <CalendarIcon size={16} className='mt-0.5 shrink-0' />
-              <p>La suscripción finalizo el {endDateString}</p>
+              <p>La suscripción finalizó el {endDateString}</p>
+            </>
+          ) : isFreeTrialExpired ? (
+            <>
+              <CalendarIcon size={16} className='mt-0.5 shrink-0' />
+              <p>La prueba gratuita finalizó el {endDateString}</p>
             </>
           ) : !willFinish ? (
             <>
