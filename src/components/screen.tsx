@@ -49,10 +49,10 @@ export default function Screen({ children, userdata }: Props) {
           : ROUTES
   ).find((route) => route.url === pathname);
 
-  const { nombre_usuario, suscripcion, setUserdata } = usuarioStore();
+  const { suscripcion, setUserdata } = usuarioStore();
 
   useEffect(() => {
-    if (!nombre_usuario) if (userdata) setUserdata(userdata);
+    if (userdata) setUserdata(userdata);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

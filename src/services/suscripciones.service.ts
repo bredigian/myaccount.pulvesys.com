@@ -87,8 +87,8 @@ export const unsuscribe = async (access_token: string) => {
   };
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Suscripcion | APIError = await res.json();
+  const data: { ok: boolean } | APIError = await res.json();
   if (!res.ok) throw data as APIError;
 
-  return data as Suscripcion;
+  return data as { ok: boolean };
 };
