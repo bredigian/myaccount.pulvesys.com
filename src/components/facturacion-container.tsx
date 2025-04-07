@@ -87,7 +87,7 @@ export default async function FacturacionContainer() {
           className={cn(
             'w-fit text-primary-foreground dark:text-primary md:text-base',
             status === 'pending'
-              ? 'bg-yellow-200'
+              ? 'bg-yellow-200 !text-primary hover:!text-primary-foreground dark:!text-primary-foreground'
               : status === 'authorized'
                 ? 'bg-green-600'
                 : '',
