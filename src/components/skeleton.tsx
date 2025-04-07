@@ -1,4 +1,11 @@
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from './ui/card';
 import { TableCell, TableRow } from './ui/table';
 
 import { Skeleton } from './ui/skeleton';
@@ -117,6 +124,26 @@ export const UsuarioItemSkeleton = () => {
       </TableCell>
       <TableCell align='right'>
         <Skeleton className='h-3 w-full max-w-3' />
+      </TableCell>
+    </TableRow>
+  );
+};
+
+export const HistorialItemSkeleton = () => {
+  return (
+    <TableRow className='h-12'>
+      <TableCell>
+        <Skeleton className='h-3 w-full max-w-24' />
+      </TableCell>
+      <TableCell>
+        <Skeleton className='h-3 w-full max-w-24' />
+      </TableCell>
+      <TableCell className='flex flex-col gap-2'>
+        <Skeleton className='h-3 w-72' />
+        <Skeleton className='h-3 w-48' />
+      </TableCell>
+      <TableCell>
+        <Skeleton className='h-3 w-48' />
       </TableCell>
     </TableRow>
   );
