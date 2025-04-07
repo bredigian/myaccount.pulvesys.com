@@ -68,7 +68,7 @@ export async function middleware(req: NextRequest) {
     if (pathname.includes('/empresa')) {
       const { rol, empresa_id } = userdata;
 
-      if (rol === 'INDIVIDUAL' && !empresa_id)
+      if (rol !== 'EMPRESA' && !empresa_id)
         return NextResponse.redirect(new URL('/', req.url));
     }
 

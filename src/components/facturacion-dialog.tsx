@@ -45,7 +45,10 @@ export const ManageFacturacionDialog = () => {
 
   const { push } = useRouter();
 
-  const { suscripcion } = usuarioStore();
+  const { suscripcion, rol } = usuarioStore();
+
+  if (rol === 'ADMIN') return null;
+
   const { free_trial, status, next_payment_date, plan } = suscripcion || {};
 
   const now = Date.now();

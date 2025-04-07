@@ -37,6 +37,14 @@ export default async function FacturacionContainer() {
 
   const { plan, fecha_fin, status, free_trial, createdAt, updatedAt } = data;
 
+  if (plan.nombre === 'ADMIN')
+    return (
+      <p>
+        Proximamente visualizarás información de las suscripciones de tus
+        clientes.
+      </p>
+    );
+
   const now = Date.now();
   const endSuscripcionDate = new Date(fecha_fin as string).getTime();
 
