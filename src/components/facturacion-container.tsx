@@ -64,7 +64,7 @@ export default async function FacturacionContainer() {
         <CardTitle className='flex items-center justify-between gap-4'>
           <h2 className='md:text-lg lg:text-xl'>Plan {plan.nombre}</h2>
           <span className='flex items-center gap-1 rounded-md bg-primary/60 px-2 py-1 font-medium text-primary-foreground md:text-lg lg:text-xl'>
-            ${plan.valor.toLocaleString('es-AR')}
+            ${plan.valor.toLocaleString('es-AR')}/mes
           </span>
         </CardTitle>
         <CardDescription>
@@ -98,20 +98,20 @@ export default async function FacturacionContainer() {
         <h5 className='flex items-start gap-1 text-sm md:text-base'>
           {isExpired ? (
             <>
-              <CalendarIcon className='mt-0.5 size-4 shrink-0 md:size-6' />
+              <CalendarIcon className='mt-0.5 size-4 shrink-0 md:mt-0 md:size-6' />
               <p>La suscripción finalizó el {endDateString}</p>
             </>
           ) : isFreeTrialExpired ? (
             <>
-              <CalendarIcon className='mt-0.5 size-4 shrink-0 md:size-6' />
+              <CalendarIcon className='mt-0.5 size-4 shrink-0 md:mt-0 md:size-6' />
               <p>La prueba gratuita finalizó el {endDateString}</p>
             </>
           ) : !willFinish ? (
             <>
               {free_trial ? (
-                <Gift className='mt-0.5 size-4 shrink-0 md:size-6' />
+                <Gift className='mt-0.5 size-4 shrink-0 md:mt-0 md:size-6' />
               ) : (
-                <CalendarSync className='mt-0.5 size-4 shrink-0 md:size-6' />
+                <CalendarSync className='mt-0.5 size-4 shrink-0 md:mt-0 md:size-6' />
               )}
               <p className='flex items-center gap-1'>
                 {free_trial
@@ -122,7 +122,7 @@ export default async function FacturacionContainer() {
             </>
           ) : (
             <>
-              <CalendarXIcon className='mt-0.5 size-4 shrink-0 md:size-6' />
+              <CalendarXIcon className='mt-0.5 size-4 shrink-0 md:mt-0 md:size-6' />
               <p>
                 Podés seguir utilizando el servicio hasta el{' '}
                 <strong>{endDateString}</strong>

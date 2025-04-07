@@ -268,7 +268,7 @@ export default function SignupForm({ planes }: Props) {
                   <CardTitle className='flex w-full items-center justify-between'>
                     <h4>{selectedPlanData?.nombre}</h4>
                     <Badge className='lg:text-base'>
-                      ${selectedPlanData?.valor.toLocaleString('es-AR')}
+                      ${selectedPlanData?.valor.toLocaleString('es-AR')}/mes
                     </Badge>
                   </CardTitle>
                   <CardDescription>
