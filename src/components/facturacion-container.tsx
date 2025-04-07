@@ -51,16 +51,16 @@ export default async function FacturacionContainer() {
     status === 'cancelled' && Date.now() > new Date(fecha_fin).getTime();
 
   return (
-    <Card>
+    <Card className='md:max-w-lg'>
       <CardHeader>
         <CardTitle className='flex items-center justify-between gap-4'>
-          <h2>Plan {plan.nombre}</h2>
-          <span className='flex items-center gap-1 rounded-md bg-primary/60 px-2 py-1 font-medium text-primary-foreground'>
+          <h2 className='md:text-lg lg:text-xl'>Plan {plan.nombre}</h2>
+          <span className='flex items-center gap-1 rounded-md bg-primary/60 px-2 py-1 font-medium text-primary-foreground md:text-lg lg:text-xl'>
             ${plan.valor.toLocaleString('es-AR')}
           </span>
         </CardTitle>
         <CardDescription>
-          <ul>
+          <ul className='flex flex-col gap-2'>
             {plan.descripcion.map((item) => (
               <li
                 key={`description-item-${item}`}
@@ -77,7 +77,7 @@ export default async function FacturacionContainer() {
         <Badge
           variant={status === 'cancelled' ? 'destructive' : 'default'}
           className={cn(
-            'w-fit text-primary hover:text-primary-foreground dark:text-primary-foreground',
+            'w-fit text-primary-foreground dark:text-primary md:text-base',
             status === 'pending'
               ? 'bg-yellow-200'
               : status === 'authorized'
@@ -87,23 +87,23 @@ export default async function FacturacionContainer() {
         >
           {STATUS[status]}
         </Badge>
-        <h5 className='flex items-start gap-1 text-sm'>
+        <h5 className='flex items-start gap-1 text-sm md:text-base'>
           {isExpired ? (
             <>
-              <CalendarIcon size={16} className='mt-0.5 shrink-0' />
+              <CalendarIcon className='mt-0.5 size-4 shrink-0 md:size-6' />
               <p>La suscripción finalizó el {endDateString}</p>
             </>
           ) : isFreeTrialExpired ? (
             <>
-              <CalendarIcon size={16} className='mt-0.5 shrink-0' />
+              <CalendarIcon className='mt-0.5 size-4 shrink-0 md:size-6' />
               <p>La prueba gratuita finalizó el {endDateString}</p>
             </>
           ) : !willFinish ? (
             <>
               {free_trial ? (
-                <Gift size={16} className='mt-0.5 shrink-0' />
+                <Gift className='mt-0.5 size-4 shrink-0 md:size-6' />
               ) : (
-                <CalendarSync size={16} className='mt-0.5 shrink-0' />
+                <CalendarSync className='mt-0.5 size-4 shrink-0 md:size-6' />
               )}
               <p className='flex items-center gap-1'>
                 {free_trial
@@ -114,7 +114,7 @@ export default async function FacturacionContainer() {
             </>
           ) : (
             <>
-              <CalendarXIcon size={16} className='mt-0.5 shrink-0' />
+              <CalendarXIcon className='mt-0.5 size-4 shrink-0 md:size-6' />
               <p>
                 Podés seguir utilizando el servicio hasta el{' '}
                 <strong>{endDateString}</strong>
