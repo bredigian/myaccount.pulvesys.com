@@ -75,7 +75,7 @@ export const verifySesion = async (
   return data as Sesion;
 };
 
-interface SignoutResponse {
+interface OKResponse {
   ok: boolean;
 }
 
@@ -88,8 +88,63 @@ export const signout = async (token: string) => {
   const PATH = `${API_URL}/v1/auth/sesion`;
 
   const res = await fetch(PATH, options);
-  const data: SignoutResponse | APIError = await res.json();
+  const data: OKResponse | APIError = await res.json();
   if (!res.ok) throw data as APIError;
 
-  return { ok: true } as SignoutResponse;
+  return { ok: true } as OKResponse;
+};
+
+export const generateRecoverPassword = async (email: Usuario['email']) => {
+  const options: RequestInit = {
+    method: 'POST',
+    credentials: 'include',
+    body: JSON.stringify({ email }),
+    headers: { 'Content-Type': 'application/json' },
+  };
+  const PATH = `${API_URL}/v1/auth/recuperar`;
+
+  const res = await fetch(PATH, options);
+  const data: OKResponse | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
+
+  return { ok: true } as OKResponse;
+};
+
+export const verifyRecoverToken = async (token: string) => {
+  const options: RequestInit = {
+    method: 'GET',
+    credentials: 'include',
+    cache: 'no-cache',
+  };
+  const PATH = `${API_URL}/v1/auth/recuperar?token=${token}`;
+
+  const res = await fetch(PATH, options);
+  const data: OKResponse | APIError = await res.json();
+  if (!res.ok) return data as APIError;
+
+  return { ok: true } as OKResponse;
+};
+
+export const resetPassword = async (
+  token: string,
+  payload: {
+    contrasena: Usuario['contrasena'];
+  },
+) => {
+  const options: RequestInit = {
+    method: 'PATCH',
+    credentials: 'include',
+    body: JSON.stringify(payload),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const PATH = `${API_URL}/v1/auth/recuperar`;
+
+  const res = await fetch(PATH, options);
+  const data: OKResponse | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
+
+  return { ok: true } as OKResponse;
 };

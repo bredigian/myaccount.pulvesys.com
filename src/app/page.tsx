@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
+import { RecoverPasswordDialog } from '@/components/auth-dialog';
 import SigninForm from '@/components/signin-form';
 import dark from '../../public/logo_for_dark.webp';
 import light from '../../public/logo_for_light.webp';
@@ -27,9 +28,11 @@ export default async function Home({ searchParams }: Props) {
           alt='Logo de PulveSys'
           className='block size-36 rounded-xl dark:hidden lg:size-64'
         />
-        {/* <h1 className='font-semibold opacity-75'>PulveSys</h1> */}
       </div>
-      <SigninForm />
+      <section className='flex flex-col gap-8'>
+        <SigninForm />
+        <RecoverPasswordDialog />
+      </section>
     </main>
   );
 }
