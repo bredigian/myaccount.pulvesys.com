@@ -75,7 +75,11 @@ export default function ScreenDialog({
               ? `Comenzá a disfrutar de tu suscripción de inmediato. Tenés acceso a todas las funcionalidades de la plataforma mediante una prueba gratuita hasta el ${endDate}.`
               : message_info === 'warning'
                 ? 'Tu prueba de 30 días ha finalizado. Suscribite para seguir disfrutando de las funcionalidades de PulveSys.'
-                : `Lamentamos que hayas tomado esa decisión. Si cambias de opinión, podés reactivarla en cualquier momento. Podés seguir usando el servicio hasta el ${endDate}.`}
+                : message_info === 'payment_warning'
+                  ? 'Hay conflictos con el pago de tu suscripción. Por favor, revisá y regulá tus métodos de pago para no perder acceso a las funcionalidades de PulveSys.'
+                  : message_info === 'paused'
+                    ? 'Tu suscripción fue pausada temporalmente. Regulá tus pagos para evitar una posible cancelación y volvé a disfrutar de las funcionalidades de PulveSys. Si ya lo hiciste, Mercado Pago intentará realizar el cobro automáticamente en las siguientes horas.'
+                    : `Lamentamos que hayas tomado esa decisión. Si cambias de opinión, podés reactivarla en cualquier momento. Podés seguir usando el servicio hasta el ${endDate}.`}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -95,7 +99,11 @@ export default function ScreenDialog({
               ? `Comenzá a disfrutar de tu suscripción de inmediato. Tenés acceso a todas las funcionalidades de la plataforma mediante una prueba gratuita hasta el ${endDate}.`
               : message_info === 'warning'
                 ? 'Tu prueba de 30 días ha finalizado. Suscribite para seguir disfrutando de las funcionalidades de PulveSys.'
-                : `Lamentamos que hayas tomado esa decisión. Si cambias de opinión, podés reactivarla en cualquier momento. Podés seguir usando el servicio hasta el ${endDate}.`}
+                : message_info === 'payment_warning'
+                  ? 'Hay conflictos con el pago de tu suscripción. Por favor, revisá y regulá tus métodos de pago para no perder acceso a las funcionalidades de PulveSys.'
+                  : message_info === 'paused'
+                    ? 'Tu suscripción fue pausada temporalmente. Regulá tus pagos para evitar una posible cancelación y volvé a disfrutar de las funcionalidades de PulveSys. Si ya lo hiciste, Mercado Pago intentará realizar el cobro automáticamente en las siguientes horas.'
+                    : `Lamentamos que hayas tomado esa decisión. Si cambias de opinión, podés reactivarla en cualquier momento. Podés seguir usando el servicio hasta el ${endDate}.`}
           </DrawerDescription>
         </DrawerHeader>
         <DrawerFooter>

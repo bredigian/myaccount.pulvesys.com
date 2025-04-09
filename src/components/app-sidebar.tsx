@@ -31,7 +31,7 @@ import { usuarioStore } from '@/store/usuario.store';
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { rol, isEmployer, suscripcion } = usuarioStore();
 
-  const { free_trial, next_payment_date } = suscripcion || {};
+  const { free_trial, next_payment_date, status } = suscripcion || {};
 
   const now = Date.now();
   const endSuscripcionDate = new Date(next_payment_date as string).getTime();
@@ -78,13 +78,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <NavSection
             title='Inicio'
             items={ENTERPRISE_ROUTES}
-            isDisabled={isFreeTrialExpired}
+            isDisabled={
+              status !== 'authorized' &&
+              (isFreeTrialExpired || status === 'paused')
+            }
           />
         )}
         <NavSection
           title='Administración'
           items={ROUTES}
-          isDisabled={isFreeTrialExpired}
+          isDisabled={
+            status !== 'authorized' &&
+            (isFreeTrialExpired || status === 'paused')
+          }
         />
         {!isEmployer && (
           <NavSection title='Suscripción' items={SUBSCRIPTION_ROUTES} />
@@ -92,7 +98,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSection
           title='Extra'
           items={EXTRAS_ROUTES}
-          isDisabled={isFreeTrialExpired}
+          isDisabled={
+            status !== 'authorized' &&
+            (isFreeTrialExpired || status === 'paused')
+          }
         />
       </SidebarContent>
       <SidebarFooter>

@@ -46,14 +46,18 @@ export async function middleware(req: NextRequest) {
     if (pathname.includes('/suscripcion-expirada') && !isEmployer)
       return NextResponse.redirect(new URL('/facturacion', req.url));
 
-    const { free_trial, next_payment_date } = suscripcion;
+    const { free_trial, next_payment_date, status } = suscripcion;
 
     const now = Date.now();
     const endDate = new Date(next_payment_date as string).getTime();
 
     const isFreeTrialExpired = !free_trial && now > endDate;
+
     if (!pathname.includes('/facturacion'))
-      if (isFreeTrialExpired)
+      if (
+        status !== 'authorized' &&
+        (isFreeTrialExpired || status === 'paused')
+      )
         return NextResponse.redirect(
           new URL(
             !isEmployer ? '/facturacion' : '/suscripcion-expirada',

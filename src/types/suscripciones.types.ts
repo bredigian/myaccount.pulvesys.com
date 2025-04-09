@@ -1,6 +1,5 @@
 import { Plan } from './planes.types';
 import { UUID } from 'crypto';
-import { Usuario } from './usuario.types';
 
 export interface PayloadInitPoint {
   plan_id: UUID;
@@ -10,14 +9,28 @@ export interface PayloadInitPoint {
 export enum STATUS {
   pending = 'Suscripción pendiente',
   authorized = 'Suscripción activa',
+  paused = 'Suscripción pausada',
   cancelled = 'Suscripción cancelada',
 }
 
 export enum SUBSCRIPTION_MESSAGE {
   welcome = 'Bienvenido a PulveSys',
   warning = 'Atención',
-  cancelled = 'Tu suscripción fué cancelada',
+  payment_warning = 'Atención con el pago',
+  paused = 'Tu suscripción fue pausada',
+  cancelled = 'Tu suscripción fue cancelada',
   disabled = 'disabled',
+}
+
+interface SummarizedProps {
+  quotas: number | null;
+  charged_quantity: number;
+  pending_charge_quantity: number | null;
+  charged_amount: number;
+  pending_charge_amount: number | null;
+  semaphore: 'green' | 'yellow' | 'red';
+  last_charged_date: Date | string;
+  last_charged_amount: number;
 }
 
 export interface Suscripcion {
@@ -30,4 +43,5 @@ export interface Suscripcion {
   message_info: keyof typeof SUBSCRIPTION_MESSAGE;
   createdAt: Date | string;
   updatedAt: Date | string;
+  extra?: SummarizedProps;
 }

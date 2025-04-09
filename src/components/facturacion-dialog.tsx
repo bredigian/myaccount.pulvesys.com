@@ -62,6 +62,8 @@ export const ManageFacturacionDialog = () => {
   >('pending');
 
   const handleAction = async () => {
+    if (status === 'paused') return;
+
     try {
       setState('processing');
 
@@ -103,7 +105,11 @@ export const ManageFacturacionDialog = () => {
   return isMobile ? (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant={'ghost'} className='w-full justify-start pl-2'>
+        <Button
+          disabled={status === 'paused'}
+          variant={'ghost'}
+          className='w-full justify-start pl-2'
+        >
           {isFreeTrialExpired || hasFreeTrial
             ? 'Suscribirse'
             : status === 'authorized'
@@ -122,7 +128,7 @@ export const ManageFacturacionDialog = () => {
           </DrawerTitle>
           <DrawerDescription>
             {hasFreeTrial
-              ? '¿Querés suscribirte ahora? Recordá que tenés una prueba gratuita de 1 mes. Pulsá el botón para redirigirte a Mercado Pago y realizar el pago'
+              ? '¿Querés suscribirte ahora? Recordá que tenés una prueba gratuita de 1 mes. Pulsá el botón para redirigirte a Mercado Pago y realizar el pago.'
               : isFreeTrialExpired
                 ? 'Seguí disfrutando de la experiencia de PulveSys. Pulsá el boton para redirigirte a Mercado Pago y realizar el pago.'
                 : status === 'authorized'
@@ -160,7 +166,11 @@ export const ManageFacturacionDialog = () => {
   ) : (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={'ghost'} className='w-full justify-start pl-2'>
+        <Button
+          disabled={status === 'paused'}
+          variant={'ghost'}
+          className='w-full justify-start pl-2'
+        >
           {isFreeTrialExpired || hasFreeTrial
             ? 'Suscribirse'
             : status === 'authorized'
@@ -179,7 +189,7 @@ export const ManageFacturacionDialog = () => {
           </DialogTitle>
           <DialogDescription>
             {hasFreeTrial
-              ? '¿Querés suscribirte ahora? Recordá que tenés una prueba gratuita de 1 mes. Pulsá el botón para redirigirte a Mercado Pago y realizar el pago'
+              ? '¿Querés suscribirte ahora? Recordá que tenés una prueba gratuita de 1 mes. Pulsá el botón para redirigirte a Mercado Pago y realizar el pago.'
               : isFreeTrialExpired
                 ? 'Seguí disfrutando de la experiencia de PulveSys. Pulsá el boton para redirigirte a Mercado Pago y realizar el pago.'
                 : status === 'authorized'
