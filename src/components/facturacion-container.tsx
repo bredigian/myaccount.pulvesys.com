@@ -113,7 +113,9 @@ export default async function FacturacionContainer() {
           ) : status === 'paused' ? (
             <p className='rounded-md border-2 border-primary/20 bg-orange-200 px-2 py-1 text-sm text-primary/75 dark:border-primary-foreground/20 dark:text-primary-foreground md:text-base'>
               Tu suscripción fue pausada debido a varios intentos fallidos de
-              realizar el cobro.
+              realizar el cobro. Regularizá el pago para seguir disfrutando de
+              las funcionalidades de PulveSys. Si ya lo hiciste, Mercado Pago
+              intentará realizar el cobro en las próximas horas.
             </p>
           ) : isFreeTrialExpired ? (
             <>
