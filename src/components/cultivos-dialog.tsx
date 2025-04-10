@@ -1,5 +1,6 @@
 'use client';
 
+import { CheckIcon, Edit, PlusSquare, Trash2 } from 'lucide-react';
 import {
   Dialog,
   DialogClose,
@@ -21,22 +22,21 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from './ui/drawer';
-import { CheckIcon, Edit, PlusSquare, Trash2 } from 'lucide-react';
 
+import { APIError } from '@/types/error.types';
 import AddOrEditCultivoForm from './cultivos-form';
 import { Button } from './ui/button';
 import Cookies from 'js-cookie';
 import { Cultivo } from '@/types/cultivos.types';
+import { ReloadIcon } from '@radix-ui/react-icons';
 import { UUID } from 'crypto';
+import { cn } from '@/lib/utils';
 import { deleteCultivo } from '@/services/cultivos.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
-import { APIError } from '@/types/error.types';
-import { cn } from '@/lib/utils';
-import { ReloadIcon } from '@radix-ui/react-icons';
 
 export const AddOrEditCultivoDialog = ({
   isEdit,
@@ -171,7 +171,8 @@ export const DeleteCultivoDialog = ({ id }: { id: UUID }) => {
             onClick={handleDelete}
             disabled={state === 'success' || state === 'processing'}
             className={cn(
-              state === 'success' && '!bg-green-700 disabled:opacity-100',
+              state === 'success' &&
+                '!bg-green-700 text-primary-foreground disabled:opacity-100 dark:text-primary',
             )}
           >
             {state === 'pending' || state === 'error' ? (
@@ -215,7 +216,8 @@ export const DeleteCultivoDialog = ({ id }: { id: UUID }) => {
             onClick={handleDelete}
             disabled={state === 'success' || state === 'processing'}
             className={cn(
-              state === 'success' && '!bg-green-700 disabled:opacity-100',
+              state === 'success' &&
+                '!bg-green-700 text-primary-foreground disabled:opacity-100 dark:text-primary',
             )}
           >
             {state === 'pending' || state === 'error' ? (

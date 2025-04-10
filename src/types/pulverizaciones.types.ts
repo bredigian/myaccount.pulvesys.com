@@ -4,6 +4,7 @@ import { ConsumoProducto } from './productos.types';
 import { Cultivo } from './cultivos.types';
 import { Tratamiento } from './tratamientos.types';
 import { UUID } from 'crypto';
+import { Usuario } from './usuario.types';
 
 export interface Detalle {
   id?: UUID;
@@ -25,6 +26,8 @@ export interface Pulverizacion {
   productos: Aplicacion[];
   Aplicacion?: Aplicacion[];
   ConsumoProducto?: ConsumoProducto[];
+
+  usuario?: Usuario;
 
   createdAt?: Date | string;
   updatedAt?: Date | string;

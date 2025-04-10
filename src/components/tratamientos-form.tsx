@@ -4,6 +4,7 @@ import {
   editTratamiento,
 } from '@/services/tratamientos.service';
 
+import { APIError } from '@/types/error.types';
 import { Button } from './ui/button';
 import { Check } from 'lucide-react';
 import Cookies from 'js-cookie';
@@ -16,7 +17,6 @@ import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { APIError } from '@/types/error.types';
 
 export default function AddOrEditTratamientoForm({
   isEdit,
@@ -101,7 +101,9 @@ export default function AddOrEditTratamientoForm({
           className={cn(
             'w-full md:w-fit',
             isDirty ? 'disabled:opacity-100' : 'disabled:opacity-75',
-            !isSubmitSuccessful ? 'bg-primary' : '!bg-green-700',
+            !isSubmitSuccessful
+              ? 'bg-primary'
+              : '!bg-green-700 text-primary-foreground dark:text-primary',
           )}
         >
           {isSubmitSuccessful ? (

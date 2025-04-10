@@ -22,28 +22,28 @@ import {
 } from './ui/select';
 import { useEffect, useState } from 'react';
 
+import { APIError } from '@/types/error.types';
+import { AllData } from '@/types/root.types';
 import { Button } from './ui/button';
 import { Calendar } from './ui/calendar';
 import Cookies from 'js-cookie';
+import { Cultivo } from '@/types/cultivos.types';
+import { DateTime } from 'luxon';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import LoteItem from './lote-item';
 import MapboxMap from './map';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
+import { Tratamiento } from '@/types/tratamientos.types';
 import { UUID } from 'crypto';
 import { addPulverizacion } from '@/services/pulverizaciones.service';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useControllerAplicaciones } from '@/hooks/use-productos';
-import { useRouter } from 'next/navigation';
-import { AllData } from '@/types/root.types';
-import { Cultivo } from '@/types/cultivos.types';
-import { Tratamiento } from '@/types/tratamientos.types';
 import { useDebouncedCallback } from 'use-debounce';
-import { DateTime } from 'luxon';
-import { APIError } from '@/types/error.types';
+import { useRouter } from 'next/navigation';
 
 interface PulverizacionExtended extends Pulverizacion {
   campo_id: Campo['id'];
@@ -365,7 +365,7 @@ export default function AddOrEditPulverizacionForm({
                 const totalHectareas = campo.Lote?.reduce(
                   (acc, lote) => acc + (lote?.hectareas as number),
                   0,
-                );
+                ).toFixed(2);
                 return (
                   <SelectItem key={campo.id} value={campo.id as string}>
                     {campo.nombre} ({totalHectareas}ha)
@@ -415,6 +415,7 @@ export default function AddOrEditPulverizacionForm({
                   borderColor: selectedLotes.includes(lote.nombre as string)
                     ? '#059f00'
                     : (lote.color as string),
+                  cursor: 'pointer',
                 }}
               />
             ))}
@@ -637,13 +638,15 @@ export default function AddOrEditPulverizacionForm({
         className='col-span-full text-sm'
         placeholder='Observación'
       />
-      <div className='col-span-full flex flex-col items-center gap-2 bg-white md:flex-row-reverse md:items-end'>
+      <div className='col-span-full flex flex-col items-center gap-2 md:flex-row-reverse md:items-end'>
         <Button
           disabled={isSubmitting || isSubmitSuccessful}
           type='submit'
           className={cn(
             'w-full disabled:opacity-100 md:w-fit',
-            !isSubmitSuccessful ? 'bg-primary' : '!bg-green-700',
+            !isSubmitSuccessful
+              ? 'bg-primary'
+              : '!bg-green-700 text-primary-foreground dark:text-primary',
           )}
           form='form-add-pulverizacion'
         >

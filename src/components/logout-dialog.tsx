@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Dialog,
   DialogClose,
@@ -19,6 +21,7 @@ import {
   DrawerTrigger,
 } from './ui/drawer';
 
+import { APIError } from '@/types/error.types';
 import { Button } from './ui/button';
 import Cookies from 'js-cookie';
 import { LogOut } from 'lucide-react';
@@ -31,11 +34,14 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { usuarioStore } from '@/store/usuario.store';
-import { APIError } from '@/types/error.types';
 
 type State = 'pending' | 'success' | 'error';
 
-export default function LogoutDialog() {
+interface Props {
+  showText?: boolean;
+}
+
+export default function LogoutDialog({ showText }: Props) {
   const { open, setOpen } = useDialog();
   const { push } = useRouter();
   const { clearUserdata } = usuarioStore();
@@ -72,7 +78,12 @@ export default function LogoutDialog() {
   return isMobile ? (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant={'destructive'} size={'icon'}>
+        <Button
+          variant={'outline'}
+          size={!showText ? 'icon' : 'default'}
+          className='shrink-0'
+        >
+          {showText && 'Salir'}
           <LogOut />
         </Button>
       </DrawerTrigger>
@@ -88,7 +99,8 @@ export default function LogoutDialog() {
             onClick={handleLogout}
             className={cn(
               'disabled:opacity-100',
-              state === 'success' && '!bg-green-700',
+              state === 'success' &&
+                '!bg-green-700 text-primary-foreground dark:text-primary',
             )}
           >
             {state === undefined ? (
@@ -115,7 +127,12 @@ export default function LogoutDialog() {
   ) : (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={'destructive'} size={'icon'}>
+        <Button
+          variant={'outline'}
+          size={!showText ? 'icon' : 'default'}
+          className='shrink-0'
+        >
+          {showText && 'Salir'}
           <LogOut />
         </Button>
       </DialogTrigger>
@@ -131,7 +148,8 @@ export default function LogoutDialog() {
             onClick={handleLogout}
             className={cn(
               'disabled:opacity-100',
-              state === 'success' && '!bg-green-700',
+              state === 'success' &&
+                '!bg-green-700 text-primary-foreground dark:text-primary',
             )}
           >
             {state === undefined ? (

@@ -1,6 +1,12 @@
 'use client';
 
 import {
+  CheckIcon,
+  PackageOpen,
+  PackagePlus,
+  PackageXIcon,
+} from 'lucide-react';
+import {
   Dialog,
   DialogClose,
   DialogContent,
@@ -21,27 +27,21 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from './ui/drawer';
-import {
-  CheckIcon,
-  PackageOpen,
-  PackagePlus,
-  PackageXIcon,
-} from 'lucide-react';
 
+import { APIError } from '@/types/error.types';
 import AddOrEditProductoForm from './productos-form';
 import { Button } from './ui/button';
 import Cookies from 'js-cookie';
 import { Producto } from '@/types/productos.types';
+import { ReloadIcon } from '@radix-ui/react-icons';
 import { UUID } from 'crypto';
+import { cn } from '@/lib/utils';
 import { deleteProducto } from '@/services/productos.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
-import { APIError } from '@/types/error.types';
-import { ReloadIcon } from '@radix-ui/react-icons';
-import { cn } from '@/lib/utils';
 
 export const AddOrEditProductoDialog = ({
   isEdit,
@@ -185,7 +185,8 @@ export const DeleteProductoDialog = ({ id }: { id: UUID }) => {
             onClick={handleDelete}
             disabled={state === 'success' || state === 'processing'}
             className={cn(
-              state === 'success' && '!bg-green-700 disabled:opacity-100',
+              state === 'success' &&
+                '!bg-green-700 text-primary-foreground disabled:opacity-100 dark:text-primary',
             )}
           >
             {state === 'pending' || state === 'error' ? (
@@ -229,7 +230,8 @@ export const DeleteProductoDialog = ({ id }: { id: UUID }) => {
             onClick={handleDelete}
             disabled={state === 'success' || state === 'processing'}
             className={cn(
-              state === 'success' && '!bg-green-700 disabled:opacity-100',
+              state === 'success' &&
+                '!bg-green-700 text-primary-foreground disabled:opacity-100 dark:text-primary',
             )}
           >
             {state === 'pending' || state === 'error' ? (

@@ -10,9 +10,10 @@ import {
 } from 'lucide-react';
 import { FieldErrors, useForm } from 'react-hook-form';
 
+import { APIError } from '@/types/error.types';
 import { Button } from './ui/button';
-// import Cookies from 'js-cookie';
 import { Input } from './ui/input';
+import Link from 'next/link';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { UsuarioToSignin } from '@/types/usuario.types';
 import { cn } from '@/lib/utils';
@@ -20,7 +21,6 @@ import { signin } from '@/services/auth.service';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { APIError } from '@/types/error.types';
 
 export default function SigninForm() {
   const {
@@ -42,13 +42,15 @@ export default function SigninForm() {
 
   const onSubmit = async (values: UsuarioToSignin) => {
     try {
-      await signin({
+      const { userdata } = await signin({
         ...values,
         nombre_usuario: (values?.nombre_usuario as string)?.trim(),
       });
 
+      const { rol } = userdata;
+
       setSuccess(true);
-      setTimeout(() => push('/panel'), 1000);
+      setTimeout(() => push(rol === 'EMPRESA' ? '/empresa' : '/panel'), 1000);
     } catch (error) {
       const { message } = error as APIError;
       toast.error(message);
@@ -63,9 +65,6 @@ export default function SigninForm() {
       className='space-y-4'
       onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
     >
-      <h2 className='hidden text-center text-xl font-semibold opacity-75 lg:block'>
-        Autenticación
-      </h2>
       <div className='group relative flex items-center'>
         <User className='absolute pl-2 opacity-60 group-focus-within:opacity-100 peer-[:not(:placeholder-shown)]:opacity-100' />
         <Input
@@ -103,28 +102,41 @@ export default function SigninForm() {
           {!showPassword ? <EyeClosed /> : <Eye />}
         </Button>
       </div>
-      <Button
-        type='submit'
-        className={cn(
-          'w-full disabled:opacity-100 lg:text-base',
-          !success ? 'bg-primary' : '!bg-green-700',
-        )}
-        disabled={isSubmitting || success}
-      >
-        {success ? (
-          <>
-            Bienvenido <ShieldCheck className='lg:!size-5' />
-          </>
-        ) : !isSubmitting ? (
-          <>
-            Iniciar sesión <LogIn className='lg:!size-5' />
-          </>
-        ) : (
-          <>
-            Autenticando <ReloadIcon className='animate-spin lg:!size-5' />
-          </>
-        )}
-      </Button>
+      <div className='flex w-full flex-col items-center gap-2'>
+        <Button
+          type='submit'
+          className={cn(
+            'w-full disabled:opacity-100 lg:text-base',
+            !success
+              ? 'bg-primary'
+              : '!bg-green-700 text-primary-foreground dark:text-primary',
+          )}
+          disabled={isSubmitting || success}
+        >
+          {success ? (
+            <>
+              Bienvenido <ShieldCheck className='lg:!size-5' />
+            </>
+          ) : !isSubmitting ? (
+            <>
+              Iniciar sesión <LogIn className='lg:!size-5' />
+            </>
+          ) : (
+            <>
+              Autenticando <ReloadIcon className='animate-spin lg:!size-5' />
+            </>
+          )}
+        </Button>
+        <Link href={'/registrarse'} className='w-full'>
+          <Button
+            type='button'
+            variant={'outline'}
+            className='w-full lg:text-base'
+          >
+            Crear una cuenta
+          </Button>
+        </Link>
+      </div>
     </form>
   );
 }

@@ -1,38 +1,37 @@
-import { useIsMobile } from '@/hooks/use-mobile';
-
+import { CheckIcon, Trash } from 'lucide-react';
 import {
   Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogTitle,
-  DialogHeader,
-  DialogDescription,
   DialogClose,
+  DialogContent,
+  DialogDescription,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from './ui/dialog';
 import {
   Drawer,
-  DrawerTrigger,
+  DrawerClose,
   DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerDescription,
-  DrawerClose,
-  DrawerFooter,
+  DrawerTrigger,
 } from './ui/drawer';
-import { Button } from './ui/button';
-import { Lote } from '@/types/campos.types';
-import { CheckIcon, Trash } from 'lucide-react';
-import { toast } from 'sonner';
 
+import { Button } from './ui/button';
 import Cookies from 'js-cookie';
+import { Lote } from '@/types/campos.types';
+import { ReloadIcon } from '@radix-ui/react-icons';
+import { UUID } from 'crypto';
+import { deleteLote } from '@/services/campos.service';
+import revalidate from '@/lib/actions';
+import { toast } from 'sonner';
+import { useDialog } from '@/hooks/use-dialog';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { deleteLote } from '@/services/campos.service';
-import { UUID } from 'crypto';
-import revalidate from '@/lib/actions';
-import { ReloadIcon } from '@radix-ui/react-icons';
-import { useDialog } from '@/hooks/use-dialog';
 
 interface Props {
   data: Lote;
@@ -103,7 +102,9 @@ export const DeleteStoredLoteDialog = ({ data }: Props) => {
             variant={'destructive'}
             onClick={handleDelete}
             className={
-              state === 'success' ? '!bg-green-700 disabled:opacity-100' : ''
+              state === 'success'
+                ? '!bg-green-700 text-primary-foreground disabled:opacity-100 dark:text-primary'
+                : ''
             }
           >
             {state === 'pending' || state === 'error' ? (
@@ -134,7 +135,7 @@ export const DeleteStoredLoteDialog = ({ data }: Props) => {
             borderColor: data.color as string,
             backgroundColor: `${data.color}75` as string,
           }}
-          className='h-full rounded-md rounded-l-none border-2 px-2 py-[5px] text-black'
+          className='h-full rounded-md rounded-l-none border-2 px-2 py-[5px] text-primary'
         >
           <Trash size={14} />
         </button>
@@ -153,7 +154,9 @@ export const DeleteStoredLoteDialog = ({ data }: Props) => {
             variant={'destructive'}
             onClick={handleDelete}
             className={
-              state === 'success' ? '!bg-green-700 disabled:opacity-100' : ''
+              state === 'success'
+                ? '!bg-green-700 text-primary-foreground disabled:opacity-100 dark:text-primary'
+                : ''
             }
           >
             {state === 'pending' || state === 'error' ? (

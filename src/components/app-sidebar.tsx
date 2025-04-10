@@ -3,6 +3,12 @@
 import * as React from 'react';
 
 import {
+  ENTERPRISE_ROUTES,
+  EXTRAS_ROUTES,
+  ROUTES,
+  SUBSCRIPTION_ROUTES,
+} from '@/routes';
+import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -14,12 +20,23 @@ import {
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { NavMain } from '@/components/nav-main';
+import { NavSection } from '@/components/nav-section';
+import { NavSettings } from './nav-settings';
 import { NavUser } from '@/components/nav-user';
-import { ROUTES } from '@/routes';
-import logo from '../../public/logo.png';
+import { ROLES } from '@/types/usuario.types';
+import original from '../../public/logo_dalle.webp';
+import { usuarioStore } from '@/store/usuario.store';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { rol, isEmployer, suscripcion } = usuarioStore();
+
+  const { free_trial, next_payment_date, status } = suscripcion || {};
+
+  const now = Date.now();
+  const endSuscripcionDate = new Date(next_payment_date as string).getTime();
+
+  const isFreeTrialExpired = !free_trial && now > endSuscripcionDate;
+
   return (
     <Sidebar variant='inset' {...props}>
       <SidebarHeader>
@@ -28,13 +45,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size='lg' asChild>
               <Link href={'/'}>
                 <Image
-                  src={logo}
+                  src={original}
                   alt='Logo de PulveSys'
                   className='size-9 rounded-md'
-                  id='primary_pulvesys_logo'
+                  id='pulvesys_logo'
                 />
                 <div className='grid flex-1 text-left text-sm leading-tight'>
-                  <span className='font-semibold'>PulveSys</span>
+                  <span className='flex items-center gap-2 font-semibold'>
+                    PulveSys
+                    <h2 className='w-fit rounded-md bg-primary/60 px-1.5 py-0.5 text-xs font-normal text-primary-foreground'>
+                      {isEmployer
+                        ? 'Empleado'
+                        : ROLES[rol as keyof typeof ROLES]}
+                    </h2>
+                  </span>
                   <p className='truncate text-xs'>Órdenes de pulverización</p>
                 </div>
               </Link>
@@ -43,9 +67,38 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={ROUTES} />
+        {rol === 'EMPRESA' && (
+          <NavSection
+            title='Inicio'
+            items={ENTERPRISE_ROUTES}
+            isDisabled={
+              status !== 'authorized' &&
+              (isFreeTrialExpired || status === 'paused')
+            }
+          />
+        )}
+        <NavSection
+          title='Administración'
+          items={ROUTES}
+          isDisabled={
+            status !== 'authorized' &&
+            (isFreeTrialExpired || status === 'paused')
+          }
+        />
+        {!isEmployer && (
+          <NavSection title='Suscripción' items={SUBSCRIPTION_ROUTES} />
+        )}
+        <NavSection
+          title='Extra'
+          items={EXTRAS_ROUTES}
+          isDisabled={
+            status !== 'authorized' &&
+            (isFreeTrialExpired || status === 'paused')
+          }
+        />
       </SidebarContent>
       <SidebarFooter>
+        <NavSettings />
         <NavUser />
       </SidebarFooter>
     </Sidebar>

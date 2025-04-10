@@ -1,8 +1,41 @@
-import { Sesion, UsuarioToSignin } from '@/types/usuario.types';
+import {
+  Sesion,
+  Usuario,
+  UsuarioToSignin,
+  UsuarioToSignup,
+} from '@/types/usuario.types';
 
+import { APIError } from '@/types/error.types';
 import { API_URL } from '@/config/api';
 import { Token } from '@/types/auth.types';
-import { APIError } from '@/types/error.types';
+
+// Servicio utilizado tanto para signup como para agregar un nuevo usuario como EMPRESA
+export const signup = async (
+  payload: UsuarioToSignup,
+  customPath?: string,
+  access_token?: string,
+) => {
+  const OPTIONS: RequestInit = {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    headers: !access_token
+      ? {
+          'Content-Type': 'application/json',
+        }
+      : {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${access_token}`,
+        },
+    credentials: 'include',
+  };
+  const PATH = `${API_URL}/v1/${customPath ?? 'auth/signup'}`;
+
+  const res = await fetch(PATH, OPTIONS);
+  const data: Sesion | Usuario | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
+
+  return customPath ? (data as Usuario) : (data as Sesion);
+};
 
 export const signin = async (payload: UsuarioToSignin) => {
   const OPTIONS: RequestInit = {
@@ -42,7 +75,7 @@ export const verifySesion = async (
   return data as Sesion;
 };
 
-interface SignoutResponse {
+interface OKResponse {
   ok: boolean;
 }
 
@@ -55,8 +88,63 @@ export const signout = async (token: string) => {
   const PATH = `${API_URL}/v1/auth/sesion`;
 
   const res = await fetch(PATH, options);
-  const data: SignoutResponse | APIError = await res.json();
+  const data: OKResponse | APIError = await res.json();
   if (!res.ok) throw data as APIError;
 
-  return { ok: true } as SignoutResponse;
+  return { ok: true } as OKResponse;
+};
+
+export const generateRecoverPassword = async (email: Usuario['email']) => {
+  const options: RequestInit = {
+    method: 'POST',
+    credentials: 'include',
+    body: JSON.stringify({ email }),
+    headers: { 'Content-Type': 'application/json' },
+  };
+  const PATH = `${API_URL}/v1/auth/recuperar`;
+
+  const res = await fetch(PATH, options);
+  const data: OKResponse | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
+
+  return { ok: true } as OKResponse;
+};
+
+export const verifyRecoverToken = async (token: string) => {
+  const options: RequestInit = {
+    method: 'GET',
+    credentials: 'include',
+    cache: 'no-cache',
+  };
+  const PATH = `${API_URL}/v1/auth/recuperar?token=${token}`;
+
+  const res = await fetch(PATH, options);
+  const data: OKResponse | APIError = await res.json();
+  if (!res.ok) return data as APIError;
+
+  return { ok: true } as OKResponse;
+};
+
+export const resetPassword = async (
+  token: string,
+  payload: {
+    contrasena: Usuario['contrasena'];
+  },
+) => {
+  const options: RequestInit = {
+    method: 'PATCH',
+    credentials: 'include',
+    body: JSON.stringify(payload),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const PATH = `${API_URL}/v1/auth/recuperar`;
+
+  const res = await fetch(PATH, options);
+  const data: OKResponse | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
+
+  return { ok: true } as OKResponse;
 };

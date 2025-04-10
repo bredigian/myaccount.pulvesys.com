@@ -15,6 +15,7 @@ import {
   MessageCircleOff,
   MessageCircleWarning,
   Tag,
+  User,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ConsumoProducto, SHORT_UNIDAD, UNIDAD } from '@/types/productos.types';
@@ -31,6 +32,7 @@ import { AplicacionConConsumo } from '@/types/aplicaciones.types';
 import { Badge } from '@/components/ui/badge';
 import { DateTime } from 'luxon';
 import { DeletePulverizacionDialog } from '@/components/pulverizaciones-dialog';
+import Link from 'next/link';
 import { Lote } from '@/types/campos.types';
 import MapboxMap from './map';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
@@ -53,6 +55,9 @@ export default function PulverizacionDetailContainer({ data }: Props) {
     data.detalle.lotes.includes(lote?.nombre as string),
   );
 
+  const isFromEmployer =
+    data.usuario?.rol === 'INDIVIDUAL' && data.usuario.empresa_id;
+
   return (
     <main className='space-y-6 p-4 pt-0'>
       <div className='flex w-full items-center justify-between gap-4'>
@@ -65,14 +70,25 @@ export default function PulverizacionDetailContainer({ data }: Props) {
         <aside className='flex items-center gap-2'>
           <SharePulverizacionDialog
             data={data}
-            nombre={nombre}
-            apellido={apellido}
+            nombre={nombre as string}
+            apellido={apellido as string}
           />
           <ShowPulverizacionInfoDialog data={data} />
           <DeletePulverizacionDialog id={data.id as UUID} />
         </aside>
       </div>
       <div className='flex flex-col gap-6'>
+        {isFromEmployer && (
+          <Link
+            href={`/empresa/usuarios?filter=${data.usuario?.nombre}+${data.usuario?.apellido}`}
+            className='flex w-fit items-center gap-2 rounded-md bg-primary/60 px-2 py-1 font-medium text-primary-foreground duration-200 ease-in-out hover:bg-primary'
+          >
+            <User size={16} />
+            <span className='text-sm'>
+              {data.usuario?.nombre} {data.usuario?.apellido}
+            </span>
+          </Link>
+        )}
         <div className='flex items-start justify-between gap-4'>
           <ul className='flex flex-wrap items-center justify-start gap-2'>
             {lotesPulverizados?.length === 0 ? (
@@ -130,7 +146,7 @@ export default function PulverizacionDetailContainer({ data }: Props) {
                 <Badge
                   variant={'secondary'}
                   className={cn(
-                    'w-fit space-x-1',
+                    'w-fit space-x-1 text-primary',
                     selectedHectareas === 0 && 'bg-yellow-200',
                   )}
                 >
@@ -152,7 +168,7 @@ export default function PulverizacionDetailContainer({ data }: Props) {
                 <Badge
                   variant={'secondary'}
                   className={cn(
-                    'flex w-fit items-center gap-1',
+                    'flex w-fit items-center gap-1 text-primary dark:text-primary-foreground',
                     data?.detalle?.observacion
                       ? '!bg-yellow-200'
                       : 'bg-secondary',

@@ -6,8 +6,8 @@ export interface Dialog {
   handleOpen: () => void;
 }
 
-export const useDialog = () => {
-  const [open, setOpen] = useState(false);
+export const useDialog = (defaultValue?: boolean) => {
+  const [open, setOpen] = useState(defaultValue ?? false);
   const handleOpen = () => setOpen(!open);
 
   return { open, setOpen, handleOpen };

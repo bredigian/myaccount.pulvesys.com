@@ -1,5 +1,6 @@
 'use client';
 
+import { CheckIcon, Droplet, Trash2 } from 'lucide-react';
 import {
   Dialog,
   DialogClose,
@@ -20,28 +21,26 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from './ui/drawer';
-import { CheckIcon, Droplet, Trash2 } from 'lucide-react';
 import { Dialog as TDialog, useDialog } from '@/hooks/use-dialog';
 
+import { APIError } from '@/types/error.types';
 import { AddOrEditCampoDialog } from './campos-dialog';
 import { AddOrEditCultivoDialog } from './cultivos-dialog';
 import { AddOrEditProductoDialog } from './productos-dialog';
 import AddOrEditPulverizacionForm from './pulverizaciones-form';
 import { AddOrEditTratamientoDialog } from './tratamientos-dialog';
+import { AllData } from '@/types/root.types';
 import { Button } from './ui/button';
 import Cookies from 'js-cookie';
+import { ReloadIcon } from '@radix-ui/react-icons';
 import { UUID } from 'crypto';
+import { cn } from '@/lib/utils';
 import { deletePulverizacion } from '@/services/pulverizaciones.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
-
-import { AllData } from '@/types/root.types';
-import { APIError } from '@/types/error.types';
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
-import { ReloadIcon } from '@radix-ui/react-icons';
 
 interface Props {
   data: AllData;
@@ -274,7 +273,8 @@ export const DeletePulverizacionDialog = ({ id }: { id: UUID }) => {
             onClick={handleDelete}
             disabled={state === 'success' || state === 'processing'}
             className={cn(
-              state === 'success' && '!bg-green-700 disabled:opacity-100',
+              state === 'success' &&
+                '!bg-green-700 text-primary-foreground disabled:opacity-100 dark:text-primary',
             )}
           >
             {state === 'pending' || state === 'error' ? (
@@ -317,7 +317,8 @@ export const DeletePulverizacionDialog = ({ id }: { id: UUID }) => {
             onClick={handleDelete}
             disabled={state === 'success' || state === 'processing'}
             className={cn(
-              state === 'success' && '!bg-green-700 disabled:opacity-100',
+              state === 'success' &&
+                '!bg-green-700 text-primary-foreground disabled:opacity-100 dark:text-primary',
             )}
           >
             {state === 'pending' || state === 'error' ? (
