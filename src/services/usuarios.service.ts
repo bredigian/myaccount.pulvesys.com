@@ -1,4 +1,8 @@
-import { Usuario, UsuarioToSignup } from '@/types/usuario.types';
+import {
+  UpdateUsuarioProps,
+  Usuario,
+  UsuarioToSignup,
+} from '@/types/usuario.types';
 
 import { APIError } from '@/types/error.types';
 import { API_URL } from '@/config/api';
@@ -33,21 +37,46 @@ export const addUsuario = async (
   access_token: string,
 ) => await signup(payload, 'usuarios/empresa', access_token);
 
-// export const editUsuario = async (payload: Usuario, access_token: string) => {
-//   const PATH = `${API_URL}/v1/usuarios/empresa`;
-//   const OPTIONS: RequestInit = {
-//     method: 'PUT',
-//     credentials: 'include',
-//     body: JSON.stringify(payload),
-//     headers: {
-//       'Content-Type': 'application/json',
-//       Authorization: `Bearer ${access_token}`,
-//     },
-//   };
+export const editUsuario = async (
+  payload: UpdateUsuarioProps,
+  access_token: string,
+) => {
+  const PATH = `${API_URL}/v1/usuarios/empresa`;
+  const OPTIONS: RequestInit = {
+    method: 'PUT',
+    credentials: 'include',
+    body: JSON.stringify(payload),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access_token}`,
+    },
+  };
 
-//   const res = await fetch(PATH, OPTIONS);
-//   const data: Usuario | APIError = await res.json();
-//   if (!res.ok) throw data as APIError;
+  const res = await fetch(PATH, OPTIONS);
+  const data: Usuario | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
 
-//   return data as Usuario;
-// };
+  return data as Usuario;
+};
+
+export const deleteUsuario = async (
+  id: Usuario['id'],
+  access_token: string,
+) => {
+  const PATH = `${API_URL}/v1/usuarios/empresa`;
+  const OPTIONS: RequestInit = {
+    method: 'DELETE',
+    credentials: 'include',
+    body: JSON.stringify({ id }),
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${access_token}`,
+    },
+  };
+
+  const res = await fetch(PATH, OPTIONS);
+  const data: { count: number } | APIError = await res.json();
+  if (!res.ok) throw data as APIError;
+
+  return data as { count: number };
+};

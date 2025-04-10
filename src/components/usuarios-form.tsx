@@ -1,5 +1,7 @@
 import { Check, Eye, EyeClosed } from 'lucide-react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
+import { UpdateUsuarioProps, Usuario } from '@/types/usuario.types';
+import { addUsuario, editUsuario } from '@/services/usuarios.service';
 
 import { APIError } from '@/types/error.types';
 import { Button } from './ui/button';
@@ -7,8 +9,6 @@ import Cookies from 'js-cookie';
 import { Input } from './ui/input';
 import PhoneNumberInput from './phone-number-input';
 import { ReloadIcon } from '@radix-ui/react-icons';
-import { UsuarioToSignup } from '@/types/usuario.types';
-import { addUsuario } from '@/services/usuarios.service';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
@@ -21,7 +21,7 @@ export default function AddOrEditUsuarioForm({
   handleOpen,
 }: {
   isEdit?: boolean;
-  data?: UsuarioToSignup;
+  data?: Usuario;
   handleOpen: () => void;
 }) {
   const { push } = useRouter();
@@ -32,7 +32,9 @@ export default function AddOrEditUsuarioForm({
     handleSubmit,
     formState: { isSubmitting, isDirty },
     watch,
-  } = useForm<UsuarioToSignup>();
+  } = useForm<Usuario>({
+    defaultValues: data ? { ...data, contrasena: undefined } : {},
+  });
 
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState<
     boolean | undefined
@@ -47,7 +49,7 @@ export default function AddOrEditUsuarioForm({
     ? false
     : confirmPassword !== password;
 
-  const onInvalidSubmit = async (errors: FieldErrors<UsuarioToSignup>) => {
+  const onInvalidSubmit = async (errors: FieldErrors<Usuario>) => {
     if (errors?.nombre)
       toast.error(errors.nombre?.message, { position: 'top-center' });
     else if (errors?.apellido)
@@ -65,13 +67,8 @@ export default function AddOrEditUsuarioForm({
         position: 'top-center',
       });
   };
-  const onSubmit = async (values: UsuarioToSignup) => {
+  const onSubmit = async (values: Usuario) => {
     try {
-      const PAYLOAD: UsuarioToSignup = {
-        ...values,
-        confirmar_contrasena: undefined,
-      };
-
       const access_token = Cookies.get('access_token');
       if (!access_token) {
         toast.error('La sesión ha expirado', { position: 'top-center' });
@@ -80,12 +77,24 @@ export default function AddOrEditUsuarioForm({
         return;
       }
 
-      if (!isEdit) await addUsuario(PAYLOAD, access_token);
-      else
-        throw new Error(
-          'La modificación de usuarios todavia no está habilitada.',
-        );
-      //   else await editCultivo(PAYLOAD, access_token);
+      if (!isEdit) {
+        const PAYLOAD: Usuario = {
+          ...values,
+          confirmar_contrasena: undefined,
+        };
+        await addUsuario(PAYLOAD, access_token);
+      } else {
+        const UPDATE_PAYLOAD: UpdateUsuarioProps = {
+          id: data?.id,
+          nombre: values.nombre,
+          apellido: values.apellido,
+          email: values.email,
+          nombre_usuario: values.nombre_usuario,
+          nro_telefono: values.nro_telefono,
+          contrasena: values.contrasena,
+        };
+        await editUsuario(UPDATE_PAYLOAD, access_token);
+      }
       await revalidate('usuarios');
 
       setIsSubmitSuccessful(true);
