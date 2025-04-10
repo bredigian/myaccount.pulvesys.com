@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Dialog,
   DialogClose,
@@ -35,7 +37,11 @@ import { usuarioStore } from '@/store/usuario.store';
 
 type State = 'pending' | 'success' | 'error';
 
-export default function LogoutDialog() {
+interface Props {
+  showText?: boolean;
+}
+
+export default function LogoutDialog({ showText }: Props) {
   const { open, setOpen } = useDialog();
   const { push } = useRouter();
   const { clearUserdata } = usuarioStore();
@@ -72,7 +78,12 @@ export default function LogoutDialog() {
   return isMobile ? (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant={'outline'} size={'icon'} className='shrink-0'>
+        <Button
+          variant={'outline'}
+          size={!showText ? 'icon' : 'default'}
+          className='shrink-0'
+        >
+          {showText && 'Salir'}
           <LogOut />
         </Button>
       </DrawerTrigger>
@@ -116,7 +127,12 @@ export default function LogoutDialog() {
   ) : (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={'outline'} size={'icon'} className='shrink-0'>
+        <Button
+          variant={'outline'}
+          size={!showText ? 'icon' : 'default'}
+          className='shrink-0'
+        >
+          {showText && 'Salir'}
           <LogOut />
         </Button>
       </DialogTrigger>

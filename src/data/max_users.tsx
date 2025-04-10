@@ -1,1 +1,1 @@
-export const MAX_USERS = 7;
+export const MAX_USERS = process.env.NEXT_PUBLIC_MAX_EXPLOYERS;
