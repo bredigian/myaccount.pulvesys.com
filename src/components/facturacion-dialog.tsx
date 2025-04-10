@@ -24,7 +24,6 @@ import {
   generateInitPoint,
   unsuscribe,
 } from '@/services/suscripciones.service';
-import { use, useState } from 'react';
 
 import { APIError } from '@/types/error.types';
 import { Button } from './ui/button';
@@ -37,6 +36,7 @@ import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { usuarioStore } from '@/store/usuario.store';
 
 export const ManageFacturacionDialog = () => {
@@ -47,6 +47,10 @@ export const ManageFacturacionDialog = () => {
 
   const { suscripcion, rol } = usuarioStore();
 
+  const [state, setState] = useState<
+    'pending' | 'processing' | 'success' | 'failure'
+  >('pending');
+
   if (rol === 'ADMIN') return null;
 
   const { free_trial, status, next_payment_date, plan } = suscripcion || {};
@@ -56,10 +60,6 @@ export const ManageFacturacionDialog = () => {
 
   const isFreeTrialExpired = !free_trial && now > endSuscripcionDate;
   const hasFreeTrial = free_trial && status === 'pending';
-
-  const [state, setState] = useState<
-    'pending' | 'processing' | 'success' | 'failure'
-  >('pending');
 
   const handleAction = async () => {
     if (status === 'paused') return;

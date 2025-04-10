@@ -23,9 +23,6 @@ export interface UsuarioToSignup extends UsuarioToSignin {
   rol: keyof typeof ROLES;
 }
 
-export interface CreateUsuarioProps
-  extends Omit<UsuarioToSignup, 'rol' | 'plan_id'> {}
-
 export interface UpdateUsuarioProps
   extends Omit<UsuarioToSignup, 'rol' | 'plan_id'> {
   id: Usuario['id'];
