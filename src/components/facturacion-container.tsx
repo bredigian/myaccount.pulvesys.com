@@ -2,7 +2,7 @@ import {
   CalendarIcon,
   CalendarSync,
   CalendarXIcon,
-  ChevronRight,
+  Dot,
   Gift,
 } from 'lucide-react';
 import {
@@ -69,19 +69,7 @@ export default async function FacturacionContainer() {
             ${plan.valor.toLocaleString('es-AR')}/mes
           </span>
         </CardTitle>
-        <CardDescription>
-          <ul className='flex flex-col gap-2'>
-            {plan.descripcion.map((item) => (
-              <li
-                key={`description-item-${item}`}
-                className='flex items-center gap-1'
-              >
-                <ChevronRight size={16} />
-                {item}
-              </li>
-            ))}
-          </ul>
-        </CardDescription>
+        <CardDescription hidden></CardDescription>
       </CardHeader>
       <CardContent className='flex flex-col gap-4'>
         <Badge
@@ -160,21 +148,37 @@ export default async function FacturacionContainer() {
           </div>
         )}
       </CardContent>
-      <CardFooter className='flex flex-col items-start gap-2 opacity-75'>
-        <p className='text-sm'>
-          Creada el{' '}
-          {DateTime.fromISO(createdAt as string).toLocaleString(
-            DateTime.DATETIME_SHORT,
-            { locale: 'es-AR' },
-          )}
-        </p>
-        <p className='text-sm'>
-          Actualizada el{' '}
-          {DateTime.fromISO(updatedAt as string).toLocaleString(
-            DateTime.DATETIME_SHORT,
-            { locale: 'es-AR' },
-          )}
-        </p>
+      <CardFooter className='flex flex-col items-start gap-4 opacity-75'>
+        <section className='flex w-full flex-col items-start gap-2'>
+          <p className='text-sm'>
+            Creada el{' '}
+            {DateTime.fromISO(createdAt as string).toLocaleString(
+              DateTime.DATETIME_SHORT,
+              { locale: 'es-AR' },
+            )}
+          </p>
+          <p className='text-sm'>
+            Actualizada el{' '}
+            {DateTime.fromISO(updatedAt as string).toLocaleString(
+              DateTime.DATETIME_SHORT,
+              { locale: 'es-AR' },
+            )}
+          </p>
+        </section>
+        <section className='flex flex-col gap-2'>
+          <h6>Features</h6>
+          <ul className='flex flex-col gap-2 rounded-md bg-primary/10 px-2 py-3'>
+            {plan.descripcion.map((item) => (
+              <li
+                key={`description-item-${item}`}
+                className='flex items-center gap-1'
+              >
+                <Dot className='shrink-0 lg:size-8' />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </section>
       </CardFooter>
     </Card>
   );
