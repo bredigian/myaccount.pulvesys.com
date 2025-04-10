@@ -24,8 +24,7 @@ import { NavSection } from '@/components/nav-section';
 import { NavSettings } from './nav-settings';
 import { NavUser } from '@/components/nav-user';
 import { ROLES } from '@/types/usuario.types';
-import dark from '../../public/logo_for_dark.webp';
-import light from '../../public/logo_for_light.webp';
+import original from '../../public/logo_dalle.webp';
 import { usuarioStore } from '@/store/usuario.store';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -46,16 +45,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size='lg' asChild>
               <Link href={'/'}>
                 <Image
-                  src={dark}
+                  src={original}
                   alt='Logo de PulveSys'
-                  className='hidden size-9 rounded-md dark:block'
-                  id='primary_pulvesys_logo'
-                />
-                <Image
-                  src={light}
-                  alt='Logo de PulveSys'
-                  className='block size-9 rounded-md dark:hidden'
-                  id='primary_pulvesys_logo'
+                  className='size-9 rounded-md'
+                  id='pulvesys_logo'
                 />
                 <div className='grid flex-1 text-left text-sm leading-tight'>
                   <span className='flex items-center gap-2 font-semibold'>

@@ -1,9 +1,17 @@
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { RecoverPasswordDialog } from '@/components/auth-dialog';
 import SigninForm from '@/components/signin-form';
-import dark from '../../public/logo_for_dark.webp';
-import light from '../../public/logo_for_light.webp';
+import original from '../../public/logo_dalle.webp';
 
 interface Props {
   searchParams: Promise<{ session: string; expired: boolean }>;
@@ -17,22 +25,24 @@ export default async function Home({ searchParams }: Props) {
       {session && expired === true && (
         <Badge className='bg-red-400'>La sesión ha expirado</Badge>
       )}
-      <div className='flex flex-col items-center gap-4'>
-        <Image
-          src={dark}
-          alt='Logo de PulveSys'
-          className='hidden size-36 rounded-xl dark:block lg:size-64'
-        />
-        <Image
-          src={light}
-          alt='Logo de PulveSys'
-          className='block size-36 rounded-xl dark:hidden lg:size-64'
-        />
-      </div>
-      <section className='flex flex-col gap-8'>
-        <SigninForm />
-        <RecoverPasswordDialog />
-      </section>
+
+      <Image
+        src={original}
+        alt='Logo de PulveSys'
+        className='size-36 rounded-xl lg:size-48'
+      />
+      <Card>
+        <CardHeader>
+          <CardTitle className='text-center text-xl'>PulveSys</CardTitle>
+          <CardDescription hidden></CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SigninForm />
+        </CardContent>
+        <CardFooter className='flex w-full items-center justify-center'>
+          <RecoverPasswordDialog />
+        </CardFooter>
+      </Card>
     </main>
   );
 }

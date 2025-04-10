@@ -65,9 +65,6 @@ export default function SigninForm() {
       className='space-y-4'
       onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
     >
-      <h2 className='hidden text-center text-xl font-bold lg:block'>
-        PulveSys
-      </h2>
       <div className='group relative flex items-center'>
         <User className='absolute pl-2 opacity-60 group-focus-within:opacity-100 peer-[:not(:placeholder-shown)]:opacity-100' />
         <Input

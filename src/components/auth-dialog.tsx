@@ -29,7 +29,9 @@ export const RecoverPasswordDialog = () => {
   return isMobile ? (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant={'ghost'}>Olvidé la contraseña</Button>
+        <Button variant={'ghost'} className='w-full'>
+          Olvidé la contraseña
+        </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
@@ -45,7 +47,9 @@ export const RecoverPasswordDialog = () => {
   ) : (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={'ghost'}>Olvidé la contraseña</Button>
+        <Button variant={'ghost'} className='w-full'>
+          Olvidé la contraseña
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

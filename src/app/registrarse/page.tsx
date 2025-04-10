@@ -1,8 +1,7 @@
 import Image from 'next/image';
 import SignupForm from '@/components/signup-form';
-import dark from '../../../public/logo_for_dark.webp';
 import { getPlanes } from '@/services/planes.service';
-import light from '../../../public/logo_for_light.webp';
+import original from '../../../public/logo_dalle.webp';
 
 export default async function Signup() {
   const data = await getPlanes();
@@ -22,14 +21,9 @@ export default async function Signup() {
         </header>
         <div className='flex size-28 shrink-0 flex-col items-center gap-4 md:size-32 lg:size-40'>
           <Image
-            src={dark}
+            src={original}
             alt='Logo de PulveSys'
-            className='hidden size-full rounded-xl dark:block'
-          />
-          <Image
-            src={light}
-            alt='Logo de PulveSys'
-            className='block size-full rounded-xl dark:hidden'
+            className='size-full rounded-xl'
           />
         </div>
       </section>
