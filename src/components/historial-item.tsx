@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function HistorialItem({ data }: Props) {
-  const { id, createdAt, usuario, type, description } = data;
+  const { createdAt, usuario, type, description } = data;
   const nombreCompleto = usuario
     ? usuario?.nombre?.concat(' ').concat(usuario?.apellido as string)
     : 'No disponible';
@@ -30,7 +30,6 @@ export default function HistorialItem({ data }: Props) {
       <TableCell>{LOG_NOMBRE[type]}</TableCell>
       {isEnterprise && <TableCell>{nombreCompleto}</TableCell>}
       <TableCell>{description}</TableCell>
-      <TableCell>{id}</TableCell>
     </TableRow>
   );
 }

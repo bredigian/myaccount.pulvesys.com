@@ -29,7 +29,6 @@ export default function HistorialTable({ data }: Props) {
           <TableHead>Tipo</TableHead>
           {isEnterprise && <TableHead>Usuario</TableHead>}
           <TableHead>Descripción</TableHead>
-          <TableHead>ID</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

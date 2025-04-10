@@ -6,6 +6,8 @@ import original from '../../../public/logo_dalle.webp';
 export default async function Signup() {
   const data = await getPlanes();
 
+  if ('error' in data) return <p>{data.message}</p>;
+
   return (
     <main className='flex min-h-dvh w-full flex-col items-center justify-start gap-8 p-8 lg:flex-row lg:gap-24 xl:mx-auto xl:max-w-screen-xl'>
       <section className='flex w-full items-start justify-between gap-4 md:gap-8 lg:flex-col'>
@@ -16,7 +18,7 @@ export default async function Signup() {
           <p className='text-sm opacity-70 md:text-base'>
             Creá tu usuario y comenzá a disfrutar de la experiencia de{' '}
             <strong>PulveSys</strong>. Recordá que tenés{' '}
-            <strong>1 mes de prueba</strong> sin necesidad de pagar nada 😉
+            <strong>1 mes de prueba</strong> sin la necesidad de pagar nada 😉
           </p>
         </header>
         <div className='flex size-28 shrink-0 flex-col items-center gap-4 md:size-32 lg:size-40'>
@@ -27,7 +29,7 @@ export default async function Signup() {
           />
         </div>
       </section>
-      {'error' in data ? <p>{data.message}</p> : <SignupForm planes={data} />}
+      <SignupForm planes={data} />
     </main>
   );
 }

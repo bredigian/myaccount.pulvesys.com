@@ -8,8 +8,7 @@ import {
   CardTitle,
 } from './ui/card';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
-import { Eye, EyeClosed, LogIn, ShieldCheck } from 'lucide-react';
-import { ROLES, UsuarioToSignup } from '@/types/usuario.types';
+import { Dot, Eye, EyeClosed, LogIn, ShieldCheck } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger } from './ui/select';
 
 import { APIError } from '@/types/error.types';
@@ -22,6 +21,7 @@ import PhoneNumberInput from './phone-number-input';
 import { Plan } from '@/types/planes.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { SelectValue } from '@radix-ui/react-select';
+import { UsuarioToSignup } from '@/types/usuario.types';
 import { cn } from '@/lib/utils';
 import { signup } from '@/services/auth.service';
 import { toast } from 'sonner';
@@ -271,10 +271,21 @@ export default function SignupForm({ planes }: Props) {
                       ${selectedPlanData?.valor.toLocaleString('es-AR')}/mes
                     </Badge>
                   </CardTitle>
-                  <CardDescription>
-                    {selectedPlanData?.descripcion}
-                  </CardDescription>
+                  <CardDescription hidden></CardDescription>
                 </CardHeader>
+                <CardContent>
+                  <ul className='flex flex-col gap-2'>
+                    {selectedPlanData?.descripcion.map((feature) => (
+                      <li
+                        key={`${selectedPlanData?.descripcion}_${feature}`}
+                        className='flex items-center gap-1 opacity-75'
+                      >
+                        <Dot className='size-6 shrink-0 lg:size-8' />
+                        <p className='text-sm lg:text-base'>{feature}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
               </Card>
             )}
           </section>

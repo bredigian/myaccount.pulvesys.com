@@ -24,6 +24,7 @@ export const PulverizacionesContainer = async ({ query }: Props) => {
     ? data
     : data.filter(
         (p) =>
+          p.id?.toLowerCase().includes(query.toLowerCase()) ||
           p.detalle.campo?.nombre.toLowerCase().includes(query.toLowerCase()) ||
           DateTime.fromISO(p.fecha as string)
             .toFormat('dd/MM/yyyy')
