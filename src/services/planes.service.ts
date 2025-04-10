@@ -8,6 +8,7 @@ export const getPlanes = async () => {
     method: 'GET',
     credentials: 'include',
     next: { tags: ['planes'] },
+    cache: 'no-cache',
   };
 
   const res = await fetch(PATH, OPTIONS);
