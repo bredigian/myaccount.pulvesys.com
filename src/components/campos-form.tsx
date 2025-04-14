@@ -51,7 +51,7 @@ interface PolygonProperties {
   color?: string;
   area?: number;
   description?: string;
-  [key: string]: any; // Para otras propiedades que pueda agregar MapboxDraw
+  opacity?: number;
 }
 export type PolygonFeature = GeoJSON.Feature<
   GeoJSON.Polygon,
@@ -164,7 +164,7 @@ export default function AddOrEditCampoForm({
               const { id, lng, lat, lote_id } = coord as Required<Coordinada>;
               if (!acc[lote_id]) acc[lote_id] = [];
 
-              acc[lote_id].push([lng, lat, id as any]);
+              acc[lote_id].push([lng, lat, id as unknown as number]);
               return acc;
             },
             {} as Record<string, Position[]>,

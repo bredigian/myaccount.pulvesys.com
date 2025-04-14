@@ -164,7 +164,7 @@ export default function AddOrEditPulverizacionForm({
               const { id, lng, lat, lote_id } = coord as Required<Coordinada>;
               if (!acc[lote_id]) acc[lote_id] = [];
 
-              acc[lote_id].push([lng, lat, id as any]);
+              acc[lote_id].push([lng, lat, id as unknown as number]);
               return acc;
             },
             {} as Record<string, Position[]>,

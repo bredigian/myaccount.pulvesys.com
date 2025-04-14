@@ -19,7 +19,6 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ConsumoProducto, SHORT_UNIDAD, UNIDAD } from '@/types/productos.types';
-import { Coordinada, Lote } from '@/types/campos.types';
 import {
   Table,
   TableBody,
@@ -31,6 +30,7 @@ import {
 
 import { AplicacionConConsumo } from '@/types/aplicaciones.types';
 import { Badge } from '@/components/ui/badge';
+import { Coordinada } from '@/types/campos.types';
 import { DateTime } from 'luxon';
 import { DeletePulverizacionDialog } from '@/components/pulverizaciones-dialog';
 import Link from 'next/link';
@@ -68,7 +68,7 @@ export default function PulverizacionDetailContainer({ data }: Props) {
         const { id, lng, lat, lote_id } = coord as Required<Coordinada>;
         if (!acc[lote_id]) acc[lote_id] = [];
 
-        acc[lote_id].push([lng, lat, id as any]);
+        acc[lote_id].push([lng, lat, id as unknown as number]);
         return acc;
       },
       {} as Record<string, Position[]>,
