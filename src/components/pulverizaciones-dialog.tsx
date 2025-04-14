@@ -59,7 +59,7 @@ export const AddOrEditPulverizacionDialog = ({ data }: Props) => {
     <>
       <Drawer dismissible={false} open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>
-          <Button>
+          <Button id='add-pulverizacion__button'>
             Crear
             <Droplet />
           </Button>
@@ -138,7 +138,7 @@ export const AddOrEditPulverizacionDialog = ({ data }: Props) => {
     <>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button>
+          <Button id='add-pulverizacion__button'>
             Crear
             <Droplet />
           </Button>

@@ -1,8 +1,8 @@
+import FetchDataContainerForAddPulverizacionForm from '@/components/fetch-data-container';
 import Finder from '@/components/finder';
 import { PulverizacionesContainer } from '@/components/pulverizaciones-container';
-import { Suspense } from 'react';
-import FetchDataContainerForAddPulverizacionForm from '@/components/fetch-data-container';
 import { PulverizacionesMasonrySkeleton } from '@/components/masonry-skeleton';
+import { Suspense } from 'react';
 
 interface Props {
   searchParams: Promise<{ filter: string }>;
