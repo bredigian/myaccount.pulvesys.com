@@ -8,12 +8,33 @@ import {
   CardTitle,
 } from './ui/card';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
 import { Dot, Eye, EyeClosed, LogIn, ShieldCheck } from 'lucide-react';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from './ui/drawer';
 import { Select, SelectContent, SelectItem, SelectTrigger } from './ui/select';
 
 import { APIError } from '@/types/error.types';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
+import { Checkbox } from './ui/checkbox';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import Link from 'next/link';
@@ -21,15 +42,21 @@ import PhoneNumberInput from './phone-number-input';
 import { Plan } from '@/types/planes.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { SelectValue } from '@radix-ui/react-select';
+import TerminosCondiciones from './terminos&condiciones';
 import { UsuarioToSignup } from '@/types/usuario.types';
 import { cn } from '@/lib/utils';
 import { signup } from '@/services/auth.service';
 import { toast } from 'sonner';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface Props {
   planes: Plan[];
+}
+
+interface SignupFormProps extends UsuarioToSignup {
+  terminos_condiciones?: boolean;
 }
 
 export default function SignupForm({ planes }: Props) {
@@ -39,13 +66,13 @@ export default function SignupForm({ planes }: Props) {
     control,
     formState: { isSubmitting },
     watch,
-  } = useForm<UsuarioToSignup>();
+  } = useForm<SignupFormProps>();
 
   const selectedPlan = watch('plan_id');
 
   const { push } = useRouter();
 
-  const onInvalidSubmit = async (errors: FieldErrors<UsuarioToSignup>) => {
+  const onInvalidSubmit = async (errors: FieldErrors<SignupFormProps>) => {
     if (errors?.nombre)
       toast.error(errors.nombre?.message, { position: 'top-center' });
     else if (errors?.apellido)
@@ -64,18 +91,23 @@ export default function SignupForm({ planes }: Props) {
       });
     else if (errors?.plan_id)
       toast.error(errors.plan_id?.message, { position: 'top-center' });
+    else if (errors?.terminos_condiciones)
+      toast.error(errors.terminos_condiciones?.message, {
+        position: 'top-center',
+      });
   };
 
   const [success, setSuccess] = useState(false);
 
-  const onSubmit = async (values: UsuarioToSignup) => {
+  const onSubmit = async (values: SignupFormProps) => {
     try {
-      const PAYLOAD: UsuarioToSignup = {
+      const PAYLOAD: SignupFormProps = {
         ...values,
         nombre: values.nombre.trim(),
         apellido: values.apellido.trim(),
         nombre_usuario: values.nombre_usuario?.trim().toLowerCase() as string,
         confirmar_contrasena: undefined,
+        terminos_condiciones: undefined,
       };
       await signup(PAYLOAD);
 
@@ -83,7 +115,7 @@ export default function SignupForm({ planes }: Props) {
       setTimeout(() => push('/panel'), 1000);
     } catch (error) {
       const { message } = error as APIError;
-      toast.error(message);
+      toast.error(message, { position: 'top-center' });
     }
   };
 
@@ -97,6 +129,8 @@ export default function SignupForm({ planes }: Props) {
     : confirmPassword !== password;
 
   const selectedPlanData = planes.find((plan) => plan.id === selectedPlan);
+
+  const isMobile = useIsMobile();
 
   return (
     <Card className='w-full'>
@@ -289,6 +323,83 @@ export default function SignupForm({ planes }: Props) {
               </Card>
             )}
           </section>
+          <Controller
+            control={control}
+            name='terminos_condiciones'
+            rules={{
+              required: {
+                value: true,
+                message: 'Tenés que aceptar los términos y condiciones.',
+              },
+            }}
+            defaultValue={false}
+            render={({ field }) => (
+              <div className='col-span-full flex items-center space-x-2'>
+                <Checkbox
+                  id='terms'
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                  defaultChecked={false}
+                />
+                <label
+                  htmlFor='terms'
+                  className='cursor-pointer text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                >
+                  Acepto los{' '}
+                  {!isMobile ? (
+                    <Dialog>
+                      <DialogTrigger className='underline'>
+                        Términos y Condiciones
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Términos y Condiciones</DialogTitle>
+                          <DialogDescription>
+                            Último actualización: 14 de abril de 2025
+                          </DialogDescription>
+                        </DialogHeader>
+                        <section className='max-h-[60dvh] overflow-auto'>
+                          <TerminosCondiciones hideTitle />
+                        </section>
+                        <DialogFooter>
+                          <DialogClose asChild>
+                            <Button variant={'outline'} type='button'>
+                              Cerrar
+                            </Button>
+                          </DialogClose>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  ) : (
+                    <Drawer>
+                      <DrawerTrigger className='underline'>
+                        Términos y Condiciones
+                      </DrawerTrigger>
+                      <DrawerContent>
+                        <DrawerHeader>
+                          <DrawerTitle>Términos y Condiciones</DrawerTitle>
+                          <DrawerDescription>
+                            Última actuialización: 14 de abril de 2025
+                          </DrawerDescription>
+                        </DrawerHeader>
+                        <section className='max-h-[75dvh] overflow-auto px-4'>
+                          <TerminosCondiciones hideTitle />
+                        </section>
+                        <DrawerFooter>
+                          <DrawerClose asChild>
+                            <Button variant={'outline'} type='button'>
+                              Cerrar
+                            </Button>
+                          </DrawerClose>
+                        </DrawerFooter>
+                      </DrawerContent>
+                    </Drawer>
+                  )}
+                </label>
+              </div>
+            )}
+          />
+
           <Button
             type='submit'
             className={cn(

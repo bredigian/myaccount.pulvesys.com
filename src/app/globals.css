@@ -83,6 +83,14 @@ body {
   width: 100wh;
 }
 
+#terms li {
+  @apply flex flex-col gap-1;
+
+  h4 {
+    @apply text-xl;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
