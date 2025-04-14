@@ -1,13 +1,15 @@
 'use client';
 
 import { AddOrEditCampoDialog, DeleteCampoDialog } from './campos-dialog';
-import { Campo, Lote } from '@/types/campos.types';
+import { Campo, Coordinada, Lote } from '@/types/campos.types';
 import { Card, CardContent } from './ui/card';
 
 import { Badge } from './ui/badge';
 import { Label } from './ui/label';
 import LoteItem from './lote-item';
 import MapboxMap from './map';
+import { PolygonFeature } from './campos-form';
+import { Position } from 'geojson';
 import { Switch } from './ui/switch';
 import { UUID } from 'crypto';
 import { useState } from 'react';
@@ -24,6 +26,39 @@ export default function CampoItem({ data }: Props) {
 
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(!show);
+
+  const { Lote } = data;
+
+  const polygonsData: PolygonFeature[] = (Lote as Lote[]).map((l) => {
+    const points = l.Coordinada as Coordinada[];
+
+    const groupedByLoteId = points.reduce(
+      (acc, coord) => {
+        const { lng, lat, lote_id } = coord as Required<Coordinada>;
+        if (!acc[lote_id]) acc[lote_id] = [];
+
+        acc[lote_id].push([lng, lat]);
+        return acc;
+      },
+      {} as Record<string, Position[]>,
+    );
+
+    return {
+      id: l.id as UUID,
+      type: 'Feature',
+      geometry: {
+        type: 'Polygon',
+        coordinates: Object.values(groupedByLoteId),
+      },
+      properties: {
+        description: `${l.nombre} (${l.hectareas?.toFixed(2)}ha)`,
+        area: l.hectareas,
+        nombre: l.nombre,
+        color: l.color,
+        opacity: 0.65,
+      },
+    } as PolygonFeature;
+  });
 
   return (
     <li className='col-span-full flex h-fit items-start justify-between lg:col-span-2'>
@@ -52,8 +87,7 @@ export default function CampoItem({ data }: Props) {
           </div>
           {show && (
             <MapboxMap
-              lotesCampo={data.Lote as Lote[]}
-              lotesPulverizados={data.Lote as Lote[]}
+              polygons={polygonsData}
               size='!h-[20dvh]'
               customZoom={13}
             />

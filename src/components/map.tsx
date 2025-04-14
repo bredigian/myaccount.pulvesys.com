@@ -1,16 +1,75 @@
 'use client';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
+import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
-import { Campo, Coordinada, Lote } from '@/types/campos.types';
-import { Layer, Map, Source, useMap } from 'react-map-gl/mapbox';
+import { Campo, Coordinada } from '@/types/campos.types';
+import { Layer, Map, Source, useControl, useMap } from 'react-map-gl/mapbox';
+import MapboxDraw, {
+  DrawCreateEvent,
+  DrawDeleteEvent,
+  DrawUpdateEvent,
+} from '@mapbox/mapbox-gl-draw';
 import { calcularCentroide, cn } from '@/lib/utils';
+import { useEffect, useRef, useState } from 'react';
 
 import { FeatureCollection } from 'geojson';
-import { useEffect } from 'react';
+import { PolygonFeature } from './campos-form';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 const MAP_STYLE = 'mapbox://styles/mapbox/satellite-streets-v12';
+
+interface DrawControlProps {
+  onCreate: (e: DrawCreateEvent) => void;
+  onUpdate: (e: DrawUpdateEvent) => void;
+  onDelete: (e: DrawDeleteEvent) => void;
+  polygons: PolygonFeature[];
+}
+
+const DrawControl = ({
+  onCreate,
+  onUpdate,
+  onDelete,
+  polygons,
+}: DrawControlProps) => {
+  const drawRef = useRef<MapboxDraw | null>(null);
+
+  const control = useControl(
+    ({ map }) => {
+      const draw = new MapboxDraw({
+        displayControlsDefault: false,
+        controls: {
+          polygon: true,
+          trash: true,
+        },
+      });
+
+      drawRef.current = draw;
+      map.addControl(draw);
+
+      map.on('draw.create', onCreate);
+      map.on('draw.update', onUpdate);
+      map.on('draw.delete', onDelete);
+
+      return draw;
+    },
+    ({ map }) => {
+      if (drawRef.current) {
+        map.removeControl(drawRef.current);
+        drawRef.current = null;
+      }
+    },
+  );
+
+  useEffect(() => {
+    control.set({
+      type: 'FeatureCollection',
+      features: polygons,
+    });
+  }, [polygons]);
+
+  return null;
+};
 
 const FlyTo = ({ selectedCampo }: { selectedCampo: Campo }) => {
   const { current } = useMap();
@@ -27,158 +86,84 @@ const FlyTo = ({ selectedCampo }: { selectedCampo: Campo }) => {
 };
 
 interface Props {
-  lotesCampo: Lote[];
-  lotesPulverizados: Lote[];
-  actualLote?: Lote;
-  handleLote?: (point: Coordinada) => void;
-  enable?: boolean;
   size?: string;
   customCenter?: boolean;
   className?: string;
   customZoom?: number;
   selectedCampo?: Campo;
+
+  onCreate?: (e: DrawCreateEvent) => void;
+  onUpdate?: (e: DrawUpdateEvent) => void;
+  onDelete?: (e: DrawDeleteEvent) => void;
+
+  polygons: PolygonFeature[];
+
+  isPulverizacionDetail?: boolean;
 }
 
 export default function MapboxMap({
-  actualLote,
-  lotesCampo,
-  lotesPulverizados,
   size,
   customZoom,
   className,
   selectedCampo,
-  enable,
-  handleLote,
+
+  onCreate,
+  onUpdate,
+  onDelete,
+
+  polygons,
+
+  isPulverizacionDetail,
 }: Props) {
-  const firstPointGeoJSON: FeatureCollection = {
+  const [geoJSON, setGeoJSON] = useState<FeatureCollection>({
     type: 'FeatureCollection',
-    features: [
-      {
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: [
-            actualLote?.zona[0]?.lng as number,
-            actualLote?.zona[0]?.lat as number,
-          ],
-        },
-        properties: {
-          color: actualLote?.color,
-          opacity: 1,
-        },
-      },
-    ],
-  };
-  const secondPointGeoJSON: FeatureCollection = {
+    features: [],
+  });
+
+  const [textGeoJSON, setTextGeoJSON] = useState<FeatureCollection>({
     type: 'FeatureCollection',
-    features: [
-      {
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: [
-            actualLote?.zona[1]?.lng as number,
-            actualLote?.zona[1]?.lat as number,
-          ],
-        },
-        properties: {
-          color: actualLote?.color,
-          opacity: 1,
-        },
-      },
-    ],
-  };
+    features: [],
+  });
 
-  const firstLineGeoJSON: FeatureCollection = {
-    type: 'FeatureCollection',
-    features: [
-      {
-        type: 'Feature',
-        geometry: {
-          type: 'LineString',
-          coordinates: [
-            [
-              actualLote?.zona[0]?.lng as number,
-              actualLote?.zona[0]?.lat as number,
-            ],
-            [
-              actualLote?.zona[1]?.lng as number,
-              actualLote?.zona[1]?.lat as number,
-            ],
-          ],
-        },
-        properties: {
-          color: actualLote?.color,
-          opacity: 1,
-        },
-      },
-    ],
-  };
+  useEffect(() => {
+    setTextGeoJSON({
+      type: 'FeatureCollection',
+      features: polygons?.map((item) => {
+        const centroide = calcularCentroide(item.geometry.coordinates[0]);
+        return {
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: centroide,
+          },
+          properties: {
+            nombre: item.properties.nombre,
+            description: item.properties.description,
+            opacity: isPulverizacionDetail ? item.properties.opacity : 1,
+          },
+        };
+      }),
+    });
 
-  const actualGeoJSON: FeatureCollection = {
-    type: 'FeatureCollection',
-    features: [
-      {
-        type: 'Feature',
-        geometry: {
-          type: 'Polygon',
-          coordinates: actualLote?.zona
-            ? [actualLote?.zona?.map((c) => [c.lng, c.lat])]
-            : [],
-        },
-        properties: {
-          color: actualLote?.color,
-          opacity: 0.75,
-        },
-      },
-    ],
-  };
-
-  const geoJSON: FeatureCollection = {
-    type: 'FeatureCollection',
-    features: lotesCampo?.map((lote) => {
-      const coords = (lote.Coordinada ?? lote.zona)
-        .map((coord) => [coord.lng, coord.lat])
-        .filter(Boolean) as number[][];
-
-      if (coords?.[0] !== coords?.[coords.length - 1]) {
-        coords?.push(coords[0]);
-      }
-
-      return {
-        type: 'Feature',
-        geometry: {
-          type: 'Polygon',
-          coordinates: [coords],
-        },
-        properties: {
-          nombre: lote.nombre,
-          color: lote.color || '#008000',
-          isPulverizado: lotesPulverizados.includes(lote) ? 0.75 : 0.2,
-        },
-      };
-    }),
-  };
-
-  const textGeoJSON: FeatureCollection = {
-    type: 'FeatureCollection',
-    features: lotesCampo?.map((lote) => {
-      const centroide = calcularCentroide(
-        (lote.Coordinada ?? lote.zona) as Coordinada[],
-      );
-      return {
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: centroide,
-        },
-        properties: {
-          nombre: lote.nombre,
-          isPulverizado: lotesPulverizados.includes(lote) ? 1 : 0.35,
-        },
-      };
-    }),
-  };
+    setGeoJSON({
+      type: 'FeatureCollection',
+      features: polygons?.map((item) => {
+        return {
+          type: 'Feature',
+          geometry: {
+            type: 'Polygon',
+            coordinates: [item.geometry.coordinates[0]],
+          },
+          properties: {
+            nombre: item.properties.nombre,
+            color: item.properties.color,
+            description: item.properties.description,
+            opacity: item.properties.opacity,
+          },
+        };
+      }),
+    });
+  }, [polygons]);
 
   return (
     <div
@@ -191,41 +176,42 @@ export default function MapboxMap({
       <Map
         initialViewState={{
           zoom: customZoom ?? 12,
-          latitude: lotesCampo?.[0]?.Coordinada?.[0]?.lat ?? -37.31587,
-          longitude: lotesCampo?.[0]?.Coordinada?.[0]?.lng ?? -59.98368,
+          latitude:
+            polygons?.[0]?.geometry?.coordinates?.[0]?.[0]?.[1] || -37.31587,
+          longitude:
+            polygons?.[0]?.geometry?.coordinates?.[0]?.[0]?.[0] || -59.98368,
         }}
         mapboxAccessToken={MAPBOX_TOKEN}
         mapStyle={MAP_STYLE}
         style={{ width: '100%', height: '100%' }}
         id='map-for-pdf'
         preserveDrawingBuffer
-        onClick={(e) => {
-          if (enable) {
-            const punto: Coordinada = {
-              lat: e.lngLat.lat,
-              lng: e.lngLat.lng,
-            };
-            if (handleLote) handleLote(punto);
-          }
-        }}
       >
         {selectedCampo && <FlyTo selectedCampo={selectedCampo} />}
-        <Source id='lotes-source' type='geojson' data={geoJSON}>
-          <Layer
-            id='lotes-layer'
-            type='fill'
-            paint={{
-              'fill-color': ['get', 'color'],
-              'fill-opacity': ['get', 'isPulverizado'],
-            }}
+        {onCreate && onUpdate && onDelete && (
+          <DrawControl
+            onCreate={onCreate}
+            onUpdate={onUpdate}
+            onDelete={onDelete}
+            polygons={polygons}
           />
+        )}
+        <Source id='lotes-source' type='geojson' data={geoJSON}>
           <Layer
             id='borders-layer'
             type='line'
             paint={{
               'line-color': ['get', 'color'],
-              'line-width': 2,
-              'line-opacity': ['get', 'isPulverizado'],
+              'line-width': 4,
+              'line-opacity': ['get', 'opacity'],
+            }}
+          />
+          <Layer
+            id='lotes-layer'
+            type='fill'
+            paint={{
+              'fill-color': ['get', 'color'],
+              'fill-opacity': ['get', 'opacity'],
             }}
           />
         </Source>
@@ -234,7 +220,7 @@ export default function MapboxMap({
             id='lotes-text-layer'
             type='symbol'
             layout={{
-              'text-field': ['get', 'nombre'],
+              'text-field': ['get', 'description'],
               'text-size': 12,
               'text-anchor': 'center',
               'text-justify': 'center',
@@ -244,94 +230,10 @@ export default function MapboxMap({
               'text-color': '#ffffff',
               'text-halo-color': '#000000',
               'text-halo-width': 1.2,
-              'text-opacity': ['get', 'isPulverizado'],
+              'text-opacity': ['get', 'opacity'],
             }}
           />
         </Source>
-        {actualLote && (
-          <>
-            <Source
-              key={`actual_lote-source`}
-              type='geojson'
-              data={actualGeoJSON}
-            >
-              <Layer
-                id='actual_lote-layer'
-                type='fill'
-                paint={{
-                  'fill-color': ['get', 'color'],
-                  'fill-opacity': ['get', 'opacity'],
-                }}
-              />
-              <Layer
-                id='actual_lote-border'
-                type='line'
-                paint={{
-                  'line-color': ['get', 'color'],
-                  'line-width': 2,
-                  'line-opacity': 1,
-                }}
-              />
-              <Layer
-                id='actual_lote-point'
-                type='circle'
-                paint={{
-                  'circle-color': ['get', 'color'],
-                  'circle-stroke-width': 1,
-                  'circle-opacity': 1,
-                  'circle-stroke-color': ['get', 'color'],
-                }}
-              />
-            </Source>
-            <Source
-              id='first-point-marked-source'
-              type='geojson'
-              data={firstPointGeoJSON}
-            >
-              <Layer
-                id='actual_lote-first-marked-point'
-                type='circle'
-                paint={{
-                  'circle-color': ['get', 'color'],
-                  'circle-stroke-width': 1,
-                  'circle-opacity': 1,
-                  'circle-stroke-color': ['get', 'color'],
-                }}
-              />
-            </Source>
-            <Source
-              id='second-point-marked-source'
-              type='geojson'
-              data={secondPointGeoJSON}
-            >
-              <Layer
-                id='actual_lote-second-marked-point'
-                type='circle'
-                paint={{
-                  'circle-color': ['get', 'color'],
-                  'circle-stroke-width': 1,
-                  'circle-opacity': 1,
-                  'circle-stroke-color': ['get', 'color'],
-                }}
-              />
-            </Source>
-            <Source
-              id='first-polygon-line-source'
-              type='geojson'
-              data={firstLineGeoJSON}
-            >
-              <Layer
-                id='actual_lote-first-polygon-line'
-                type='line'
-                paint={{
-                  'line-color': ['get', 'color'],
-                  'line-width': 2,
-                  'line-opacity': 1,
-                }}
-              />
-            </Source>
-          </>
-        )}
       </Map>
     </div>
   );

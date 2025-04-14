@@ -242,7 +242,7 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
         headStyles: { fillColor: '#243641' },
         body: data?.detalle.campo?.Lote?.map((lote) => [
           lote.nombre,
-          `${lote.hectareas}ha`,
+          `${lote.hectareas?.toFixed(2)}ha`,
           data.detalle.lotes.includes(lote?.nombre as string)
             ? 'A pulverizar'
             : 'Sin espec.',

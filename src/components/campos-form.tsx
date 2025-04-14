@@ -1,27 +1,62 @@
 'use client';
 
 import { Campo, Coordinada, Lote } from '@/types/campos.types';
-import { Check, Cloud, Eraser, Layers, MapPinPlusInside } from 'lucide-react';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from './ui/dialog';
+import {
+  DrawCreateEvent,
+  DrawDeleteEvent,
+  DrawUpdateEvent,
+} from '@mapbox/mapbox-gl-draw';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+} from './ui/drawer';
 import { FieldErrors, useForm } from 'react-hook-form';
 import { addCampo, editCampo } from '@/services/campos.service';
 import { area, convertArea } from '@turf/turf';
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { APIError } from '@/types/error.types';
 import { Button } from './ui/button';
+import { Check } from 'lucide-react';
 import ColorPicker from './color-picker';
 import Cookies from 'js-cookie';
-import { FeatureCollection } from 'geojson';
 import { Input } from './ui/input';
-import { Label } from './ui/label';
-import LoteItem from './lote-item';
 import MapboxMap from './map';
+import { Position } from 'geojson';
 import { ReloadIcon } from '@radix-ui/react-icons';
+import { UUID } from 'crypto';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
-import { useDebouncedCallback } from 'use-debounce';
+import { useDialog } from '@/hooks/use-dialog';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
+
+interface PolygonProperties {
+  nombre?: string;
+  color?: string;
+  area?: number;
+  description?: string;
+  opacity?: number;
+}
+export type PolygonFeature = GeoJSON.Feature<
+  GeoJSON.Polygon,
+  PolygonProperties
+>;
 
 export default function AddOrEditCampoForm({
   isEdit,
@@ -52,18 +87,44 @@ export default function AddOrEditCampoForm({
         position: 'top-center',
       });
   };
+
   const onSubmit = async (values: Campo) => {
     try {
-      if (lotes.length === 0) {
-        toast.error('No se añadieron lotes', {
+      if (polygons.length === 0) {
+        toast.error('No es posible agregar un campo sin lotes', {
           position: 'top-center',
         });
+
         return;
       }
+
+      const coordenadas = polygons.map((p) => p.geometry.coordinates);
+
+      const lotes: Lote[] = polygons.map((i) => {
+        return {
+          id: typeof i.id === 'number' ? i.id.toString() : i.id,
+          nombre: i.properties.nombre as string,
+          hectareas: i.properties.area as number,
+          color: i.properties.color as string,
+          zona: coordenadas
+            .filter((c) => c === i.geometry.coordinates)[0][0]
+            .map((a) => ({
+              id: !isEdit
+                ? undefined
+                : typeof a[2] === 'number'
+                  ? a[2].toString()
+                  : a[2],
+              lng: a[0],
+              lat: a[1],
+            })),
+        };
+      });
+
       const PAYLOAD: Campo = {
         ...values,
         id: data?.id,
         Lote: lotes,
+        polygonsToDelete: !isEdit ? undefined : polygonsToDelete,
       };
 
       const access_token = Cookies.get('access_token');
@@ -90,69 +151,124 @@ export default function AddOrEditCampoForm({
     }
   };
 
-  const [enable, setEnable] = useState(false);
+  const [polygonsToDelete, setPolygonsToDelete] = useState<string[]>([]);
 
-  const [lotes, setLotes] = useState<Lote[]>(
-    !isEdit ? [] : (data?.Lote as Lote[]),
+  const [polygons, setPolygons] = useState<PolygonFeature[]>(
+    !isEdit
+      ? []
+      : (data?.Lote as Lote[]).map((l) => {
+          const points = l.Coordinada as Coordinada[];
+
+          const groupedByLoteId = points.reduce(
+            (acc, coord) => {
+              const { id, lng, lat, lote_id } = coord as Required<Coordinada>;
+              if (!acc[lote_id]) acc[lote_id] = [];
+
+              acc[lote_id].push([lng, lat, id as unknown as number]);
+              return acc;
+            },
+            {} as Record<string, Position[]>,
+          );
+
+          return {
+            id: l.id as UUID,
+            type: 'Feature',
+            geometry: {
+              type: 'Polygon',
+              coordinates: Object.values(groupedByLoteId),
+            },
+            properties: {
+              description: `${l.nombre} (${l.hectareas?.toFixed(2)}ha)`,
+              area: l.hectareas,
+              nombre: l.nombre,
+              color: l.color,
+              opacity: 0.65,
+            },
+          } as PolygonFeature;
+        }),
   );
-  const addLote = (lote: Lote) => setLotes((prev) => [...prev, lote]);
 
-  const [lote, setLote] = useState<Lote>({
-    nombre: '',
-    hectareas: 0,
-    zona: [],
-    color: '#000000',
-  });
-  const handleLote = (point: Coordinada) =>
-    setLote((prev) => {
-      if (prev.zona.length === 0) {
-        return { ...prev, zona: [point, point] };
+  const { open, setOpen, handleOpen: handleNewPolygonDialog } = useDialog();
+  const [newPolygon, setNewPolygon] = useState<PolygonFeature | null>(null);
+  const [polygonName, setPolygonName] = useState('');
+  const [polygonColor, setPolygonColor] = useState('#ff0000');
+
+  const onCreate = useCallback((e: DrawCreateEvent) => {
+    const newPolygon = e.features[0];
+    setNewPolygon(newPolygon as PolygonFeature);
+    handleNewPolygonDialog();
+  }, []);
+
+  const onHandlePolygonInformation = () => {
+    if (newPolygon && polygonName) {
+      if (polygonName.length < 2) {
+        toast.error('El nombre debe contener al menos 2 caracteres.');
+        return;
       }
-      const newArea = [...prev.zona];
-      newArea.splice(newArea.length - 1, 0, point);
-      return { ...prev, zona: newArea };
-    });
 
-  const handleLoteName = (value: string) => {
-    setLote((prev) => ({ ...prev, nombre: value }));
-  };
+      const polygonArea = convertArea(
+        area(newPolygon.geometry),
+        'meters',
+        'hectares',
+      );
 
-  const handleLoteHectareas = (value: number) => {
-    setLote((prev) => ({ ...prev, hectareas: value }));
-  };
-
-  const handleLoteColor = useDebouncedCallback((value: string) => {
-    setLote((prev) => ({ ...prev, color: value }));
-  }, 300);
-
-  useEffect(() => {
-    if (isEdit) setLotes(data?.Lote as Lote[]);
-  }, [data]);
-
-  useEffect(() => {
-    const actualGeoJSON: FeatureCollection = {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          geometry: {
-            type: 'Polygon',
-            coordinates: lote?.zona
-              ? [lote?.zona?.map((c) => [c.lng, c.lat])]
-              : [],
-          },
-          properties: {
-            color: lote?.color,
-            opacity: 0.75,
-          },
+      const updatedPolygon: PolygonFeature = {
+        ...newPolygon,
+        properties: {
+          ...newPolygon.properties,
+          nombre: polygonName,
+          color: polygonColor,
+          area: polygonArea,
+          description: `${polygonName} (${polygonArea.toFixed(2)}ha)`,
         },
-      ],
-    };
+      };
+      setPolygons((prev) => [...prev, updatedPolygon]);
+      handleNewPolygonDialog();
+      setPolygonName('');
+      setNewPolygon(null);
+    }
+  };
 
-    const selectedArea = convertArea(area(actualGeoJSON), 'meters', 'hectares');
-    if (selectedArea !== 0)
-      handleLoteHectareas(Number(selectedArea.toFixed(2)));
-  }, [lote.zona]);
+  const onUpdate = useCallback((e: DrawUpdateEvent) => {
+    setPolygons((prev) =>
+      prev.map((p) => {
+        const updatedFeature = e.features.find((f) => f.id === p.id);
+        if (updatedFeature && updatedFeature.geometry.type === 'Polygon') {
+          const polygonArea = convertArea(
+            area(updatedFeature.geometry),
+            'meters',
+            'hectares',
+          );
+
+          return {
+            ...updatedFeature,
+            properties: {
+              ...p.properties,
+              ...(updatedFeature.properties || {}),
+              area: polygonArea,
+              description: `${p.properties.nombre} (${polygonArea.toFixed(2)}ha)`,
+            },
+          } as PolygonFeature;
+        }
+        return p;
+      }),
+    );
+  }, []);
+
+  const onDelete = useCallback((e: DrawDeleteEvent) => {
+    const deletedIds = e.features.map((f) => f.id);
+    setPolygons((prev) => prev.filter((p) => !deletedIds.includes(p.id)));
+
+    for (const id of deletedIds) {
+      if (
+        data?.Lote?.some((st) => st.id === id) &&
+        !polygonsToDelete.includes(id as string)
+      )
+        setPolygonsToDelete((prev) => [...prev, id as string]);
+    }
+  }, []);
+
+  const isMobile = useIsMobile();
 
   return (
     <form
@@ -165,173 +281,107 @@ export default function AddOrEditCampoForm({
     >
       <Input
         {...register('nombre', {
-          required: { value: true, message: 'El nombre es requerido.' },
           minLength: {
             value: 4,
             message: 'Debe contener al menos 4 caracteres.',
           },
+          required: { value: true, message: 'El nombre es requerido.' },
         })}
         placeholder='Nombre'
-        className='text-sm'
+        className='text-sm md:text-base'
       />
-
+      {isMobile ? (
+        <Drawer open={open} onOpenChange={setOpen}>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Lote</DrawerTitle>
+              <DrawerDescription>
+                El nombre debe contener al menos 2 caracteres. Además, podés
+                elegír el color que más te guste
+              </DrawerDescription>
+            </DrawerHeader>
+            <div className='flex h-9 items-center gap-4 px-4'>
+              <Input
+                id='new-polygon-name'
+                value={polygonName}
+                onChange={(e) => setPolygonName(e.target.value)}
+                placeholder='Ej: Lote 1'
+                className='text-sm'
+              />
+              <ColorPicker
+                color={polygonColor}
+                onChange={(color) => setPolygonColor(color)}
+              />
+            </div>
+            <DrawerFooter>
+              <Button
+                disabled={polygonName.length < 2}
+                onClick={onHandlePolygonInformation}
+              >
+                Guardar
+              </Button>
+              <DrawerClose asChild>
+                <Button variant={'outline'}>Cancelar</Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      ) : (
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Lote</DialogTitle>
+              <DialogDescription>
+                El nombre debe contener al menos 2 caracteres. Además, podés
+                elegír el color que más te guste
+              </DialogDescription>
+            </DialogHeader>
+            <div className='flex h-9 items-center gap-4'>
+              <Input
+                id='new-polygon-name'
+                value={polygonName}
+                onChange={(e) => setPolygonName(e.target.value)}
+                placeholder='Ej: Lote 1'
+                className='text-sm'
+              />
+              <ColorPicker
+                color={polygonColor}
+                onChange={(color) => setPolygonColor(color)}
+              />
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant={'outline'}>Cancelar</Button>
+              </DialogClose>
+              <Button
+                disabled={polygonName.length < 2}
+                onClick={onHandlePolygonInformation}
+              >
+                Guardar
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
       <div className='flex h-[60dvh] w-full flex-col gap-4 overflow-y-auto md:justify-between'>
-        <div className='flex items-center justify-between'>
-          <Label>Ubicación</Label>
-          <aside className='flex items-center gap-2'>
-            <Button
-              variant={'outline'}
-              onClick={() => {
-                if (!enable) setEnable(true);
-                else {
-                  if (!lote.nombre) {
-                    toast.error('El nombre de lote es requerido', {
-                      position: 'top-center',
-                    });
-
-                    return;
-                  } else if (!lote.hectareas || lote.hectareas === 0) {
-                    toast.error('Las hectáreas son requeridas', {
-                      position: 'top-center',
-                    });
-
-                    return;
-                  }
-
-                  let error = false;
-                  for (const l of lotes) {
-                    if (
-                      l.nombre?.toLowerCase() === lote?.nombre?.toLowerCase()
-                    ) {
-                      toast.error(
-                        'No puede haber dos lotes con el mismo nombre',
-                        { position: 'top-center' },
-                      );
-                      error = true;
-
-                      break;
-                    }
-                  }
-                  if (error) return;
-
-                  addLote(lote as Lote);
-                  setLote({
-                    nombre: '',
-                    hectareas: 0,
-                    zona: [],
-                    color: lote.color as string,
-                  });
-                  setEnable(false);
-                }
-              }}
-              type='button'
-            >
-              {!enable ? (
-                <>
-                  Agregar lote <MapPinPlusInside />
-                </>
-              ) : (
-                <>
-                  Finalizar <Check />
-                </>
-              )}
-            </Button>
-            <Button
-              variant={'destructive'}
-              size={'icon'}
-              onClick={() =>
-                setLote((prev) => ({
-                  ...prev,
-                  zona: [],
-                  hectareas: 0,
-                }))
-              }
-              disabled={!enable}
-              type='button'
-            >
-              <Eraser />
-            </Button>
-          </aside>
-        </div>
-        <div className='grid grid-cols-9 gap-4'>
-          <Input
-            placeholder='Nombre del lote'
-            className='col-span-4 text-sm'
-            disabled={!lote.nombre && !enable}
-            onChange={(e) => handleLoteName(e.target.value)}
-            value={lote.nombre as string}
-          />
-          <div className='group relative col-span-3 flex items-center'>
-            <Layers className='absolute pl-2 opacity-60 group-focus-within:opacity-100 peer-[:not(:placeholder-shown)]:opacity-100' />
-            <Input
-              placeholder='Hectáreas'
-              className='peer col-span-3 pl-8 text-sm'
-              disabled={!lote.hectareas && !enable}
-              type='number'
-              onChange={(e) => handleLoteHectareas(Number(e.target.value))}
-              value={lote.hectareas?.toString()}
-            />
-          </div>
-          <ColorPicker
-            color={lote.color as string}
-            onChange={(color) => handleLoteColor(color)}
-          />
-        </div>
         <MapboxMap
           key={data?.Lote?.length}
           size='!grow'
-          enable={enable}
-          handleLote={handleLote as () => void}
-          actualLote={lote}
-          lotesCampo={lotes}
-          lotesPulverizados={lotes}
+          onCreate={onCreate}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+          polygons={polygons}
         />
-        <ul
-          key={`lotes-list-${data?.Lote?.length}`}
-          className='relative flex max-h-[244px] flex-wrap items-end gap-2'
-        >
-          {lotes?.length === 0 ? (
-            <li className='rounded-md border-2 border-gray-200 bg-gray-50/50 px-3 py-1 text-xs font-semibold'>
-              Sin lotes
-            </li>
-          ) : (
-            lotes?.map((lote, index) => (
-              <LoteItem
-                key={`badge-${lote.nombre}-${index}`}
-                lote={lote}
-                showButtonClear
-                deleteLote={() =>
-                  setLotes((prev) =>
-                    prev.filter((l) => l.nombre !== lote.nombre),
-                  )
-                }
-                isEditting={isEdit}
-                storedLotesQuantity={
-                  lotes.filter((l) => (l.id ? 1 : 0))?.length
-                }
-              />
-            ))
-          )}
-        </ul>
       </div>
-      {isEdit && (
-        <div className='flex items-center gap-2'>
-          <div className='w-fit rounded-t-md border-2 border-primary bg-green-600 p-1 dark:border-primary-foreground'>
-            <Cloud size={14} />
-          </div>
-          <p className='text-sm italic'>* Almacenado en base de datos</p>
-        </div>
-      )}
       <div className='flex flex-col items-center gap-2 md:flex-row-reverse md:items-end'>
         <Button
-          disabled={isSubmitting || isSubmitSuccessful || enable}
+          disabled={isSubmitting || isSubmitSuccessful}
           type='submit'
           className={cn(
             'w-full md:w-fit',
-            !enable && 'disabled:opacity-100',
             !isSubmitSuccessful
               ? 'bg-primary'
-              : '!bg-green-700 text-primary-foreground dark:text-primary',
+              : '!bg-green-700 text-primary-foreground disabled:opacity-100 dark:text-primary',
           )}
           form='form-add-campos'
         >
