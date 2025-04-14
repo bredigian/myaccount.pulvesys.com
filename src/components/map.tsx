@@ -34,32 +34,24 @@ const DrawControl = ({
 }: DrawControlProps) => {
   const drawRef = useRef<MapboxDraw | null>(null);
 
-  const control = useControl(
-    ({ map }) => {
-      const draw = new MapboxDraw({
-        displayControlsDefault: false,
-        controls: {
-          polygon: true,
-          trash: true,
-        },
-      });
+  const control = useControl(({ map }) => {
+    const draw = new MapboxDraw({
+      displayControlsDefault: false,
+      controls: {
+        polygon: true,
+        trash: true,
+      },
+    });
 
-      drawRef.current = draw;
-      map.addControl(draw);
+    drawRef.current = draw;
+    if (!map.hasControl) map.addControl(draw);
 
-      map.on('draw.create', onCreate);
-      map.on('draw.update', onUpdate);
-      map.on('draw.delete', onDelete);
+    map.on('draw.create', onCreate);
+    map.on('draw.update', onUpdate);
+    map.on('draw.delete', onDelete);
 
-      return draw;
-    },
-    ({ map }) => {
-      if (drawRef.current) {
-        map.removeControl(drawRef.current);
-        drawRef.current = null;
-      }
-    },
-  );
+    return draw;
+  });
 
   useEffect(() => {
     control.set({
