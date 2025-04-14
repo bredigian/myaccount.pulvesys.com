@@ -2,6 +2,11 @@ name: PulveSys App CI/CD
 on:
   push:
     branches: ['main']
+
+permissions:
+  contents: write
+  pull-requests: write
+
 defaults:
   run:
     working-directory: ./main
@@ -11,7 +16,7 @@ jobs:
     env:
       NEXT_PUBLIC_API_URL: ${{secrets.NEXT_PUBLIC_API_URL}}
       NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{secrets.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}}
-      NEXT_PUBLIC_MAX_EMPLOYERS: ${{secrets.NEXT_PUBLIC_MAX_EXPLOYERS}}
+      NEXT_PUBLIC_MAX_EMPLOYERS: ${{secrets.NEXT_PUBLIC_MAX_EMPLOYERS}}
     strategy:
       matrix:
         node-version: [22.x]
@@ -32,6 +37,10 @@ jobs:
       - name: Install dependencies
         run: pnpm i
         working-directory: ./main
+      - name: Release version
+        run: pnpx semantic-release
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Build app
         run: pnpm run build
         working-directory: ./main
