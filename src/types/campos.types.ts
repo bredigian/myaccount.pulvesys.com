@@ -1,7 +1,7 @@
 import { UUID } from 'crypto';
 
 export interface Lote {
-  id?: UUID;
+  id?: UUID | string;
   nombre: string | null;
   hectareas: number | null;
   zona: Coordinada[];
@@ -11,6 +11,7 @@ export interface Lote {
 }
 
 export interface Coordinada {
+  id?: string;
   lote_id?: UUID;
   lat: number;
   lng: number;
@@ -20,4 +21,5 @@ export interface Campo {
   id?: UUID;
   nombre: string;
   Lote?: Lote[];
+  polygonsToDelete?: Lote['id'][];
 }

@@ -58,7 +58,7 @@ export default function LoteItem({
         >
           <Tag size={14} className='flex-shrink-0' />
           <span className='truncate'>{lote.nombre}</span>
-          <p>({lote.hectareas}ha)</p>
+          <p>({lote.hectareas?.toFixed(2)}ha)</p>
         </div>
         {isEditting && hasMinimumLotesQuantity && isStored ? (
           <DeleteStoredLoteDialog data={lote} />

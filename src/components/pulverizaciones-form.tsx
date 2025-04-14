@@ -1,6 +1,6 @@
 'use client';
 
-import { Campo, Lote } from '@/types/campos.types';
+import { Campo, Coordinada, Lote } from '@/types/campos.types';
 import {
   Check,
   ChevronDown,
@@ -33,6 +33,8 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import LoteItem from './lote-item';
 import MapboxMap from './map';
+import { PolygonFeature } from './campos-form';
+import { Position } from 'geojson';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { Tratamiento } from '@/types/tratamientos.types';
@@ -148,6 +150,44 @@ export default function AddOrEditPulverizacionForm({
   const [selectedLotes, setSelectedLotes] = useState<string[]>(
     storedLotes ?? [],
   );
+
+  const [polygons, setPolygons] = useState<PolygonFeature[]>();
+
+  useEffect(() => {
+    if (selectedCampo)
+      setPolygons(
+        (selectedCampo?.Lote as Lote[]).map((l) => {
+          const points = l.Coordinada as Coordinada[];
+
+          const groupedByLoteId = points.reduce(
+            (acc, coord) => {
+              const { id, lng, lat, lote_id } = coord as Required<Coordinada>;
+              if (!acc[lote_id]) acc[lote_id] = [];
+
+              acc[lote_id].push([lng, lat, id as any]);
+              return acc;
+            },
+            {} as Record<string, Position[]>,
+          );
+
+          return {
+            id: l.id as UUID,
+            type: 'Feature',
+            geometry: {
+              type: 'Polygon',
+              coordinates: Object.values(groupedByLoteId),
+            },
+            properties: {
+              description: `${l.nombre} (${l.hectareas?.toFixed(2)}ha)`,
+              area: l.hectareas,
+              nombre: l.nombre,
+              color: l.color,
+              opacity: selectedLotes.includes(l.nombre as string) ? 1 : 0.5,
+            },
+          } as PolygonFeature;
+        }),
+      );
+  }, [selectedCampo, selectedLotes]);
 
   const {
     aplicaciones,
@@ -421,11 +461,11 @@ export default function AddOrEditPulverizacionForm({
             ))}
           </ul>
           <MapboxMap
-            lotesCampo={selectedCampo.Lote as Lote[]}
-            lotesPulverizados={selectedCampo.Lote as Lote[]}
+            polygons={polygons as PolygonFeature[]}
             className='col-span-full'
             size='!h-[20dvh]'
             selectedCampo={selectedCampo}
+            isPulverizacionDetail
           />
         </>
       )}

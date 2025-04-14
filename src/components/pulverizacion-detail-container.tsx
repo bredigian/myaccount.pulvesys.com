@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ConsumoProducto, SHORT_UNIDAD, UNIDAD } from '@/types/productos.types';
+import { Coordinada, Lote } from '@/types/campos.types';
 import {
   Table,
   TableBody,
@@ -33,8 +34,9 @@ import { Badge } from '@/components/ui/badge';
 import { DateTime } from 'luxon';
 import { DeletePulverizacionDialog } from '@/components/pulverizaciones-dialog';
 import Link from 'next/link';
-import { Lote } from '@/types/campos.types';
 import MapboxMap from './map';
+import { PolygonFeature } from './campos-form';
+import { Position } from 'geojson';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { UUID } from 'crypto';
 import { cn } from '@/lib/utils';
@@ -57,6 +59,37 @@ export default function PulverizacionDetailContainer({ data }: Props) {
 
   const isFromEmployer =
     data.usuario?.rol === 'INDIVIDUAL' && data.usuario.empresa_id;
+
+  const polygons = data?.detalle?.campo?.Lote?.map((l) => {
+    const points = l.Coordinada as Coordinada[];
+
+    const groupedByLoteId = points.reduce(
+      (acc, coord) => {
+        const { id, lng, lat, lote_id } = coord as Required<Coordinada>;
+        if (!acc[lote_id]) acc[lote_id] = [];
+
+        acc[lote_id].push([lng, lat, id as any]);
+        return acc;
+      },
+      {} as Record<string, Position[]>,
+    );
+
+    return {
+      id: l.id as UUID,
+      type: 'Feature',
+      geometry: {
+        type: 'Polygon',
+        coordinates: Object.values(groupedByLoteId),
+      },
+      properties: {
+        description: `${l.nombre} (${l.hectareas?.toFixed(2)}ha)`,
+        area: l.hectareas,
+        nombre: l.nombre,
+        color: l.color,
+        opacity: data?.detalle.lotes.includes(l.nombre as string) ? 1 : 0.35,
+      },
+    } as PolygonFeature;
+  });
 
   return (
     <main className='space-y-6 p-4 pt-0'>
@@ -113,7 +146,7 @@ export default function PulverizacionDetailContainer({ data }: Props) {
                 >
                   <Tag size={14} />
                   <span>{lote.nombre}</span>
-                  <p>({lote.hectareas}ha)</p>
+                  <p>({lote.hectareas?.toFixed(2)}ha)</p>
                 </li>
               ))
             )}
@@ -132,10 +165,10 @@ export default function PulverizacionDetailContainer({ data }: Props) {
         </div>
         <div className='flex w-full flex-col gap-6 lg:flex-row'>
           <MapboxMap
-            lotesCampo={data?.detalle?.campo?.Lote as Lote[]}
-            lotesPulverizados={lotesPulverizados as Lote[]}
+            polygons={polygons as PolygonFeature[]}
             customZoom={13}
             size='!h-[40dvh] lg:!h-[78.5vh]'
+            isPulverizacionDetail
           />
           <div className='flex w-full flex-col gap-6 md:flex-row lg:flex-col'>
             <Card className='h-fit w-full'>
@@ -155,7 +188,7 @@ export default function PulverizacionDetailContainer({ data }: Props) {
                   ) : (
                     <Layers size={14} />
                   )}
-                  <h6>{selectedHectareas}ha</h6>
+                  <h6>{selectedHectareas?.toFixed(2)}ha</h6>
                 </Badge>
                 <Badge variant={'secondary'} className='w-fit space-x-1'>
                   <Leaf size={14} />
@@ -170,7 +203,7 @@ export default function PulverizacionDetailContainer({ data }: Props) {
                   className={cn(
                     'flex w-fit items-center gap-1 text-primary dark:text-primary-foreground',
                     data?.detalle?.observacion
-                      ? '!bg-yellow-200'
+                      ? '!bg-yellow-200 dark:!text-primary-foreground'
                       : 'bg-secondary',
                   )}
                 >
