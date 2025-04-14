@@ -137,7 +137,7 @@ export default function MapboxMap({
             coordinates: centroide,
           },
           properties: {
-            nombre: item.properties.name,
+            nombre: item.properties.nombre,
             description: item.properties.description,
             opacity: isPulverizacionDetail ? item.properties.opacity : 1,
           },
