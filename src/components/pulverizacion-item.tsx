@@ -56,7 +56,7 @@ export default function PulverizacionItem({ pulverizacion }: Props) {
                   return !loteData ? (
                     <div
                       key={`lote-empty-${index}`}
-                      className='flex items-center gap-1 overflow-hidden rounded-md border-2 bg-yellow-200 px-3 py-1 text-xs font-semibold hover:cursor-pointer'
+                      className='flex items-center gap-1 overflow-hidden rounded-md border-2 bg-yellow-200 px-3 py-1 text-xs font-semibold hover:cursor-pointer dark:text-primary-foreground'
                     >
                       <Tag size={14} />
                       <span className='truncate'>Lote no disponible</span>

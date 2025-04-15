@@ -43,7 +43,7 @@ interface Props {
 
 export default function LogoutDialog({ showText }: Props) {
   const { open, setOpen } = useDialog();
-  const { push } = useRouter();
+  const { push, refresh } = useRouter();
   const { clearUserdata } = usuarioStore();
 
   const [state, setState] = useState<undefined | State>(undefined);
@@ -62,7 +62,7 @@ export default function LogoutDialog({ showText }: Props) {
       clearUserdata();
 
       setState('success');
-      setTimeout(() => push('/'), 500);
+      refresh();
     } catch (error) {
       setState('error');
       const { statusCode, message } = error as APIError;

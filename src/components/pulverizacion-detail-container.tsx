@@ -127,7 +127,7 @@ export default function PulverizacionDetailContainer({ data }: Props) {
             {lotesPulverizados?.length === 0 ? (
               <div
                 key={`${data.id}-lote-empty`}
-                className='flex items-center gap-1 overflow-hidden rounded-md border-2 bg-yellow-200 px-3 py-1 text-xs font-semibold hover:cursor-pointer'
+                className='flex items-center gap-1 overflow-hidden rounded-md border-2 bg-yellow-200 px-3 py-1 text-xs font-semibold hover:cursor-pointer dark:text-primary-foreground'
               >
                 <Tag size={14} />
                 <span className='truncate'>Lote no disponible</span>
@@ -180,7 +180,8 @@ export default function PulverizacionDetailContainer({ data }: Props) {
                   variant={'secondary'}
                   className={cn(
                     'w-fit space-x-1 text-primary',
-                    selectedHectareas === 0 && 'bg-yellow-200',
+                    selectedHectareas === 0 &&
+                      'bg-yellow-200 dark:text-primary-foreground',
                   )}
                 >
                   {selectedHectareas === 0 ? (
@@ -201,7 +202,7 @@ export default function PulverizacionDetailContainer({ data }: Props) {
                 <Badge
                   variant={'secondary'}
                   className={cn(
-                    'flex w-fit items-center gap-1 text-primary dark:text-primary-foreground',
+                    'flex w-fit items-center gap-1 text-primary dark:text-primary',
                     data?.detalle?.observacion
                       ? '!bg-yellow-200 dark:!text-primary-foreground'
                       : 'bg-secondary',
