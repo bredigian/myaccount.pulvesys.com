@@ -11,9 +11,12 @@ export default function PulverizacionesContainerEmpty() {
   };
 
   return (
-    <div className='flex flex-col items-start gap-4 p-4 md:mx-auto md:!mt-48 md:max-w-screen-sm'>
-      <div className='flex items-center gap-4 opacity-50' id='empty-container'>
-        <Droplets className='size-[100] shrink-0 lg:size-[164]' />
+    <div className='flex flex-col items-start gap-4 p-4 md:mx-auto md:!mt-36 md:max-w-screen-sm'>
+      <div
+        className='flex items-center gap-4 opacity-50 dark:opacity-25'
+        id='empty-container'
+      >
+        <Droplets className='size-32 shrink-0 lg:size-48' />
         <div className='flex flex-col gap-2 font-semibold sm:text-lg lg:text-2xl'>
           <p>Todavía no tenés ninguna orden generada.</p>
           <p>¡Creá la primera!</p>
