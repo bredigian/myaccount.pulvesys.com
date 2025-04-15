@@ -352,7 +352,7 @@ export const SharePulverizacionDialog = ({ data, nombre, apellido }: Props) => {
           </DrawerDescription>
         </DrawerHeader>
         <Image
-          src={'/logo.png'}
+          src={'/logo_dalle.webp'}
           alt='Logo auxiliar de PulveSys'
           className='hidden size-2'
           id='pulvesys_logo'

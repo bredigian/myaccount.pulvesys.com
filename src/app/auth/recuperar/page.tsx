@@ -8,8 +8,7 @@ import {
 
 import Image from 'next/image';
 import { ResetPasswordForm } from '@/components/recover-form';
-import dark from '../../../../public/logo_for_dark.webp';
-import light from '../../../../public/logo_for_light.webp';
+import original from '../../../../public/logo_dalle.webp';
 import { redirect } from 'next/navigation';
 import { verifyRecoverToken } from '@/services/auth.service';
 
@@ -26,18 +25,11 @@ export default async function RecuperarContraseña({ searchParams }: Props) {
 
   return (
     <main className='flex min-h-dvh w-full flex-col items-center justify-center gap-8 p-8 md:flex-row md:gap-16'>
-      <div className='flex flex-col items-center gap-4'>
-        <Image
-          src={dark}
-          alt='Logo de PulveSys'
-          className='hidden size-36 rounded-xl dark:block'
-        />
-        <Image
-          src={light}
-          alt='Logo de PulveSys'
-          className='block size-36 rounded-xl dark:hidden'
-        />
-      </div>
+      <Image
+        src={original}
+        alt='Logo de PulveSys'
+        className='size-36 rounded-xl'
+      />
       {hasError ? (
         <p>El token es inválido o ya caducó.</p>
       ) : (
