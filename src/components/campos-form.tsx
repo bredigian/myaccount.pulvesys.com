@@ -197,6 +197,10 @@ export default function AddOrEditCampoForm({
     const newPolygon = e.features[0];
     setNewPolygon(newPolygon as PolygonFeature);
     handleNewPolygonDialog();
+
+    e.target.dragPan.enable();
+    e.target.touchZoomRotate.enable();
+    e.target.touchPitch.enable();
   }, []);
 
   const onHandlePolygonInformation = () => {
@@ -253,6 +257,9 @@ export default function AddOrEditCampoForm({
         return p;
       }),
     );
+    e.target.dragPan.enable();
+    e.target.touchZoomRotate.enable();
+    e.target.touchPitch.enable();
   }, []);
 
   const onDelete = useCallback((e: DrawDeleteEvent) => {
@@ -266,6 +273,10 @@ export default function AddOrEditCampoForm({
       )
         setPolygonsToDelete((prev) => [...prev, id as string]);
     }
+
+    e.target.dragPan.enable();
+    e.target.touchZoomRotate.enable();
+    e.target.touchPitch.enable();
   }, []);
 
   const isMobile = useIsMobile();

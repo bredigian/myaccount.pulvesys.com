@@ -17,7 +17,7 @@ import { FeatureCollection } from 'geojson';
 import { PolygonFeature } from './campos-form';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
-const MAP_STYLE = 'mapbox://styles/mapbox/satellite-streets-v12';
+const MAP_STYLE = 'mapbox://styles/mapbox/satellite-v9';
 
 interface DrawControlProps {
   onCreate: (e: DrawCreateEvent) => void;
@@ -178,6 +178,9 @@ export default function MapboxMap({
         style={{ width: '100%', height: '100%' }}
         id='map-for-pdf'
         preserveDrawingBuffer
+        dragPan
+        touchZoomRotate
+        touchPitch
       >
         {selectedCampo && <FlyTo selectedCampo={selectedCampo} />}
         {onCreate && onUpdate && onDelete && (
