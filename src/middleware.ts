@@ -18,6 +18,7 @@ export async function middleware(req: NextRequest) {
 
     if ('error' in sesion) {
       // Se produce un error en la verificación de la sesión y hace las redirecciones en base al 'pathname'
+      const { extras } = sesion;
 
       if (
         pathname.includes('/panel') ||
@@ -28,17 +29,23 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL('/', req.url), {
           headers: {
             'Set-Cookie': [
-              `access_token=;`,
-              `refresh_token=;`,
-              `userdata=;`,
+              `access_token=; Domain=${extras.domain};`,
+              `refresh_token=; Secure; HttpOnly; Domain=${extras.domain}; SameSite=None;`,
+              `userdata=; Domain=${extras.domain}`,
             ].join(', '),
           },
         });
       }
       const res = NextResponse.next();
-      res.cookies.delete('access_token');
-      res.cookies.delete('refresh_token');
-      res.cookies.delete('userdata');
+      res.cookies.delete({ name: 'access_token', domain: extras.domain });
+      res.cookies.delete({
+        name: 'refresh_token',
+        domain: extras.domain,
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      });
+      res.cookies.delete({ name: 'userdata', domain: extras.domain });
 
       return res;
     }
