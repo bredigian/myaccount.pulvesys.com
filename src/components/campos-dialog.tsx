@@ -41,6 +41,7 @@ import { useRouter } from 'next/navigation';
 export const AddOrEditCampoDialog = ({
   isEdit,
   data,
+  storedData,
   variant,
   className,
   onlyIcon,
@@ -51,6 +52,7 @@ export const AddOrEditCampoDialog = ({
 }: {
   isEdit?: boolean;
   data?: Campo;
+  storedData?: Campo[];
   variant?:
     | 'link'
     | 'default'
@@ -101,6 +103,7 @@ export const AddOrEditCampoDialog = ({
         <AddOrEditCampoForm
           isEdit={isEdit}
           data={data}
+          storedData={storedData}
           handleOpen={customHandleOpen ?? handleOpen}
         />
       </DrawerContent>
@@ -137,6 +140,7 @@ export const AddOrEditCampoDialog = ({
         <AddOrEditCampoForm
           isEdit={isEdit}
           data={data}
+          storedData={storedData}
           handleOpen={customHandleOpen ?? handleOpen}
         />
       </DialogContent>

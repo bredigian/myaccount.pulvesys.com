@@ -112,6 +112,7 @@ interface Props {
   onDelete?: (e: DrawDeleteEvent) => void;
 
   polygons: PolygonFeature[];
+  storedPolygons?: PolygonFeature[];
 
   isPulverizacionDetail?: boolean;
 }
@@ -127,6 +128,7 @@ export default function MapboxMap({
   onDelete,
 
   polygons,
+  storedPolygons,
 
   isPulverizacionDetail,
 }: Props) {
@@ -139,6 +141,18 @@ export default function MapboxMap({
     type: 'FeatureCollection',
     features: [],
   });
+
+  const [storedGeoJSON, setStoredGeoJSON] = useState<FeatureCollection>({
+    type: 'FeatureCollection',
+    features: [],
+  });
+
+  const [storedTextGeoJSON, setStoredTextGeoJSON] = useState<FeatureCollection>(
+    {
+      type: 'FeatureCollection',
+      features: [],
+    },
+  );
 
   useEffect(() => {
     setTextGeoJSON({
@@ -180,6 +194,48 @@ export default function MapboxMap({
     });
   }, [polygons]);
 
+  useEffect(() => {
+    if (storedPolygons) {
+      setStoredTextGeoJSON({
+        type: 'FeatureCollection',
+        features: storedPolygons.map((item) => {
+          const centroide = calcularCentroide(item.geometry.coordinates[0]);
+          return {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: centroide,
+            },
+            properties: {
+              nombre: item.properties.nombre,
+              description: item.properties.description,
+              opacity: isPulverizacionDetail ? item.properties.opacity : 1,
+            },
+          };
+        }),
+      });
+
+      setStoredGeoJSON({
+        type: 'FeatureCollection',
+        features: storedPolygons?.map((item) => {
+          return {
+            type: 'Feature',
+            geometry: {
+              type: 'Polygon',
+              coordinates: [item.geometry.coordinates[0]],
+            },
+            properties: {
+              nombre: item.properties.nombre,
+              color: item.properties.color,
+              description: item.properties.description,
+              opacity: item.properties.opacity,
+            },
+          };
+        }),
+      });
+    }
+  }, [storedPolygons]);
+
   return (
     <div
       className={cn(
@@ -216,6 +272,48 @@ export default function MapboxMap({
             polygons={polygons}
           />
         )}
+        <Source id='stored-lotes-source' type='geojson' data={storedGeoJSON}>
+          <Layer
+            id='stored-borders-layer'
+            type='line'
+            paint={{
+              'line-color': ['get', 'color'],
+              'line-width': 4,
+              'line-opacity': ['get', 'opacity'],
+            }}
+          />
+          <Layer
+            id='stored-lotes-layer'
+            type='fill'
+            paint={{
+              'fill-color': ['get', 'color'],
+              'fill-opacity': ['get', 'opacity'],
+            }}
+          />
+        </Source>
+        <Source
+          id='stored-lotes-text-description-source'
+          type='geojson'
+          data={storedTextGeoJSON}
+        >
+          <Layer
+            id='stored-lotes-description-text-layer'
+            type='symbol'
+            layout={{
+              'text-field': ['get', 'description'],
+              'text-size': 12,
+              'text-anchor': 'center',
+              'text-justify': 'center',
+              'text-font': ['Open Sans Bold'],
+            }}
+            paint={{
+              'text-color': '#ffffff',
+              'text-halo-color': '#000000',
+              'text-halo-width': 1.2,
+              'text-opacity': ['get', 'opacity'],
+            }}
+          />
+        </Source>
         <Source id='lotes-source' type='geojson' data={geoJSON}>
           <Layer
             id='borders-layer'
