@@ -324,7 +324,7 @@ export default function AddOrEditCampoForm({
         e.stopPropagation();
         handleSubmit(onSubmit, onInvalidSubmit)(e);
       }}
-      className='space-y-4 px-4 pb-4 md:px-0 md:pb-0'
+      className='flex flex-col gap-4 px-4 pb-4 md:px-0 md:pb-0'
       id='form-add-campos'
     >
       <Input
@@ -411,6 +411,10 @@ export default function AddOrEditCampoForm({
           </DialogContent>
         </Dialog>
       )}
+      <p className='max-w-72 self-end text-end text-xs opacity-50'>
+        *Marcá los puntos y cerrá el área seleccionando el primer o último punto
+        que marcaste.
+      </p>
       <div className='flex h-[60dvh] w-full flex-col gap-4 overflow-y-auto md:justify-between'>
         <MapboxMap
           key={data?.Lote?.length}
