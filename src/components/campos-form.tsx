@@ -62,9 +62,11 @@ export default function AddOrEditCampoForm({
   isEdit,
   data,
   handleOpen,
+  storedData,
 }: {
   isEdit?: boolean;
   data?: Campo;
+  storedData?: Campo[];
   handleOpen: () => void;
 }) {
   const { push } = useRouter();
@@ -187,6 +189,40 @@ export default function AddOrEditCampoForm({
           } as PolygonFeature;
         }),
   );
+
+  const storedPolygons: PolygonFeature[][] =
+    storedData?.map((c) =>
+      (c.Lote as Lote[]).map((l) => {
+        const points = l.Coordinada as Coordinada[];
+
+        const groupedByLoteId = points.reduce(
+          (acc, coord) => {
+            const { lng, lat, lote_id } = coord as Required<Coordinada>;
+            if (!acc[lote_id]) acc[lote_id] = [];
+
+            acc[lote_id].push([lng, lat]);
+            return acc;
+          },
+          {} as Record<string, Position[]>,
+        );
+
+        return {
+          id: l.id as UUID,
+          type: 'Feature',
+          geometry: {
+            type: 'Polygon',
+            coordinates: Object.values(groupedByLoteId),
+          },
+          properties: {
+            description: `${l.nombre} (${l.hectareas?.toFixed(2)}ha)\n${c.nombre}`,
+            area: l.hectareas,
+            nombre: l.nombre,
+            color: l.color,
+            opacity: 0.65,
+          },
+        } as PolygonFeature;
+      }),
+    ) ?? [];
 
   const { open, setOpen, handleOpen: handleNewPolygonDialog } = useDialog();
   const [newPolygon, setNewPolygon] = useState<PolygonFeature | null>(null);
@@ -382,6 +418,7 @@ export default function AddOrEditCampoForm({
           onUpdate={onUpdate}
           onDelete={onDelete}
           polygons={polygons}
+          storedPolygons={storedPolygons.flat()}
         />
       </div>
       <div className='flex flex-col items-center gap-2 md:flex-row-reverse md:items-end'>

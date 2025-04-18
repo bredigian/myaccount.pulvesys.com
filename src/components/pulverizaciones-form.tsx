@@ -463,7 +463,7 @@ export default function AddOrEditPulverizacionForm({
           <MapboxMap
             polygons={polygons as PolygonFeature[]}
             className='col-span-full'
-            size='!h-[27dvh]'
+            size='!h-[27dvh] md:!h-[20dvh]'
             selectedCampo={selectedCampo}
             isPulverizacionDetail
           />
@@ -603,7 +603,7 @@ export default function AddOrEditPulverizacionForm({
             </Button>
           </aside>
         </div>
-        <ul className='max-h-36 space-y-4 overflow-auto'>
+        <ul className='max-h-36 space-y-4 overflow-auto' data-vaul-no-drag>
           {aplicaciones.map((aplicacion, index) => (
             <li key={`aplicacion-${index}`} className='grid grid-cols-10 gap-4'>
               <Select

@@ -1,8 +1,10 @@
-import { AddOrEditCampoDialog } from '@/components/campos-dialog';
+import AddCampoContainer from '@/components/add-campo-container';
+import { Button } from '@/components/ui/button';
 import CamposContainer from '@/components/campos-container';
-import Finder from '@/components/finder';
-import { Suspense } from 'react';
 import { CamposMasonrySkeleton } from '@/components/masonry-skeleton';
+import Finder from '@/components/finder';
+import { ReloadIcon } from '@radix-ui/react-icons';
+import { Suspense } from 'react';
 
 interface Props {
   searchParams: Promise<{
@@ -18,7 +20,15 @@ export default async function Campos({ searchParams }: Props) {
       <h2>Administra las ubicaciones en los que se realizan los trabajos.</h2>
       <aside id='finder' className='flex items-center justify-between gap-4'>
         <Finder />
-        <AddOrEditCampoDialog />
+        <Suspense
+          fallback={
+            <Button disabled size={'icon'}>
+              <ReloadIcon className='animate-spin' />
+            </Button>
+          }
+        >
+          <AddCampoContainer />
+        </Suspense>
       </aside>
       <Suspense fallback={<CamposMasonrySkeleton />}>
         <CamposContainer query={nombre} />
