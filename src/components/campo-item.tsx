@@ -88,7 +88,7 @@ export default function CampoItem({ data }: Props) {
           {show && (
             <MapboxMap
               polygons={polygonsData}
-              size='!h-[20dvh]'
+              size='!h-[40dvh]'
               customZoom={13}
             />
           )}

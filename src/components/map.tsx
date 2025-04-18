@@ -60,7 +60,7 @@ const DrawControl = ({
             'circle-stroke-color': '#ffffff', // borde oscuro
             'circle-stroke-opacity': 0.25,
             'circle-opacity': 0.25,
-            'circle-translate': [40, 0],
+            'circle-translate': [0, 60],
           },
         },
       ],

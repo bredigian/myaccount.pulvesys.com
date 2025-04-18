@@ -463,7 +463,7 @@ export default function AddOrEditPulverizacionForm({
           <MapboxMap
             polygons={polygons as PolygonFeature[]}
             className='col-span-full'
-            size='!h-[20dvh]'
+            size='!h-[27dvh]'
             selectedCampo={selectedCampo}
             isPulverizacionDetail
           />
