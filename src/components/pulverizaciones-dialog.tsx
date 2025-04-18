@@ -57,7 +57,7 @@ export const AddOrEditPulverizacionDialog = ({ data }: Props) => {
 
   return isMobile ? (
     <>
-      <Drawer dismissible={false} open={open} onOpenChange={setOpen}>
+      <Drawer open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>
           <Button id='add-pulverizacion__button'>
             Crear

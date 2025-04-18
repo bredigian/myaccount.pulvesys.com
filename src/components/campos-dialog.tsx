@@ -70,11 +70,7 @@ export const AddOrEditCampoDialog = ({
   const isMobile = useIsMobile();
 
   return isMobile ? (
-    <Drawer
-      open={customOpen ?? open}
-      onOpenChange={customSetOpen ?? setOpen}
-      dismissible={false}
-    >
+    <Drawer open={customOpen ?? open} onOpenChange={customSetOpen ?? setOpen}>
       {!hidden && (
         <DrawerTrigger asChild>
           {!isEdit ? (

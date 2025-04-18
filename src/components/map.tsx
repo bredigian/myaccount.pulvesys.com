@@ -187,6 +187,7 @@ export default function MapboxMap({
         size ?? '!h-[40dvh]',
         className,
       )}
+      data-vaul-no-drag
     >
       <Map
         initialViewState={{
@@ -204,6 +205,7 @@ export default function MapboxMap({
         dragPan
         touchZoomRotate
         touchPitch
+        data-vaul-no-drag
       >
         {selectedCampo && <FlyTo selectedCampo={selectedCampo} />}
         {onCreate && onUpdate && onDelete && (
