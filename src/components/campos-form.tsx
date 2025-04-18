@@ -260,6 +260,7 @@ export default function AddOrEditCampoForm({
           color: polygonColor,
           area: polygonArea,
           description: `${polygonName} (${polygonArea.toFixed(2)}ha)`,
+          opacity: 0.65,
         },
       };
       setPolygons((prev) => [...prev, updatedPolygon]);
