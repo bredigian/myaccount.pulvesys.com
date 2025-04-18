@@ -14,6 +14,7 @@ import { calcularCentroide, cn } from '@/lib/utils';
 import { useEffect, useRef, useState } from 'react';
 
 import { FeatureCollection } from 'geojson';
+import { MAPBOX_DEFAULT_STYLES } from '@/assets/mapbox-styles';
 import { PolygonFeature } from './campos-form';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
@@ -41,6 +42,28 @@ const DrawControl = ({
         polygon: true,
         trash: true,
       },
+      styles: [
+        ...MAPBOX_DEFAULT_STYLES,
+        {
+          id: 'custom-vertex',
+          type: 'circle',
+          filter: [
+            'all',
+            ['==', '$type', 'Point'],
+            ['==', 'meta', 'vertex'],
+            ['==', 'active', 'true'],
+          ],
+          paint: {
+            'circle-radius': 16, // tamaño del vértice
+            'circle-color': '#000000', // color de fondo (turquesa tipo Bulma)
+            'circle-stroke-width': 3,
+            'circle-stroke-color': '#ffffff', // borde oscuro
+            'circle-stroke-opacity': 0.25,
+            'circle-opacity': 0.25,
+            'circle-translate': [40, 0],
+          },
+        },
+      ],
     });
 
     drawRef.current = draw;
