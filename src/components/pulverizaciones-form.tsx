@@ -337,6 +337,7 @@ export default function AddOrEditPulverizacionForm({
       onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
       className='grid max-h-[86dvh] grid-cols-10 gap-4 overflow-y-auto px-4 pb-4 md:px-0 md:pb-0'
       id='form-add-pulverizacion'
+      data-vaul-no-drag
     >
       <Popover open={calendarDialog.open} onOpenChange={calendarDialog.setOpen}>
         <PopoverTrigger asChild>

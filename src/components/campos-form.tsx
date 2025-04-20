@@ -326,6 +326,7 @@ export default function AddOrEditCampoForm({
       }}
       className='flex flex-col gap-4 px-4 pb-4 md:px-0 md:pb-0'
       id='form-add-campos'
+      data-vaul-no-drag
     >
       <Input
         {...register('nombre', {
