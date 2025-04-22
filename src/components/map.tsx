@@ -128,7 +128,7 @@ interface Props {
 
   polygons: PolygonFeature[];
   storedPolygons?: PolygonFeature[];
-  polygonInDrawing: PolygonFeature | null;
+  polygonInDrawing?: PolygonFeature | null;
 
   isPulverizacionDetail?: boolean;
 }
@@ -307,7 +307,7 @@ export default function MapboxMap({
             onUpdate={onUpdate}
             onDelete={onDelete}
             polygons={polygons}
-            polygonInDrawing={polygonInDrawing}
+            polygonInDrawing={polygonInDrawing as PolygonFeature | null}
             handleDrawMode={handleDrawMode}
           />
         )}
