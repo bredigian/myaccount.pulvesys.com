@@ -425,6 +425,7 @@ export default function AddOrEditCampoForm({
           onDelete={onDelete}
           polygons={polygons}
           storedPolygons={storedPolygons.flat()}
+          polygonInDrawing={newPolygon}
         />
       </div>
       <div className='flex flex-col items-center gap-2 md:flex-row-reverse md:items-end'>

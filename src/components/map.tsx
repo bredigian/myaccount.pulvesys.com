@@ -8,14 +8,18 @@ import { Layer, Map, Source, useControl, useMap } from 'react-map-gl/mapbox';
 import MapboxDraw, {
   DrawCreateEvent,
   DrawDeleteEvent,
+  DrawMode,
+  DrawModeChangeEvent,
   DrawUpdateEvent,
 } from '@mapbox/mapbox-gl-draw';
 import { calcularCentroide, cn } from '@/lib/utils';
 import { useEffect, useRef, useState } from 'react';
 
+import { Check } from 'lucide-react';
 import { FeatureCollection } from 'geojson';
 import { MAPBOX_DEFAULT_STYLES } from '@/assets/mapbox-styles';
 import { PolygonFeature } from './campos-form';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 const MAP_STYLE = 'mapbox://styles/mapbox/satellite-v9';
@@ -24,14 +28,22 @@ interface DrawControlProps {
   onCreate: (e: DrawCreateEvent) => void;
   onUpdate: (e: DrawUpdateEvent) => void;
   onDelete: (e: DrawDeleteEvent) => void;
+
   polygons: PolygonFeature[];
+  polygonInDrawing: PolygonFeature | null;
+
+  handleDrawMode: (value: DrawMode) => void;
 }
 
 const DrawControl = ({
   onCreate,
   onUpdate,
   onDelete,
+
   polygons,
+  polygonInDrawing,
+
+  handleDrawMode,
 }: DrawControlProps) => {
   const drawRef = useRef<MapboxDraw | null>(null);
 
@@ -72,6 +84,9 @@ const DrawControl = ({
     map.on('draw.create', onCreate);
     map.on('draw.update', onUpdate);
     map.on('draw.delete', onDelete);
+    map.on('draw.modechange', (e: DrawModeChangeEvent) =>
+      handleDrawMode(e.mode),
+    );
 
     return draw;
   });
@@ -81,7 +96,7 @@ const DrawControl = ({
       type: 'FeatureCollection',
       features: polygons,
     });
-  }, [polygons]);
+  }, [polygons, polygonInDrawing]);
 
   return null;
 };
@@ -113,6 +128,7 @@ interface Props {
 
   polygons: PolygonFeature[];
   storedPolygons?: PolygonFeature[];
+  polygonInDrawing: PolygonFeature | null;
 
   isPulverizacionDetail?: boolean;
 }
@@ -131,7 +147,11 @@ export default function MapboxMap({
   storedPolygons,
 
   isPulverizacionDetail,
+  polygonInDrawing,
 }: Props) {
+  const [drawMode, setDrawMode] = useState<DrawMode | null>(null);
+  const handleDrawMode = (value: DrawMode) => setDrawMode(value);
+
   const [geoJSON, setGeoJSON] = useState<FeatureCollection>({
     type: 'FeatureCollection',
     features: [],
@@ -236,6 +256,8 @@ export default function MapboxMap({
     }
   }, [storedPolygons]);
 
+  const isMobile = useIsMobile();
+
   return (
     <div
       className={cn(
@@ -263,6 +285,21 @@ export default function MapboxMap({
         touchPitch
         data-vaul-no-drag
       >
+        {drawMode === 'draw_polygon' && (
+          <div className='absolute z-[99999] ml-2 mt-2 flex w-fit items-center gap-2 rounded-md bg-green-800 px-2 py-1 drop-shadow-xl'>
+            <p className='font-bold'>Modo dibujo activado</p>
+            <Check size={16} />
+          </div>
+        )}
+        {isMobile && drawMode === 'draw_polygon' && (
+          <div className='absolute bottom-0 z-[99999] w-fit rounded-md bg-yellow-500 px-2 py-1 text-primary-foreground drop-shadow-xl'>
+            <p className='font-bold'>
+              Procurá marcar los puntos con un buen zoom ya que el tacto con el
+              dedo es muy sensible y puede cerrarte el poligono a pesar de que
+              no sea tu intención.
+            </p>
+          </div>
+        )}
         {selectedCampo && <FlyTo selectedCampo={selectedCampo} />}
         {onCreate && onUpdate && onDelete && (
           <DrawControl
@@ -270,6 +307,8 @@ export default function MapboxMap({
             onUpdate={onUpdate}
             onDelete={onDelete}
             polygons={polygons}
+            polygonInDrawing={polygonInDrawing}
+            handleDrawMode={handleDrawMode}
           />
         )}
         <Source id='stored-lotes-source' type='geojson' data={storedGeoJSON}>
