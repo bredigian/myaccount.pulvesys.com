@@ -5,7 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from './ui/card';
-import { Leaf, ListCheckIcon, Tag, User } from 'lucide-react';
+import { CloudOffIcon, Leaf, ListCheckIcon, Tag, User } from 'lucide-react';
 
 import { Badge } from './ui/badge';
 import { DateTime } from 'luxon';
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export default function PulverizacionItem({ pulverizacion }: Props) {
-  const { id, usuario, detalle, fecha, Aplicacion } = pulverizacion;
+  const { id, usuario, detalle, fecha, Aplicacion, productos } = pulverizacion;
   const isFromEmployer = usuario?.rol === 'INDIVIDUAL' && usuario.empresa_id;
 
   return (
@@ -31,8 +31,8 @@ export default function PulverizacionItem({ pulverizacion }: Props) {
       >
         <Card className='h-full w-full duration-200 ease-in-out hover:cursor-pointer hover:bg-secondary'>
           <CardHeader>
-            <CardTitle className='flex items-start justify-between gap-4'>
-              <h4 className='truncate text-base font-semibold'>
+            <CardTitle className='flex items-center justify-between gap-4'>
+              <h4 className='grow truncate text-base font-semibold'>
                 {detalle.campo?.nombre}
               </h4>
               <p className='w-fit text-end text-sm font-normal'>
@@ -43,6 +43,11 @@ export default function PulverizacionItem({ pulverizacion }: Props) {
                   },
                 )}
               </p>
+              {!id && (
+                <div className='rounded-md bg-yellow-300 p-1'>
+                  <CloudOffIcon className='size-4' />
+                </div>
+              )}
             </CardTitle>
           </CardHeader>
           <CardContent className='space-y-4'>
@@ -81,13 +86,19 @@ export default function PulverizacionItem({ pulverizacion }: Props) {
               </Badge>
             </div>
             <ul className='flex flex-wrap items-center gap-2'>
-              {Aplicacion?.map((aplicacion) => (
-                <li key={`pulverizacion-aplicacion__${aplicacion.id}`}>
-                  <Badge variant={'secondary'}>
-                    {aplicacion.producto?.nombre}
-                  </Badge>
-                </li>
-              ))}
+              {Aplicacion
+                ? Aplicacion?.map((aplicacion) => (
+                    <li key={`pulverizacion-aplicacion__${aplicacion.id}`}>
+                      <Badge variant={'secondary'}>
+                        {aplicacion.producto?.nombre}
+                      </Badge>
+                    </li>
+                  ))
+                : productos?.map((p) => (
+                    <li key={`pulverizacion-aplicacion__${p.producto_id}`}>
+                      <Badge variant={'secondary'}>{p.producto?.nombre}</Badge>
+                    </li>
+                  ))}
             </ul>
           </CardContent>
           {isFromEmployer && (

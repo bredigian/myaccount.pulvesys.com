@@ -1,3 +1,4 @@
+import { CultivosStore, PendingSyncStore } from '@/db/store';
 import { FieldErrors, useForm } from 'react-hook-form';
 import { addCultivo, editCultivo } from '@/services/cultivos.service';
 
@@ -11,6 +12,7 @@ import { ReloadIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
+import { useNetworkState } from '@uidotdev/usehooks';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -41,6 +43,9 @@ export default function AddOrEditCultivoForm({
     if (errors.nombre)
       toast.error(errors.nombre.message, { position: 'top-center' });
   };
+
+  const { online } = useNetworkState();
+
   const onSubmit = async (values: Cultivo) => {
     try {
       const PAYLOAD: Cultivo = {
@@ -56,8 +61,22 @@ export default function AddOrEditCultivoForm({
         return;
       }
 
-      if (!isEdit) await addCultivo(PAYLOAD, access_token);
-      else await editCultivo(PAYLOAD, access_token);
+      if (online)
+        if (!isEdit)
+          // Ejecuta la query al backend ya que esta online
+          await addCultivo(PAYLOAD, access_token);
+        else await editCultivo(PAYLOAD, access_token);
+      else {
+        await CultivosStore.saveOne(PAYLOAD);
+        // Guarda la peticion en IndexedDB para que cuando se re-conecte a la red, haga las query pendientes.
+        await PendingSyncStore.saveOne(
+          PAYLOAD,
+          'cultivo',
+          '/v1/cultivos',
+          !isEdit ? 'POST' : 'PUT',
+        );
+      }
+
       await revalidate('cultivos');
       await revalidate('historial');
 

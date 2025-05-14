@@ -1,4 +1,5 @@
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
+import { PendingSyncStore, ProductosStore } from '@/db/store';
 import { Producto, UNIDAD } from '@/types/productos.types';
 import {
   Select,
@@ -18,6 +19,7 @@ import { ReloadIcon } from '@radix-ui/react-icons';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
+import { useNetworkState } from '@uidotdev/usehooks';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -58,6 +60,9 @@ export default function AddOrEditProductoForm({
     else if (errors.unidad)
       toast.error(errors.unidad.message, { position: 'top-center' });
   };
+
+  const { online } = useNetworkState();
+
   const onSubmit = async (values: Producto) => {
     try {
       const PAYLOAD: Producto = {
@@ -74,9 +79,24 @@ export default function AddOrEditProductoForm({
         return;
       }
 
-      if (!isEdit) await addProducto(PAYLOAD, access_token);
-      else await editProducto(PAYLOAD, access_token);
+      if (online)
+        if (!isEdit)
+          // Ejecuta la query al backend ya que esta online
+          await addProducto(PAYLOAD, access_token);
+        else await editProducto(PAYLOAD, access_token);
+      else {
+        await ProductosStore.saveOne(PAYLOAD);
+        // Guarda la peticion en IndexedDB para que cuando se re-conecte a la red, haga las query pendientes.
+        await PendingSyncStore.saveOne(
+          PAYLOAD,
+          'producto',
+          '/v1/productos',
+          !isEdit ? 'POST' : 'PUT',
+        );
+      }
+
       await revalidate('productos');
+      await revalidate('historial');
 
       setIsSubmitSuccessful(true);
       setTimeout(() => handleOpen(), 1000);

@@ -22,6 +22,7 @@ import {
   DrawerTrigger,
 } from './ui/drawer';
 import { Dialog as TDialog, useDialog } from '@/hooks/use-dialog';
+import { useEffect, useState } from 'react';
 
 import { APIError } from '@/types/error.types';
 import { AddOrEditCampoDialog } from './campos-dialog';
@@ -30,6 +31,7 @@ import { AddOrEditProductoDialog } from './productos-dialog';
 import AddOrEditPulverizacionForm from './pulverizaciones-form';
 import { AddOrEditTratamientoDialog } from './tratamientos-dialog';
 import { AllData } from '@/types/root.types';
+import { AllDataStore } from '@/db/store';
 import { Button } from './ui/button';
 import Cookies from 'js-cookie';
 import { ReloadIcon } from '@radix-ui/react-icons';
@@ -40,13 +42,13 @@ import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 interface Props {
   data: AllData;
+  storeData?: boolean;
 }
 
-export const AddOrEditPulverizacionDialog = ({ data }: Props) => {
+export const AddOrEditPulverizacionDialog = ({ data, storeData }: Props) => {
   const { open, setOpen, handleOpen } = useDialog();
   const addCampoDialog = useDialog();
   const addCultivoDialog = useDialog();
@@ -54,6 +56,15 @@ export const AddOrEditPulverizacionDialog = ({ data }: Props) => {
   const addProductoDialog = useDialog();
 
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    // Guarda TODOS los datos necesarios para registrar una nueva pulverizacion en local
+    const handleSaveAllDataInLocal = async () => {
+      await AllDataStore.save(data);
+    };
+
+    if (storeData) handleSaveAllDataInLocal();
+  }, [data]);
 
   return isMobile ? (
     <>

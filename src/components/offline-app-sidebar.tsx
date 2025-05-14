@@ -3,12 +3,6 @@
 import * as React from 'react';
 
 import {
-  ENTERPRISE_ROUTES,
-  EXTRAS_ROUTES,
-  ROUTES,
-  SUBSCRIPTION_ROUTES,
-} from '@/routes';
-import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -23,20 +17,12 @@ import Link from 'next/link';
 import { NavSection } from '@/components/nav-section';
 import { NavSettings } from './nav-settings';
 import { NavUser } from '@/components/nav-user';
-import { ROLES } from '@/types/usuario.types';
+import { OFFLINE_ROUTES } from '@/routes';
 import original from '../../public/logo_dalle.webp';
-import { usuarioStore } from '@/store/usuario.store';
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { rol, isEmployer, suscripcion } = usuarioStore();
-
-  const { free_trial, next_payment_date, status } = suscripcion || {};
-
-  const now = Date.now();
-  const endSuscripcionDate = new Date(next_payment_date as string).getTime();
-
-  const isFreeTrialExpired = !free_trial && now > endSuscripcionDate;
-
+export function OfflineAppSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar variant='inset' {...props}>
       <SidebarHeader>
@@ -54,9 +40,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <span className='flex items-center gap-2 font-semibold'>
                     PulveSys
                     <h2 className='w-fit rounded-md bg-primary/60 px-1.5 py-0.5 text-xs font-normal text-primary-foreground'>
-                      {isEmployer
-                        ? 'Empleado'
-                        : ROLES[rol as keyof typeof ROLES]}
+                      Sin conexión
                     </h2>
                   </span>
                   <p className='truncate text-xs'>Órdenes de pulverización</p>
@@ -67,39 +51,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        {rol === 'EMPRESA' && (
-          <NavSection
-            title='Inicio'
-            items={ENTERPRISE_ROUTES}
-            isDisabled={
-              status !== 'authorized' &&
-              (isFreeTrialExpired || status === 'paused')
-            }
-          />
-        )}
-        <NavSection
-          title='Administración'
-          items={ROUTES}
-          isDisabled={
-            status !== 'authorized' &&
-            (isFreeTrialExpired || status === 'paused')
-          }
-        />
-        {!isEmployer && (
-          <NavSection title='Suscripción' items={SUBSCRIPTION_ROUTES} />
-        )}
-        <NavSection
-          title='Extra'
-          items={EXTRAS_ROUTES}
-          isDisabled={
-            status !== 'authorized' &&
-            (isFreeTrialExpired || status === 'paused')
-          }
-        />
+        <NavSection title='Inicio' items={OFFLINE_ROUTES} />
       </SidebarContent>
       <SidebarFooter>
         <NavSettings />
-        <NavUser mode='online' />
+        <NavUser mode={'offline'} />
       </SidebarFooter>
     </Sidebar>
   );

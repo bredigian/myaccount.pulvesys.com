@@ -12,9 +12,11 @@ import { FieldErrors, useForm } from 'react-hook-form';
 
 import { APIError } from '@/types/error.types';
 import { Button } from './ui/button';
+import { DateTime } from 'luxon';
 import { Input } from './ui/input';
 import Link from 'next/link';
 import { ReloadIcon } from '@radix-ui/react-icons';
+import { SessionStore } from '@/db/store';
 import { UsuarioToSignin } from '@/types/usuario.types';
 import { cn } from '@/lib/utils';
 import { signin } from '@/services/auth.service';
@@ -42,12 +44,18 @@ export default function SigninForm() {
 
   const onSubmit = async (values: UsuarioToSignin) => {
     try {
-      const { userdata } = await signin({
+      const { userdata, access_token } = await signin({
         ...values,
         nombre_usuario: (values?.nombre_usuario as string)?.trim(),
       });
 
       const { rol } = userdata;
+
+      await SessionStore.save(
+        access_token,
+        userdata,
+        DateTime.now().plus({ days: 2 }).toUTC().toMillis(),
+      ); // Guarda la session en IndexedDB para futuros accesos offline
 
       setSuccess(true);
       setTimeout(() => push(rol === 'EMPRESA' ? '/empresa' : '/panel'), 1000);

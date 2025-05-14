@@ -44,6 +44,35 @@ export const ROUTES: Route[] = [
   },
 ];
 
+export const OFFLINE_ROUTES: Route[] = [
+  {
+    title: 'Pulverizaciones',
+    url: '/offline/panel',
+    icon: Droplets,
+    isActive: true,
+  },
+  {
+    title: 'Productos',
+    url: '/offline/panel/productos',
+    icon: Package,
+  },
+  {
+    title: 'Cultivos & Tratamientos',
+    url: '/offline/panel/cultivos&tratamientos',
+    icon: Leaf,
+  },
+  {
+    title: 'Ubicaciones',
+    url: '/offline/panel/campos',
+    icon: MapIcon,
+  },
+  {
+    title: 'Historial',
+    url: '/offline/panel/historial',
+    icon: History,
+  },
+];
+
 export const ENTERPRISE_ROUTES: Route[] = [
   {
     title: 'Panel',

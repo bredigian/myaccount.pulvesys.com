@@ -26,6 +26,7 @@ import { Button } from './ui/button';
 import Cookies from 'js-cookie';
 import { LogOut } from 'lucide-react';
 import { ReloadIcon } from '@radix-ui/react-icons';
+import { SessionStore } from '@/db/store';
 import { cn } from '@/lib/utils';
 import { signout } from '@/services/auth.service';
 import { toast } from 'sonner';
@@ -39,9 +40,10 @@ type State = 'pending' | 'success' | 'error';
 
 interface Props {
   showText?: boolean;
+  offlineModeActive?: boolean;
 }
 
-export default function LogoutDialog({ showText }: Props) {
+export default function LogoutDialog({ showText, offlineModeActive }: Props) {
   const { open, setOpen } = useDialog();
   const { push, refresh } = useRouter();
   const { clearUserdata } = usuarioStore();
@@ -51,6 +53,14 @@ export default function LogoutDialog({ showText }: Props) {
   const handleLogout = async () => {
     try {
       setState('pending');
+
+      if (offlineModeActive) {
+        await SessionStore.clear();
+        setState('success');
+        push('/offline');
+
+        return;
+      }
 
       const access_token = Cookies.get('access_token');
       if (!access_token) {

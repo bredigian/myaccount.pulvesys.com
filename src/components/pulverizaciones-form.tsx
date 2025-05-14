@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { Dialog, useDialog } from '@/hooks/use-dialog';
+import { PendingSyncStore, PulverizacionStore } from '@/db/store';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { SHORT_UNIDAD, UNIDAD } from '@/types/productos.types';
 import {
@@ -45,6 +46,7 @@ import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useControllerAplicaciones } from '@/hooks/use-productos';
 import { useDebouncedCallback } from 'use-debounce';
+import { useNetworkState } from '@uidotdev/usehooks';
 import { useRouter } from 'next/navigation';
 
 interface PulverizacionExtended extends Pulverizacion {
@@ -224,6 +226,9 @@ export default function AddOrEditPulverizacionForm({
         });
     }
   };
+
+  const { online } = useNetworkState();
+
   const onSubmit = async (values: Pulverizacion) => {
     if (selectedLotes.length === 0) {
       toast.error('No hay lotes seleccionados.', {
@@ -264,8 +269,37 @@ export default function AddOrEditPulverizacionForm({
         return;
       }
 
-      await addPulverizacion(PAYLOAD, access_token);
+      console.log(online);
+
+      if (online) await addPulverizacion(PAYLOAD, access_token);
+      else {
+        const PAYLOAD_FULLDATA: Pulverizacion = {
+          ...PAYLOAD,
+          detalle: {
+            ...PAYLOAD.detalle,
+            campo: data.campos.find((c) => c.id === PAYLOAD.detalle.campo_id),
+            cultivo: data.cultivos.find(
+              (c) => c.id === PAYLOAD.detalle.cultivo_id,
+            ),
+            tratamiento: data.tratamientos.find(
+              (t) => t.id === PAYLOAD.detalle.tratamiento_id,
+            ),
+          },
+          productos: PAYLOAD.productos.map((p) => ({
+            ...p,
+            producto: data.productos.find((sp) => sp.id === p.producto_id),
+          })),
+        };
+        await PulverizacionStore.saveOne(PAYLOAD_FULLDATA);
+        await PendingSyncStore.saveOne(
+          PAYLOAD,
+          'pulverizacion',
+          '/v1/pulverizaciones',
+          'POST',
+        );
+      }
       await revalidate('pulverizaciones');
+      await revalidate('historial');
 
       setIsSubmitSuccessful(true);
 

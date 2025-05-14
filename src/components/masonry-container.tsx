@@ -1,20 +1,36 @@
 'use client';
 
-import { Pulverizacion } from '@/types/pulverizaciones.types';
-import PulverizacionItem from './pulverizacion-item';
-import { Masonry } from './masonry';
-import { Campo } from '@/types/campos.types';
-import CampoItem from './campo-item';
 import {
   CamposMasonrySkeleton,
   PulverizacionesMasonrySkeleton,
 } from './masonry-skeleton';
+
+import { Campo } from '@/types/campos.types';
+import CampoItem from './campo-item';
+import { Masonry } from './masonry';
+import { Pulverizacion } from '@/types/pulverizaciones.types';
+import PulverizacionItem from './pulverizacion-item';
+import { PulverizacionStore } from '@/db/store';
+import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 export const PulverizacionesGridContainer = ({
   data,
 }: {
   data: Pulverizacion[];
 }) => {
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const saveDataToLocal = async () => {
+      for (const i of data) {
+        const exists = await PulverizacionStore.getById(i.id);
+        if (!exists) await PulverizacionStore.saveOne(i);
+      }
+    };
+    if (!pathname.includes('offline')) saveDataToLocal();
+  }, []);
+
   return (
     <Masonry
       items={data}
@@ -23,9 +39,9 @@ export const PulverizacionesGridContainer = ({
         gap: [16, 16, 16, 16, 16],
         media: [768, 1024, 1280, 1400, 1536],
       }}
-      render={(pulverizacion) => (
+      render={(pulverizacion, index) => (
         <PulverizacionItem
-          key={pulverizacion.id}
+          key={pulverizacion.id || `pulverizacion_no_stored_${index}`}
           pulverizacion={pulverizacion}
         />
       )}

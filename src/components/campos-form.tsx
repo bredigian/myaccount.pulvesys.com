@@ -1,6 +1,7 @@
 'use client';
 
 import { Campo, Coordinada, Lote } from '@/types/campos.types';
+import { CamposStore, PendingSyncStore } from '@/db/store';
 import {
   Dialog,
   DialogClose,
@@ -44,6 +45,7 @@ import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useNetworkState } from '@uidotdev/usehooks';
 import { useRouter } from 'next/navigation';
 
 interface PolygonProperties {
@@ -89,6 +91,8 @@ export default function AddOrEditCampoForm({
         position: 'top-center',
       });
   };
+
+  const { online } = useNetworkState();
 
   const onSubmit = async (values: Campo) => {
     try {
@@ -137,13 +141,27 @@ export default function AddOrEditCampoForm({
         return;
       }
 
-      if (!isEdit) await addCampo(PAYLOAD, access_token);
-      else await editCampo(PAYLOAD, access_token);
+      if (online)
+        if (!isEdit)
+          // Ejecuta la query al backend ya que esta online
+          await addCampo(PAYLOAD, access_token);
+        else await editCampo(PAYLOAD, access_token);
+      else {
+        await CamposStore.saveOne(PAYLOAD);
+        // Guarda la peticion en IndexedDB para que cuando se re-conecte a la red, haga las query pendientes.
+        await PendingSyncStore.saveOne(
+          PAYLOAD,
+          'campo',
+          '/v1/campos',
+          !isEdit ? 'POST' : 'PATCH',
+        );
+      }
 
       setIsSubmitSuccessful(true);
       setTimeout(() => handleOpen(), 1000);
 
       await revalidate('campos');
+      await revalidate('historial');
     } catch (error) {
       const { statusCode, message } = error as APIError;
 

@@ -6,7 +6,11 @@ import { SidebarMenu, SidebarMenuItem } from '@/components/ui/sidebar';
 import LogoutDialog from './logout-dialog';
 import { usuarioStore } from '@/store/usuario.store';
 
-export function NavUser() {
+interface Props {
+  mode: 'online' | 'offline';
+}
+
+export function NavUser({ mode }: Props) {
   const { nombre_usuario, nombre, apellido } = usuarioStore();
   const avatar = nombre
     ?.charAt(0)
@@ -27,7 +31,7 @@ export function NavUser() {
             <span className='truncate text-xs'>@{nombre_usuario}</span>
           </div>
         </div>
-        <LogoutDialog />
+        <LogoutDialog offlineModeActive={mode === 'offline'} />
       </SidebarMenuItem>
     </SidebarMenu>
   );

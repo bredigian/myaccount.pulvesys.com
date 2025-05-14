@@ -30,6 +30,7 @@ import {
   DrawerTrigger,
 } from './ui/drawer';
 import { Select, SelectContent, SelectItem, SelectTrigger } from './ui/select';
+import { Sesion, UsuarioToSignup } from '@/types/usuario.types';
 
 import { APIError } from '@/types/error.types';
 import { Badge } from './ui/badge';
@@ -42,8 +43,8 @@ import PhoneNumberInput from './phone-number-input';
 import { Plan } from '@/types/planes.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { SelectValue } from '@radix-ui/react-select';
+import { SessionStore } from '@/db/store';
 import TerminosCondiciones from './terminos&condiciones';
-import { UsuarioToSignup } from '@/types/usuario.types';
 import { cn } from '@/lib/utils';
 import { signup } from '@/services/auth.service';
 import { toast } from 'sonner';
@@ -109,7 +110,15 @@ export default function SignupForm({ planes }: Props) {
         confirmar_contrasena: undefined,
         terminos_condiciones: undefined,
       };
-      await signup(PAYLOAD);
+      const { access_token, userdata, expireIn } = (await signup(
+        PAYLOAD,
+      )) as Sesion;
+
+      await SessionStore.save(
+        access_token,
+        userdata,
+        new Date(expireIn).getTime(),
+      ); // Guarda la session en IndexedDB para futuros accesos offline
 
       setSuccess(true);
       setTimeout(() => push('/panel'), 1000);

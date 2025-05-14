@@ -1,4 +1,5 @@
 import { FieldErrors, useForm } from 'react-hook-form';
+import { PendingSyncStore, TratamientosStore } from '@/db/store';
 import {
   addTratamiento,
   editTratamiento,
@@ -15,6 +16,7 @@ import { Tratamiento } from '@/types/tratamientos.types';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
+import { useNetworkState } from '@uidotdev/usehooks';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -45,6 +47,9 @@ export default function AddOrEditTratamientoForm({
     if (errors.nombre)
       toast.error(errors.nombre.message, { position: 'top-center' });
   };
+
+  const { online } = useNetworkState();
+
   const onSubmit = async (values: Cultivo) => {
     try {
       const PAYLOAD: Cultivo = {
@@ -60,9 +65,23 @@ export default function AddOrEditTratamientoForm({
         return;
       }
 
-      if (!isEdit) await addTratamiento(PAYLOAD, access_token);
-      else await editTratamiento(PAYLOAD, access_token);
+      if (online)
+        if (!isEdit)
+          // Ejecuta la query al backend ya que esta online
+          await addTratamiento(PAYLOAD, access_token);
+        else await editTratamiento(PAYLOAD, access_token);
+      else {
+        TratamientosStore.saveOne(PAYLOAD);
+        // Guarda la peticion en IndexedDB para que cuando se re-conecte a la red, haga las query pendientes.
+        await PendingSyncStore.saveOne(
+          PAYLOAD,
+          'tratamiento',
+          '/v1/tratamientos',
+          !isEdit ? 'POST' : 'PUT',
+        );
+      }
       await revalidate('tratamientos');
+      await revalidate('historial');
 
       setIsSubmitSuccessful(true);
       setTimeout(() => handleOpen(), 1000);
