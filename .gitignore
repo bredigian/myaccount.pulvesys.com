@@ -13,6 +13,9 @@
 # testing
 /coverage
 
+# service worker
+/public/sw.js
+
 # next.js
 /.next/
 /out/
