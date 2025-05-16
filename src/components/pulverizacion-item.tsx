@@ -19,7 +19,8 @@ interface Props {
 }
 
 export default function PulverizacionItem({ pulverizacion }: Props) {
-  const { id, usuario, detalle, fecha, Aplicacion, productos } = pulverizacion;
+  const { id, usuario, detalle, fecha, Aplicacion, productos, isCached } =
+    pulverizacion;
   const isFromEmployer = usuario?.rol === 'INDIVIDUAL' && usuario.empresa_id;
 
   return (
@@ -43,8 +44,8 @@ export default function PulverizacionItem({ pulverizacion }: Props) {
                   },
                 )}
               </p>
-              {!id && (
-                <div className='rounded-md bg-yellow-300 p-1'>
+              {isCached && (
+                <div className='rounded-md bg-yellow-300 p-1 dark:text-primary-foreground'>
                   <CloudOffIcon className='size-4' />
                 </div>
               )}

@@ -10,7 +10,6 @@ import CampoItem from './campo-item';
 import { Masonry } from './masonry';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import PulverizacionItem from './pulverizacion-item';
-import { PulverizacionStore } from '@/db/store';
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
@@ -21,15 +20,14 @@ export const PulverizacionesGridContainer = ({
 }) => {
   const pathname = usePathname();
 
+  const saveDataToLocal = async () => {
+    const cache = await caches.open('api-cache');
+    await cache.put('/api/pulverizaciones', new Response(JSON.stringify(data)));
+  };
+
   useEffect(() => {
-    const saveDataToLocal = async () => {
-      for (const i of data) {
-        const exists = await PulverizacionStore.getById(i.id);
-        if (!exists) await PulverizacionStore.saveOne(i);
-      }
-    };
     if (!pathname.includes('offline')) saveDataToLocal();
-  }, []);
+  }, [data]);
 
   return (
     <Masonry

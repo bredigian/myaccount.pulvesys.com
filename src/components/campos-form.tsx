@@ -1,7 +1,6 @@
 'use client';
 
 import { Campo, Coordinada, Lote } from '@/types/campos.types';
-import { CamposStore, PendingSyncStore } from '@/db/store';
 import {
   Dialog,
   DialogClose,
@@ -37,10 +36,12 @@ import ColorPicker from './color-picker';
 import Cookies from 'js-cookie';
 import { Input } from './ui/input';
 import MapboxMap from './map';
+import { PendingSyncStore } from '@/db/store';
 import { Position } from 'geojson';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { UUID } from 'crypto';
 import { cn } from '@/lib/utils';
+import { v4 as generateUUIDv4 } from 'uuid';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
@@ -141,14 +142,31 @@ export default function AddOrEditCampoForm({
         return;
       }
 
-      if (online)
-        if (!isEdit)
-          // Ejecuta la query al backend ya que esta online
-          await addCampo(PAYLOAD, access_token);
+      if (online) {
+        if (!isEdit) await addCampo(PAYLOAD, access_token);
         else await editCampo(PAYLOAD, access_token);
-      else {
-        await CamposStore.saveOne(PAYLOAD);
-        // Guarda la peticion en IndexedDB para que cuando se re-conecte a la red, haga las query pendientes.
+
+        await revalidate('campos');
+        await revalidate('historial');
+      } else {
+        let updatedData: Campo[] = [];
+
+        const cache = await caches.open('api-cache');
+        const cachedData = await cache.match('/api/campos');
+
+        if (cachedData) updatedData = await cachedData.json();
+
+        updatedData.push({
+          ...PAYLOAD,
+          id: generateUUIDv4() as UUID,
+          isCached: true,
+        });
+
+        await cache.put(
+          '/api/campo',
+          new Response(JSON.stringify(updatedData)),
+        );
+
         await PendingSyncStore.saveOne(
           PAYLOAD,
           'campo',
@@ -159,9 +177,6 @@ export default function AddOrEditCampoForm({
 
       setIsSubmitSuccessful(true);
       setTimeout(() => handleOpen(), 1000);
-
-      await revalidate('campos');
-      await revalidate('historial');
     } catch (error) {
       const { statusCode, message } = error as APIError;
 

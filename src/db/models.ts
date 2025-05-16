@@ -13,12 +13,6 @@ export type DataType =
   | 'cultivo'
   | 'tratamiento';
 
-export interface AllDataRegister {
-  id?: number;
-  data: AllData;
-  timestamp: number;
-}
-
 export interface PendingSync {
   id?: number;
   data: Pulverizacion | Campo | Producto | Cultivo | Tratamiento;

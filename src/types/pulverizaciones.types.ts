@@ -31,4 +31,6 @@ export interface Pulverizacion {
 
   createdAt?: Date | string;
   updatedAt?: Date | string;
+
+  isCached?: boolean;
 }

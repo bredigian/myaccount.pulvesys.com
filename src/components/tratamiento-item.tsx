@@ -4,27 +4,39 @@ import {
   AddOrEditTratamientoDialog,
   DeleteTratamientoDialog,
 } from './tratamientos-dialog';
-
-import { Tratamiento } from '@/types/tratamientos.types';
-import { UUID } from 'crypto';
-import { TableCell, TableRow } from './ui/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
+import { TableCell, TableRow } from './ui/table';
+
 import { Button } from './ui/button';
+import { CloudOffIcon } from 'lucide-react';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { Tratamiento } from '@/types/tratamientos.types';
+import { UUID } from 'crypto';
 
 interface Props {
   data: Tratamiento;
 }
 
 export default function TratamientoItem({ data }: Props) {
+  const { isCached } = data;
+
   return (
     <TableRow className='h-12'>
-      <TableCell className=''>{data.nombre}</TableCell>
+      <TableCell className=''>
+        {isCached ? (
+          <div className='flex w-fit items-center gap-1 rounded-md bg-yellow-300 p-1 px-2 dark:text-primary-foreground'>
+            <CloudOffIcon className='size-3.5' />
+            {data.nombre}
+          </div>
+        ) : (
+          data.nombre
+        )}
+      </TableCell>
       <TableCell align='right'>
         <DropdownMenu modal={false} key={'manage-tratamiento-dropdown'}>
           <DropdownMenuTrigger asChild>

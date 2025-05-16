@@ -16,6 +16,8 @@ export interface Producto {
   id?: UUID;
   nombre: string;
   unidad: UNIDAD;
+
+  isCached?: boolean;
 }
 
 export interface ConsumoProducto {

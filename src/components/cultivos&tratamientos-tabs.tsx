@@ -1,5 +1,13 @@
 'use client';
 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from './ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 import { AddOrEditCultivoDialog } from './cultivos-dialog';
@@ -10,14 +18,6 @@ import Finder from './finder';
 import { Tratamiento } from '@/types/tratamientos.types';
 import TratamientoItem from './tratamiento-item';
 import { useState } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from './ui/table';
 
 type DataTabs = 'cultivos' | 'tratamientos';
 
@@ -73,8 +73,11 @@ export default function CultivosTratamientosTabs({
                 <TableCell>No se encontraron cultivos</TableCell>
               </TableRow>
             ) : (
-              cultivos.map((cultivo) => (
-                <CultivoItem key={cultivo.id} data={cultivo} />
+              cultivos.map((cultivo, index) => (
+                <CultivoItem
+                  key={cultivo.id ?? `cultivo__cached-${index}`}
+                  data={cultivo}
+                />
               ))
             )}
           </TableBody>
@@ -97,8 +100,11 @@ export default function CultivosTratamientosTabs({
                 <TableCell>No se encontraron tratamientos</TableCell>
               </TableRow>
             ) : (
-              tratamientos.map((tratamiento) => (
-                <TratamientoItem key={tratamiento.id} data={tratamiento} />
+              tratamientos.map((tratamiento, index) => (
+                <TratamientoItem
+                  key={tratamiento.id ?? `tratamiento__cached-${index}`}
+                  data={tratamiento}
+                />
               ))
             )}
           </TableBody>

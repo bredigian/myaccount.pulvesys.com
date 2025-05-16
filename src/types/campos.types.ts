@@ -22,4 +22,6 @@ export interface Campo {
   nombre: string;
   Lote?: Lote[];
   polygonsToDelete?: Lote['id'][];
+
+  isCached?: boolean;
 }

@@ -11,7 +11,6 @@ import {
 } from 'lucide-react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { Dialog, useDialog } from '@/hooks/use-dialog';
-import { PendingSyncStore, PulverizacionStore } from '@/db/store';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { SHORT_UNIDAD, UNIDAD } from '@/types/productos.types';
 import {
@@ -34,6 +33,7 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import LoteItem from './lote-item';
 import MapboxMap from './map';
+import { PendingSyncStore } from '@/db/store';
 import { PolygonFeature } from './campos-form';
 import { Position } from 'geojson';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
@@ -42,6 +42,7 @@ import { Tratamiento } from '@/types/tratamientos.types';
 import { UUID } from 'crypto';
 import { addPulverizacion } from '@/services/pulverizaciones.service';
 import { cn } from '@/lib/utils';
+import { v4 as generateUUIDv4 } from 'uuid';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useControllerAplicaciones } from '@/hooks/use-productos';
@@ -269,12 +270,22 @@ export default function AddOrEditPulverizacionForm({
         return;
       }
 
-      console.log(online);
+      if (online) {
+        await addPulverizacion(PAYLOAD, access_token);
 
-      if (online) await addPulverizacion(PAYLOAD, access_token);
-      else {
-        const PAYLOAD_FULLDATA: Pulverizacion = {
+        await revalidate('pulverizaciones');
+        await revalidate('historial');
+      } else {
+        let updatedData: Pulverizacion[] = [];
+
+        const cache = await caches.open('api-cache');
+        const cachedData = await cache.match('/api/pulverizaciones');
+
+        if (cachedData) updatedData = await cachedData.json();
+
+        const FULL_PAYLOAD: Pulverizacion = {
           ...PAYLOAD,
+          id: generateUUIDv4() as UUID,
           detalle: {
             ...PAYLOAD.detalle,
             campo: data.campos.find((c) => c.id === PAYLOAD.detalle.campo_id),
@@ -282,15 +293,23 @@ export default function AddOrEditPulverizacionForm({
               (c) => c.id === PAYLOAD.detalle.cultivo_id,
             ),
             tratamiento: data.tratamientos.find(
-              (t) => t.id === PAYLOAD.detalle.tratamiento_id,
+              (c) => c.id === PAYLOAD.detalle.tratamiento_id,
             ),
           },
-          productos: PAYLOAD.productos.map((p) => ({
-            ...p,
-            producto: data.productos.find((sp) => sp.id === p.producto_id),
+          productos: aplicaciones.map((a) => ({
+            ...a,
+            producto: data.productos.find((p) => p.id === a.producto_id),
           })),
+          isCached: true,
         };
-        await PulverizacionStore.saveOne(PAYLOAD_FULLDATA);
+
+        updatedData.push(FULL_PAYLOAD);
+
+        await cache.put(
+          '/api/pulverizaciones',
+          new Response(JSON.stringify(updatedData)),
+        );
+
         await PendingSyncStore.saveOne(
           PAYLOAD,
           'pulverizacion',
@@ -298,8 +317,6 @@ export default function AddOrEditPulverizacionForm({
           'POST',
         );
       }
-      await revalidate('pulverizaciones');
-      await revalidate('historial');
 
       setIsSubmitSuccessful(true);
 
@@ -542,7 +559,12 @@ export default function AddOrEditPulverizacionForm({
               ) : (
                 data.cultivos?.map((cultivo) => {
                   return (
-                    <SelectItem key={cultivo.id} value={cultivo.id as string}>
+                    <SelectItem
+                      key={cultivo.id ?? `cultivo__cached-${cultivo.nombre}`}
+                      value={
+                        (cultivo.id as string) ?? (cultivo.nombre as string)
+                      }
+                    >
                       {cultivo.nombre}
                     </SelectItem>
                   );
@@ -594,8 +616,14 @@ export default function AddOrEditPulverizacionForm({
                 data.tratamientos?.map((tratamiento) => {
                   return (
                     <SelectItem
-                      key={tratamiento.id}
-                      value={tratamiento.id as string}
+                      key={
+                        tratamiento.id ??
+                        `tratamiento__cached-${tratamiento.nombre}`
+                      }
+                      value={
+                        (tratamiento.id as string) ??
+                        (tratamiento.nombre as string)
+                      }
                     >
                       {tratamiento.nombre}
                     </SelectItem>
@@ -657,8 +685,13 @@ export default function AddOrEditPulverizacionForm({
                     data.productos?.map((producto) => {
                       return (
                         <SelectItem
-                          key={producto.id}
-                          value={producto.id as string}
+                          key={
+                            producto.id ?? `producto__cached-${producto.nombre}`
+                          }
+                          value={
+                            (producto.id as string) ??
+                            (producto.nombre as string)
+                          }
                           disabled={
                             aplicaciones.find(
                               (a) => a.producto_id === producto.id,

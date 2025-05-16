@@ -1,4 +1,3 @@
-import { CultivosStore, PendingSyncStore } from '@/db/store';
 import { FieldErrors, useForm } from 'react-hook-form';
 import { addCultivo, editCultivo } from '@/services/cultivos.service';
 
@@ -8,8 +7,11 @@ import { Check } from 'lucide-react';
 import Cookies from 'js-cookie';
 import { Cultivo } from '@/types/cultivos.types';
 import { Input } from './ui/input';
+import { PendingSyncStore } from '@/db/store';
 import { ReloadIcon } from '@radix-ui/react-icons';
+import { UUID } from 'crypto';
 import { cn } from '@/lib/utils';
+import { v4 as generateUUIDv4 } from 'uuid';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useNetworkState } from '@uidotdev/usehooks';
@@ -61,14 +63,31 @@ export default function AddOrEditCultivoForm({
         return;
       }
 
-      if (online)
-        if (!isEdit)
-          // Ejecuta la query al backend ya que esta online
-          await addCultivo(PAYLOAD, access_token);
+      if (online) {
+        if (!isEdit) await addCultivo(PAYLOAD, access_token);
         else await editCultivo(PAYLOAD, access_token);
-      else {
-        await CultivosStore.saveOne(PAYLOAD);
-        // Guarda la peticion en IndexedDB para que cuando se re-conecte a la red, haga las query pendientes.
+
+        await revalidate('cultivos');
+        await revalidate('historial');
+      } else {
+        let updatedData: Cultivo[] = [];
+
+        const cache = await caches.open('api-cache');
+        const cachedData = await cache.match('/api/cultivos');
+
+        if (cachedData) updatedData = await cachedData.json();
+
+        updatedData.push({
+          ...PAYLOAD,
+          id: generateUUIDv4() as UUID,
+          isCached: true,
+        });
+
+        await cache.put(
+          '/api/cultivos',
+          new Response(JSON.stringify(updatedData)),
+        );
+
         await PendingSyncStore.saveOne(
           PAYLOAD,
           'cultivo',
@@ -76,9 +95,6 @@ export default function AddOrEditCultivoForm({
           !isEdit ? 'POST' : 'PUT',
         );
       }
-
-      await revalidate('cultivos');
-      await revalidate('historial');
 
       setIsSubmitSuccessful(true);
       setTimeout(() => handleOpen(), 1000);

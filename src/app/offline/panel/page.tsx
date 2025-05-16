@@ -22,9 +22,11 @@ function PulverizacionesContainerLoader() {
   useEffect(() => {
     const fetchData = async () => {
       setState('loading');
-      const storedData = await PulverizacionStore.getAll();
 
-      setData(storedData.map((i) => i.data));
+      const cache = await caches.open('api-cache');
+      const data = await (await cache.match('/api/pulverizaciones'))?.json();
+      setData(data);
+
       setState('completed');
     };
 
@@ -47,8 +49,16 @@ export default function OfflinePanel() {
   useEffect(() => {
     const fetchAllLocalData = async () => {
       setState('loading');
-      const [localData] = await AllDataStore.getAll();
-      if (localData) setData(localData.data);
+
+      const cache = await caches.open('api-cache');
+      const allData: AllData = {
+        cultivos: await (await cache.match('/api/cultivos'))?.json(),
+        campos: await (await cache.match('/api/campos'))?.json(),
+        tratamientos: await (await cache.match('/api/tratamientos'))?.json(),
+        productos: await (await cache.match('/api/productos'))?.json(),
+      };
+      setData(allData);
+
       setState('completed');
     };
 

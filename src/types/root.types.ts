@@ -9,3 +9,5 @@ export interface AllData {
   tratamientos: Tratamiento[];
   productos: Producto[];
 }
+
+export type STATE = 'pending' | 'processing' | 'success';

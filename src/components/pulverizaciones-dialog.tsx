@@ -1,5 +1,12 @@
 'use client';
 
+import {
+  AllDataStore,
+  CamposStore,
+  CultivosStore,
+  ProductosStore,
+  TratamientosStore,
+} from '@/db/store';
 import { CheckIcon, Droplet, Trash2 } from 'lucide-react';
 import {
   Dialog,
@@ -31,7 +38,6 @@ import { AddOrEditProductoDialog } from './productos-dialog';
 import AddOrEditPulverizacionForm from './pulverizaciones-form';
 import { AddOrEditTratamientoDialog } from './tratamientos-dialog';
 import { AllData } from '@/types/root.types';
-import { AllDataStore } from '@/db/store';
 import { Button } from './ui/button';
 import Cookies from 'js-cookie';
 import { ReloadIcon } from '@radix-ui/react-icons';
@@ -58,9 +64,22 @@ export const AddOrEditPulverizacionDialog = ({ data, storeData }: Props) => {
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    // Guarda TODOS los datos necesarios para registrar una nueva pulverizacion en local
     const handleSaveAllDataInLocal = async () => {
-      await AllDataStore.save(data);
+      const cache = await caches.open('api-cache');
+
+      await cache.put('/api/campos', new Response(JSON.stringify(data.campos)));
+      await cache.put(
+        '/api/cultivos',
+        new Response(JSON.stringify(data.cultivos)),
+      );
+      await cache.put(
+        '/api/tratamientos',
+        new Response(JSON.stringify(data.tratamientos)),
+      );
+      await cache.put(
+        '/api/productos',
+        new Response(JSON.stringify(data.productos)),
+      );
     };
 
     if (storeData) handleSaveAllDataInLocal();
