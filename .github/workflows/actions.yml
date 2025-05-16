@@ -45,4 +45,4 @@ jobs:
         run: pnpm run build
         working-directory: ./main
       - name: Reload production proxy server
-        run: pm2 reload pulvesys.com --update-env
+        run: pm2 reload myaccount.pulvesys.com --update-env
