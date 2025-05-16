@@ -1,6 +1,5 @@
 'use client';
 
-import { AllDataStore, PulverizacionStore } from '@/db/store';
 import { useEffect, useState } from 'react';
 
 import { AddOrEditPulverizacionDialog } from '@/components/pulverizaciones-dialog';

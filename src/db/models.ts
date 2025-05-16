@@ -1,4 +1,3 @@
-import { AllData } from '@/types/root.types';
 import { Campo } from '@/types/campos.types';
 import { Cultivo } from '@/types/cultivos.types';
 import { Producto } from '@/types/productos.types';

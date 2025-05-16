@@ -1,5 +1,5 @@
 import { CacheFirst, Serwist } from 'serwist';
-import type { PrecacheEntry, RouteHandler, SerwistGlobalConfig } from 'serwist';
+import type { PrecacheEntry, SerwistGlobalConfig } from 'serwist';
 
 import { defaultCache } from '@serwist/next/worker';
 
@@ -37,7 +37,7 @@ const serwist = new Serwist({
             },
           },
           {
-            cacheDidUpdate: async ({ cacheName, request }) => {
+            cacheDidUpdate: async ({ cacheName }) => {
               const cache = await caches.open(cacheName);
               const keys = await cache.keys();
               if (keys.length > 6000) {
@@ -66,7 +66,7 @@ const serwist = new Serwist({
             },
           },
           {
-            cacheDidUpdate: async ({ cacheName, request }) => {
+            cacheDidUpdate: async ({ cacheName }) => {
               const cache = await caches.open(cacheName);
               const keys = await cache.keys();
               if (keys.length > 10) {

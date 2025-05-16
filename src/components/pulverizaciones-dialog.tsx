@@ -1,12 +1,5 @@
 'use client';
 
-import {
-  AllDataStore,
-  CamposStore,
-  CultivosStore,
-  ProductosStore,
-  TratamientosStore,
-} from '@/db/store';
 import { CheckIcon, Droplet, Trash2 } from 'lucide-react';
 import {
   Dialog,

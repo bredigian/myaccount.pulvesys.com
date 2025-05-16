@@ -4,7 +4,6 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
-  BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { ReactNode, useEffect } from 'react';
 import {
@@ -17,15 +16,16 @@ import Link from 'next/link';
 import { OfflineAppSidebar } from './offline-app-sidebar';
 import { Separator } from '@/components/ui/separator';
 import { SessionStore } from '@/db/store';
-import { usePathname } from 'next/navigation';
 import { usuarioStore } from '@/store/usuario.store';
+
+// import { usePathname } from 'next/navigation';
 
 interface Props {
   children: ReactNode;
 }
 
 export default function ScreenOffline({ children }: Props) {
-  const pathname = usePathname();
+  // const pathname = usePathname();
   const { setUserdata } = usuarioStore();
 
   useEffect(() => {
