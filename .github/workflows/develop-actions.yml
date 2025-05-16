@@ -36,4 +36,4 @@ jobs:
         run: pnpm run build
         working-directory: ./develop
       - name: Reload beta proxy server
-        run: pm2 reload myccount.beta.pulvesys.com --update-env
+        run: pm2 reload myaccount.beta.pulvesys.com --update-env
