@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Campo } from '@/types/campos.types';
 import { CamposGridContainer } from '@/components/masonry-container';
 import { CamposMasonrySkeleton } from '@/components/masonry-skeleton';
-import Finder from '@/components/finder';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { STATE } from '@/types/root.types';
 
@@ -60,7 +59,7 @@ export default function Campos() {
     <main className='space-y-4 p-4 pt-0'>
       <h2>Administra las ubicaciones en los que se realizan los trabajos.</h2>
       <aside id='finder' className='flex items-center justify-between gap-4'>
-        <Finder />
+        {/* <Finder /> */}
         {state !== 'success' ? (
           <ReloadIcon className='size-4 animate-spin' />
         ) : data ? (

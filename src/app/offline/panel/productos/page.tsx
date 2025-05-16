@@ -11,7 +11,6 @@ import {
 import { useEffect, useState } from 'react';
 
 import { AddOrEditProductoDialog } from '@/components/productos-dialog';
-import Finder from '@/components/finder';
 import { Producto } from '@/types/productos.types';
 import ProductoItem from '@/components/producto-item';
 import { ProductosContainerSkeleton } from '@/components/container-skeleton';
@@ -69,7 +68,7 @@ export default function OfflineProductos() {
     <main className='space-y-4 p-4 pt-0'>
       <h2>Administra los productos disponibles para las pulverizaciones.</h2>
       <aside id='finder' className='flex items-center justify-between gap-4'>
-        <Finder />
+        {/* <Finder /> */}
         <AddOrEditProductoDialog />
       </aside>
       <ProductosContainerLoader />

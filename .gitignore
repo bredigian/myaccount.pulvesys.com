@@ -15,6 +15,7 @@
 
 # service worker
 /public/sw.js
+/sw.js
 
 # next.js
 /.next/
