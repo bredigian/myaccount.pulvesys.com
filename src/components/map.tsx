@@ -88,6 +88,8 @@ const DrawControl = ({
       handleDrawMode(e.mode),
     );
 
+    map.on('error', (e) => console.warn('No se pudo cargar el mapa. ', e));
+
     return draw;
   });
 
@@ -284,6 +286,8 @@ export default function MapboxMap({
         touchZoomRotate
         touchPitch
         data-vaul-no-drag
+        minZoom={11}
+        maxZoom={18}
       >
         {drawMode === 'draw_polygon' && (
           <div className='absolute z-[99999] ml-2 mt-2 flex w-fit items-center gap-2 rounded-md bg-green-800 px-2 py-1 drop-shadow-xl'>
