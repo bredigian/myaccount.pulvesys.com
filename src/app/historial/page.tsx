@@ -1,3 +1,4 @@
+import Finder from '@/components/finder';
 import HistorialContainer from '@/components/historial-container';
 import { HistorialContainerSkeleton } from '@/components/container-skeleton';
 import { Suspense } from 'react';
@@ -11,6 +12,7 @@ export default async function Historial({ searchParams }: Props) {
 
   return (
     <main className='space-y-4 p-4 pt-0'>
+      <Finder />
       <Suspense fallback={<HistorialContainerSkeleton />}>
         <HistorialContainer filter={filter} />
       </Suspense>
