@@ -15,7 +15,7 @@ export default async function Pulverizaciones({ searchParams }: Props) {
     <main className='space-y-4 p-4 pt-0'>
       <h2>Crea, modifica y elimina las ordenes de pulverizacion que desees.</h2>
       <aside id='finder' className='flex items-center justify-between gap-4'>
-        <Finder param='filter' placeholder='Filtrá por ubicación o por fecha' />
+        <Finder param='filter' placeholder='Buscar' />
         <FetchDataContainerForAddPulverizacionForm />
       </aside>
       <Suspense fallback={<PulverizacionesMasonrySkeleton />}>

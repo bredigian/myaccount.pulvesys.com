@@ -32,7 +32,7 @@ export default function Finder({ param, placeholder }: Props) {
         defaultValue={searchParams?.get(param || 'nombre')?.toString()}
         onChange={(e) => handleSearch(e.target.value)}
         placeholder={placeholder ?? 'Buscar'}
-        className='truncate pl-7 lg:text-base'
+        className='truncate pl-7 text-sm md:text-base'
       />
     </div>
   );
