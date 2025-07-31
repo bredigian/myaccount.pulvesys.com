@@ -21,3 +21,10 @@ export const calcularCentroide = (
 
   return [x / n, y / n];
 };
+
+export const normalize = (value: string) =>
+  value
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');

@@ -7,19 +7,11 @@ import {
   MapPinPlus,
   PackageMinus,
   PackagePlus,
-  PlusSquare,
 } from 'lucide-react';
 import { Controller, FieldErrors, useForm } from 'react-hook-form';
 import { Dialog, useDialog } from '@/hooks/use-dialog';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { SHORT_UNIDAD, UNIDAD } from '@/types/productos.types';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from './ui/select';
 import { useEffect, useState } from 'react';
 
 import { APIError } from '@/types/error.types';
@@ -37,6 +29,7 @@ import { PolygonFeature } from './campos-form';
 import { Position } from 'geojson';
 import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
+import SelectorFinder from './selector-finder';
 import { Tratamiento } from '@/types/tratamientos.types';
 import { UUID } from 'crypto';
 import { addPulverizacion } from '@/services/pulverizaciones.service';
@@ -387,34 +380,19 @@ export default function AddOrEditPulverizacionForm({
         control={control}
         name='detalle.campo.id'
         render={({ field }) => (
-          <Select
-            onValueChange={(value) => {
-              field.onChange(value);
-              setSelectedCampo(
-                data.campos?.find((campo) => campo.id === value),
-              );
+          <SelectorFinder
+            data={data.campos}
+            className='col-span-6'
+            onSelectValue={(id) => {
+              field.onChange(id);
+              setSelectedCampo(data.campos?.find((campo) => campo.id === id));
               setSelectedLotes([]);
-              handleLocalStorage('campo_id', value);
+              handleLocalStorage('campo_id', id);
             }}
-            {...field}
-          >
-            <SelectTrigger className='col-span-6'>
-              <SelectValue placeholder='Ubicación' />
-            </SelectTrigger>
-            <SelectContent className='col-span-6'>
-              {data.campos?.map((campo) => {
-                const totalHectareas = campo.Lote?.reduce(
-                  (acc, lote) => acc + (lote?.hectareas as number),
-                  0,
-                ).toFixed(2);
-                return (
-                  <SelectItem key={campo.id} value={campo.id as string}>
-                    {campo.nombre} ({totalHectareas}ha)
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
+            selectedValue={selectedCampo?.nombre!}
+            type='Ubicación'
+            placeholder='Busca un campo...'
+          />
         )}
       />
       <Button
@@ -477,45 +455,31 @@ export default function AddOrEditPulverizacionForm({
           required: { value: true, message: 'El cultivo es requerido.' },
         }}
         render={({ field }) => (
-          <Select
-            open={cultivoSelector.open}
-            onOpenChange={cultivoSelector.setOpen}
-            onValueChange={(value) => {
-              field.onChange(value);
-              handleLocalStorage('cultivo_id', value);
+          <SelectorFinder
+            data={data.cultivos}
+            className='col-span-4'
+            onSelectValue={(id) => {
+              field.onChange(id);
+              handleLocalStorage('cultivo_id', id);
             }}
-            {...field}
-          >
-            <SelectTrigger className='col-span-4'>
-              <SelectValue placeholder='Cultivo' />
-            </SelectTrigger>
-            <SelectContent className='col-span-4'>
-              <Button
+            placeholder='Busca un cultivo...'
+            selectedValue={
+              data.cultivos.find((c) => c.id === field.value)?.nombre!
+            }
+            type='Cultivo'
+            externalModalTrigger={
+              <button
                 type='button'
-                size='default'
-                variant='default'
-                className='mb-2 flex w-full items-center justify-between'
                 onClick={() => {
                   cultivoSelector.handleOpen();
                   handleExternalDialog(cultivosDialog);
                 }}
+                className='cursor-pointer hover:underline'
               >
-                Nuevo cultivo
-                <PlusSquare />
-              </Button>
-              {data.cultivos?.length === 0 ? (
-                <p className='px-4 py-2 text-sm'>No se encontraron cultivos</p>
-              ) : (
-                data.cultivos?.map((cultivo) => {
-                  return (
-                    <SelectItem key={cultivo.id} value={cultivo.id as string}>
-                      {cultivo.nombre}
-                    </SelectItem>
-                  );
-                })
-              )}
-            </SelectContent>
-          </Select>
+                Añadir
+              </button>
+            }
+          />
         )}
       />
       <Controller
@@ -526,50 +490,32 @@ export default function AddOrEditPulverizacionForm({
           required: { value: true, message: 'El tratamiento es requerido.' },
         }}
         render={({ field }) => (
-          <Select
-            open={tratamientoSelector.open}
-            onOpenChange={tratamientoSelector.setOpen}
-            onValueChange={(value) => {
-              field.onChange(value);
-              handleLocalStorage('tratamiento_id', value);
+          <SelectorFinder
+            data={data.tratamientos}
+            className='col-span-6'
+            onSelectValue={(id) => {
+              field.onChange(id);
+              handleLocalStorage('tratamiento_id', id);
             }}
-            {...field}
-          >
-            <SelectTrigger className='col-span-6'>
-              <SelectValue placeholder='Tipo de tratamiento' />
-            </SelectTrigger>
-            <SelectContent className='col-span-6'>
-              <Button
+            placeholder='Busca un tipo de tratamiento...'
+            selectedValue={
+              data.tratamientos.find((c) => c.id === field.value)?.nombre!
+            }
+            type='Tratamiento'
+            customAlign='end'
+            externalModalTrigger={
+              <button
                 type='button'
-                size='default'
-                variant='default'
-                className='mb-2 flex w-full items-center justify-between'
                 onClick={() => {
                   tratamientoSelector.handleOpen();
                   handleExternalDialog(tratamientosDialog);
                 }}
+                className='cursor-pointer hover:underline'
               >
-                Nuevo tratratamiento
-                <PlusSquare />
-              </Button>
-              {data.tratamientos?.length === 0 ? (
-                <p className='px-4 py-2 text-sm'>
-                  No se encontraron tratamientos
-                </p>
-              ) : (
-                data.tratamientos?.map((tratamiento) => {
-                  return (
-                    <SelectItem
-                      key={tratamiento.id}
-                      value={tratamiento.id as string}
-                    >
-                      {tratamiento.nombre}
-                    </SelectItem>
-                  );
-                })
-              )}
-            </SelectContent>
-          </Select>
+                Añadir
+              </button>
+            }
+          />
         )}
       />
       <div className='col-span-full space-y-4'>
@@ -607,39 +553,21 @@ export default function AddOrEditPulverizacionForm({
         <ul className='max-h-36 space-y-4 overflow-auto' data-vaul-no-drag>
           {aplicaciones.map((aplicacion, index) => (
             <li key={`aplicacion-${index}`} className='grid grid-cols-10 gap-4'>
-              <Select
-                onValueChange={(value) => handleChangeSelectValue(value, index)}
-                defaultValue={aplicacion.producto_id ?? undefined}
-              >
-                <SelectTrigger className='col-span-5'>
-                  <SelectValue placeholder='Producto' />
-                </SelectTrigger>
-                <SelectContent className='col-span-5'>
-                  {data.productos?.length === 0 ? (
-                    <p className='px-4 py-2 text-sm'>
-                      No se encontraron productos
-                    </p>
-                  ) : (
-                    data.productos?.map((producto) => {
-                      return (
-                        <SelectItem
-                          key={producto.id}
-                          value={producto.id as string}
-                          disabled={
-                            aplicaciones.find(
-                              (a) => a.producto_id === producto.id,
-                            )
-                              ? true
-                              : false
-                          }
-                        >
-                          {producto.nombre}
-                        </SelectItem>
-                      );
-                    })
-                  )}
-                </SelectContent>
-              </Select>
+              <SelectorFinder
+                data={data.productos}
+                className='col-span-5'
+                onSelectValue={(id) => {
+                  handleChangeSelectValue(id, index);
+                }}
+                placeholder='Busca un producto...'
+                selectedValue={
+                  data.productos.find((p) => p.id === aplicacion?.producto_id)
+                    ?.nombre!
+                }
+                type='Producto'
+                customAlign='start'
+                aplicaciones={aplicaciones}
+              />
               <Input
                 placeholder='Dosis'
                 disabled={!watch('detalle.campo.id')}
@@ -652,7 +580,7 @@ export default function AddOrEditPulverizacionForm({
                 }
                 defaultValue={aplicacion?.dosis?.toString() ?? undefined}
               />
-              <span className='col-span-2 self-center text-sm font-semibold opacity-60'>
+              <span className='col-span-2 self-center text-center text-sm font-semibold opacity-60'>
                 {
                   SHORT_UNIDAD[
                     data.productos?.find(
