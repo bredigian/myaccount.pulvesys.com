@@ -389,7 +389,7 @@ export default function AddOrEditPulverizacionForm({
               setSelectedLotes([]);
               handleLocalStorage('campo_id', id);
             }}
-            selectedValue={selectedCampo?.nombre!}
+            selectedValue={selectedCampo?.nombre as string}
             type='Ubicación'
             placeholder='Busca un campo...'
           />
@@ -464,7 +464,7 @@ export default function AddOrEditPulverizacionForm({
             }}
             placeholder='Busca un cultivo...'
             selectedValue={
-              data.cultivos.find((c) => c.id === field.value)?.nombre!
+              data.cultivos.find((c) => c.id === field.value)?.nombre as string
             }
             type='Cultivo'
             externalModalTrigger={
@@ -499,7 +499,8 @@ export default function AddOrEditPulverizacionForm({
             }}
             placeholder='Busca un tipo de tratamiento...'
             selectedValue={
-              data.tratamientos.find((c) => c.id === field.value)?.nombre!
+              data.tratamientos.find((c) => c.id === field.value)
+                ?.nombre as string
             }
             type='Tratamiento'
             customAlign='end'
@@ -562,7 +563,7 @@ export default function AddOrEditPulverizacionForm({
                 placeholder='Busca un producto...'
                 selectedValue={
                   data.productos.find((p) => p.id === aplicacion?.producto_id)
-                    ?.nombre!
+                    ?.nombre as string
                 }
                 type='Producto'
                 customAlign='start'
