@@ -131,6 +131,8 @@ interface Props {
   polygonInDrawing?: PolygonFeature | null;
 
   isPulverizacionDetail?: boolean;
+
+  currentGeolocation?: Coordinada | { error: string };
 }
 
 export default function MapboxMap({
@@ -148,9 +150,36 @@ export default function MapboxMap({
 
   isPulverizacionDetail,
   polygonInDrawing,
+
+  currentGeolocation,
 }: Props) {
   const [drawMode, setDrawMode] = useState<DrawMode | null>(null);
   const handleDrawMode = (value: DrawMode) => setDrawMode(value);
+
+  const [currentGeoJSON, setCurrentGeoJSON] = useState<FeatureCollection>({
+    type: 'FeatureCollection',
+    features: [],
+  });
+
+  useEffect(() => {
+    if (currentGeolocation) {
+      if ('error' in currentGeolocation) return;
+
+      setCurrentGeoJSON({
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [currentGeolocation.lng, currentGeolocation.lat],
+            },
+            properties: {},
+          },
+        ],
+      });
+    }
+  }, [currentGeolocation]);
 
   const [geoJSON, setGeoJSON] = useState<FeatureCollection>({
     type: 'FeatureCollection',
@@ -269,11 +298,13 @@ export default function MapboxMap({
     >
       <Map
         initialViewState={{
-          zoom: customZoom ?? 12,
+          zoom: customZoom ?? 14,
           latitude:
-            polygons?.[0]?.geometry?.coordinates?.[0]?.[0]?.[1] || -37.31587,
+            polygons?.[0]?.geometry?.coordinates?.[0]?.[0]?.[1] ||
+            ((currentGeolocation as Coordinada)?.lat ?? -37.31587),
           longitude:
-            polygons?.[0]?.geometry?.coordinates?.[0]?.[0]?.[0] || -59.98368,
+            polygons?.[0]?.geometry?.coordinates?.[0]?.[0]?.[0] ||
+            ((currentGeolocation as Coordinada)?.lng ?? -59.98368),
         }}
         mapboxAccessToken={MAPBOX_TOKEN}
         mapStyle={MAP_STYLE}
@@ -311,6 +342,7 @@ export default function MapboxMap({
             handleDrawMode={handleDrawMode}
           />
         )}
+
         <Source id='stored-lotes-source' type='geojson' data={storedGeoJSON}>
           <Layer
             id='stored-borders-layer'
@@ -388,6 +420,21 @@ export default function MapboxMap({
               'text-halo-color': '#000000',
               'text-halo-width': 1.2,
               'text-opacity': ['get', 'opacity'],
+            }}
+          />
+        </Source>
+        <Source
+          id='current-geolocation-source'
+          type='geojson'
+          data={currentGeoJSON}
+        >
+          <Layer
+            id='current-geolocation-layer'
+            type='circle'
+            paint={{
+              'circle-color': '#0079FF',
+              'circle-stroke-width': 2,
+              'circle-stroke-color': '#FFFFFF',
             }}
           />
         </Source>

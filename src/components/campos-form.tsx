@@ -27,7 +27,7 @@ import {
 import { FieldErrors, useForm } from 'react-hook-form';
 import { addCampo, editCampo } from '@/services/campos.service';
 import { area, convertArea } from '@turf/turf';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { APIError } from '@/types/error.types';
 import { Button } from './ui/button';
@@ -38,11 +38,13 @@ import { Input } from './ui/input';
 import MapboxMap from './map';
 import { Position } from 'geojson';
 import { ReloadIcon } from '@radix-ui/react-icons';
+import { Skeleton } from './ui/skeleton';
 import { UUID } from 'crypto';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';
+import { useGeoLocation } from '@/hooks/use-location';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 
@@ -70,6 +72,7 @@ export default function AddOrEditCampoForm({
   handleOpen: () => void;
 }) {
   const { push } = useRouter();
+  const { geoLocation, getGeolocation } = useGeoLocation();
 
   const {
     register,
@@ -417,16 +420,23 @@ export default function AddOrEditCampoForm({
         que marcaste.
       </p>
       <div className='flex h-[60dvh] w-full flex-col gap-4 overflow-y-auto md:justify-between'>
-        <MapboxMap
-          key={data?.Lote?.length}
-          size='!grow'
-          onCreate={onCreate}
-          onUpdate={onUpdate}
-          onDelete={onDelete}
-          polygons={polygons}
-          storedPolygons={storedPolygons.flat()}
-          polygonInDrawing={newPolygon}
-        />
+        {!geoLocation ? (
+          <div className='relative h-full !grow rounded-lg bg-primary-foreground'>
+            <Skeleton className='size-full' />
+          </div>
+        ) : (
+          <MapboxMap
+            key={data?.Lote?.length}
+            size='!grow'
+            onCreate={onCreate}
+            onUpdate={onUpdate}
+            onDelete={onDelete}
+            polygons={polygons}
+            storedPolygons={storedPolygons.flat()}
+            polygonInDrawing={newPolygon}
+            currentGeolocation={geoLocation}
+          />
+        )}
       </div>
       <div className='flex flex-col items-center gap-2 md:flex-row-reverse md:items-end'>
         <Button
