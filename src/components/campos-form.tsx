@@ -27,7 +27,7 @@ import {
 import { FieldErrors, useForm } from 'react-hook-form';
 import { addCampo, editCampo } from '@/services/campos.service';
 import { area, convertArea } from '@turf/turf';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { APIError } from '@/types/error.types';
 import { Button } from './ui/button';
@@ -72,7 +72,7 @@ export default function AddOrEditCampoForm({
   handleOpen: () => void;
 }) {
   const { push } = useRouter();
-  const { geoLocation, getGeolocation } = useGeoLocation();
+  const { geoLocation } = useGeoLocation();
 
   const {
     register,
