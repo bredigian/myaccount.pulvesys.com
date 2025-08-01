@@ -57,20 +57,20 @@ export const AddOrEditPulverizacionDialog = ({ data }: Props) => {
 
   return isMobile ? (
     <>
-      <Drawer open={open} onOpenChange={setOpen}>
-        <DrawerTrigger asChild>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
           <Button id='add-pulverizacion__button'>
             Crear
             <Droplet />
           </Button>
-        </DrawerTrigger>
-        <DrawerContent className='h-auto'>
-          <DrawerHeader>
-            <DrawerTitle>Nueva pulverización</DrawerTitle>
-            <DrawerDescription>
+        </DialogTrigger>
+        <DialogContent className='h-auto'>
+          <DialogHeader>
+            <DialogTitle>Nueva pulverización</DialogTitle>
+            <DialogDescription>
               Completa con lo requerido para la pulverización
-            </DrawerDescription>
-          </DrawerHeader>
+            </DialogDescription>
+          </DialogHeader>
           <AddOrEditPulverizacionForm
             handleOpen={handleOpen}
             camposDialog={addCampoDialog}
@@ -83,8 +83,8 @@ export const AddOrEditPulverizacionDialog = ({ data }: Props) => {
             }}
             data={data}
           />
-        </DrawerContent>
-      </Drawer>
+        </DialogContent>
+      </Dialog>
       <AddOrEditCampoDialog
         hidden
         customOpen={addCampoDialog.open}

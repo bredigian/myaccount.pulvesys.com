@@ -328,7 +328,7 @@ export default function AddOrEditPulverizacionForm({
     <form
       key={key}
       onSubmit={handleSubmit(onSubmit, onInvalidSubmit)}
-      className='grid max-h-[86dvh] grid-cols-10 gap-4 overflow-y-auto px-4 pb-4 md:px-0 md:pb-0'
+      className='grid max-h-[86dvh] grid-cols-10 gap-4 overflow-y-auto'
       id='form-add-pulverizacion'
       data-vaul-no-drag
     >
