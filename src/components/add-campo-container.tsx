@@ -10,8 +10,9 @@ export default async function AddCampoContainer() {
   const refresh_token = (await cookies()).get('refresh_token');
   if (!access_token || !refresh_token) redirect('/', RedirectType.replace);
 
-  const data = await getCampos(access_token.value, refresh_token);
-  if ('error' in data) return <Button disabled>No disponible</Button>;
+  const campos = await getCampos(access_token.value, refresh_token);
 
-  return <AddOrEditCampoDialog storedData={data} />;
+  if ('error' in campos) return <Button disabled>No disponible</Button>;
+
+  return <AddOrEditCampoDialog storedData={campos} />;
 }

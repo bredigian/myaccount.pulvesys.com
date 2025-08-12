@@ -73,7 +73,7 @@ export const AddOrEditCultivoDialog = ({
             {!isEdit ? 'Nuevo cultivo' : 'Modificar cultivo'}
           </DrawerTitle>
           <DrawerDescription>
-            Completa con las caracteristicas del cultivo
+            Ingresá el nombre y color del cultivo
           </DrawerDescription>
         </DrawerHeader>
         <AddOrEditCultivoForm
@@ -99,7 +99,7 @@ export const AddOrEditCultivoDialog = ({
             {!isEdit ? 'Nuevo cultivo' : 'Modificar cultivo'}
           </DialogTitle>
           <DialogDescription>
-            Completa con las caracteristicas del cultivo
+            Ingresá el nombre y color del cultivo
           </DialogDescription>
         </DialogHeader>
         <AddOrEditCultivoForm

@@ -1,5 +1,13 @@
 'use client';
 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from './ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 import { AddOrEditCultivoDialog } from './cultivos-dialog';
@@ -10,14 +18,6 @@ import Finder from './finder';
 import { Tratamiento } from '@/types/tratamientos.types';
 import TratamientoItem from './tratamiento-item';
 import { useState } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from './ui/table';
 
 type DataTabs = 'cultivos' | 'tratamientos';
 
@@ -64,6 +64,7 @@ export default function CultivosTratamientosTabs({
           <TableHeader>
             <TableRow>
               <TableHead>Nombre</TableHead>
+              <TableHead>Color</TableHead>
               <TableHead className='text-end'>Opciones</TableHead>
             </TableRow>
           </TableHeader>

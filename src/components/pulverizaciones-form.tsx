@@ -146,6 +146,14 @@ export default function AddOrEditPulverizacionForm({
 
   const [polygons, setPolygons] = useState<PolygonFeature[]>();
 
+  const [selectedCultivoColor, setSelectedCultivoColor] = useState<
+    string | null
+  >(
+    storedCultivo
+      ? (data.cultivos.find((c) => c.id === storedCultivo)?.color ?? '#000000')
+      : '#000000',
+  );
+
   useEffect(() => {
     if (selectedCampo)
       setPolygons(
@@ -174,13 +182,13 @@ export default function AddOrEditPulverizacionForm({
               description: `${l.nombre} (${l.hectareas?.toFixed(2)}ha)`,
               area: l.hectareas,
               nombre: l.nombre,
-              color: l.color,
+              color: selectedCultivoColor as string,
               opacity: selectedLotes.includes(l.nombre as string) ? 1 : 0.5,
             },
           } as PolygonFeature;
         }),
       );
-  }, [selectedCampo, selectedLotes]);
+  }, [selectedCampo, selectedLotes, selectedCultivoColor]);
 
   const {
     aplicaciones,
@@ -429,11 +437,11 @@ export default function AddOrEditPulverizacionForm({
                 }}
                 customStyle={{
                   backgroundColor: selectedLotes.includes(lote.nombre as string)
-                    ? '#059f0050'
-                    : `${lote.color as string}50`,
+                    ? '#059f00'
+                    : `#b0b0b0`,
                   borderColor: selectedLotes.includes(lote.nombre as string)
                     ? '#059f00'
-                    : (lote.color as string),
+                    : '#a2a2a2',
                   cursor: 'pointer',
                 }}
               />
@@ -461,11 +469,15 @@ export default function AddOrEditPulverizacionForm({
             onSelectValue={(id) => {
               field.onChange(id);
               handleLocalStorage('cultivo_id', id);
+              setSelectedCultivoColor(
+                data.cultivos.find((c) => c.id === id)?.color ?? '#000000',
+              );
             }}
             placeholder='Busca un cultivo...'
             selectedValue={
               data.cultivos.find((c) => c.id === field.value)?.nombre as string
             }
+            selectedColor={selectedCultivoColor}
             type='Cultivo'
             externalModalTrigger={
               <button

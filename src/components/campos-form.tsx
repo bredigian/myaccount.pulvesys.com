@@ -32,11 +32,12 @@ import { useCallback, useState } from 'react';
 import { APIError } from '@/types/error.types';
 import { Button } from './ui/button';
 import { Check } from 'lucide-react';
-import ColorPicker from './color-picker';
 import Cookies from 'js-cookie';
+import { Cultivo } from '@/types/cultivos.types';
 import { Input } from './ui/input';
 import MapboxMap from './map';
 import { Position } from 'geojson';
+import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { Skeleton } from './ui/skeleton';
 import { UUID } from 'crypto';
@@ -60,17 +61,23 @@ export type PolygonFeature = GeoJSON.Feature<
   PolygonProperties
 >;
 
+interface Props {
+  isEdit?: boolean;
+  data?: Campo;
+  storedData?: Campo[];
+  handleOpen: () => void;
+  cultivos?: Cultivo[];
+  pulverizaciones?: Pulverizacion[];
+}
+
 export default function AddOrEditCampoForm({
   isEdit,
   data,
   handleOpen,
   storedData,
-}: {
-  isEdit?: boolean;
-  data?: Campo;
-  storedData?: Campo[];
-  handleOpen: () => void;
-}) {
+  cultivos,
+  pulverizaciones,
+}: Props) {
   const { push } = useRouter();
   const { geoLocation } = useGeoLocation();
 
@@ -209,6 +216,10 @@ export default function AddOrEditCampoForm({
           {} as Record<string, Position[]>,
         );
 
+        const lastPulverizacionAppliedToThisCampo = pulverizaciones?.find(
+          (p) => p.detalle.campo_id === c.id,
+        );
+
         return {
           id: l.id as UUID,
           type: 'Feature',
@@ -220,7 +231,13 @@ export default function AddOrEditCampoForm({
             description: `${l.nombre} (${l.hectareas?.toFixed(2)}ha)\n${c.nombre}`,
             area: l.hectareas,
             nombre: l.nombre,
-            color: l.color,
+            color: !lastPulverizacionAppliedToThisCampo
+              ? '#000000'
+              : cultivos?.find(
+                  (c) =>
+                    c.id ===
+                    lastPulverizacionAppliedToThisCampo.detalle.cultivo_id,
+                )?.color,
             opacity: 0.65,
           },
         } as PolygonFeature;
@@ -230,7 +247,7 @@ export default function AddOrEditCampoForm({
   const { open, setOpen, handleOpen: handleNewPolygonDialog } = useDialog();
   const [newPolygon, setNewPolygon] = useState<PolygonFeature | null>(null);
   const [polygonName, setPolygonName] = useState('');
-  const [polygonColor, setPolygonColor] = useState('#ff0000');
+  const [polygonColor] = useState('#000000');
 
   const onCreate = useCallback((e: DrawCreateEvent) => {
     const newPolygon = e.features[0];
@@ -352,17 +369,13 @@ export default function AddOrEditCampoForm({
                 elegír el color que más te guste
               </DrawerDescription>
             </DrawerHeader>
-            <div className='flex h-9 items-center gap-4 px-4'>
+            <div className='px-4'>
               <Input
                 id='new-polygon-name'
                 value={polygonName}
                 onChange={(e) => setPolygonName(e.target.value)}
                 placeholder='Ej: Lote 1'
                 className='text-sm'
-              />
-              <ColorPicker
-                color={polygonColor}
-                onChange={(color) => setPolygonColor(color)}
               />
             </div>
             <DrawerFooter>
@@ -388,19 +401,15 @@ export default function AddOrEditCampoForm({
                 elegír el color que más te guste
               </DialogDescription>
             </DialogHeader>
-            <div className='flex h-9 items-center gap-4'>
-              <Input
-                id='new-polygon-name'
-                value={polygonName}
-                onChange={(e) => setPolygonName(e.target.value)}
-                placeholder='Ej: Lote 1'
-                className='text-sm'
-              />
-              <ColorPicker
-                color={polygonColor}
-                onChange={(color) => setPolygonColor(color)}
-              />
-            </div>
+            {/* <div className='flex h-9 items-center gap-4'> */}
+            <Input
+              id='new-polygon-name'
+              value={polygonName}
+              onChange={(e) => setPolygonName(e.target.value)}
+              placeholder='Ej: Lote 1'
+              className='text-sm'
+            />
+            {/* </div> */}
             <DialogFooter>
               <DialogClose asChild>
                 <Button variant={'outline'}>Cancelar</Button>
@@ -419,7 +428,7 @@ export default function AddOrEditCampoForm({
         *Marcá los puntos y cerrá el área seleccionando el primer o último punto
         que marcaste.
       </p>
-      <div className='flex h-[60dvh] w-full flex-col gap-4 overflow-y-auto md:justify-between'>
+      <div className='flex h-[40dvh] w-full flex-col gap-4 overflow-y-auto md:h-[50dvh] md:justify-between'>
         {!geoLocation ? (
           <div className='relative h-full !grow rounded-lg bg-primary-foreground'>
             <Skeleton className='size-full' />
@@ -438,6 +447,19 @@ export default function AddOrEditCampoForm({
           />
         )}
       </div>
+      {cultivos && (
+        <ul className='flex flex-wrap gap-2'>
+          {cultivos?.map((c) => (
+            <li className='flex items-center gap-2' key={c.id}>
+              <div
+                className='size-4 rounded-sm'
+                style={{ backgroundColor: c.color ?? '#000000' }}
+              />
+              <p className='text-sm'>{c.nombre}</p>
+            </li>
+          ))}
+        </ul>
+      )}
       <div className='flex flex-col items-center gap-2 md:flex-row-reverse md:items-end'>
         <Button
           disabled={isSubmitting || isSubmitSuccessful}

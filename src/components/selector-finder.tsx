@@ -23,6 +23,7 @@ type SelectorType = 'Ubicación' | 'Cultivo' | 'Tratamiento' | 'Producto';
 interface Props {
   data: Campo[] | Cultivo[] | Tratamiento[] | Producto[];
   selectedValue: string;
+  selectedColor?: string | null;
   onSelectValue: (value: string) => void;
   className?: string;
   type: SelectorType;
@@ -35,6 +36,7 @@ interface Props {
 export default function SelectorFinder({
   data,
   selectedValue,
+  selectedColor,
   onSelectValue,
   className,
   type,
@@ -54,7 +56,17 @@ export default function SelectorFinder({
           aria-expanded={open}
           className='justify-between'
         >
-          <p className='truncate'>{selectedValue || type}</p>
+          {selectedValue && type === 'Cultivo' ? (
+            <div className='flex items-center gap-2 truncate'>
+              <div
+                className='aspect-square size-4 rounded-sm'
+                style={{ backgroundColor: selectedColor ?? 'transparent' }}
+              />
+              <span className='truncate'>{selectedValue}</span>
+            </div>
+          ) : (
+            selectedValue || type
+          )}
           <ChevronsUpDown className='opacity-50' />
         </Button>
       </PopoverTrigger>
@@ -66,26 +78,36 @@ export default function SelectorFinder({
               No se encontraron resultados
             </CommandEmpty>
             <CommandGroup heading={externalModalTrigger}>
-              {data.map((c) => (
+              {data.map((i) => (
                 <CommandItem
-                  key={c.id}
-                  value={`${normalize(c.nombre)}__${c.id}`}
+                  key={i.id}
+                  value={`${normalize(i.nombre)}__${i.id}`}
                   onSelect={(value) => {
                     onSelectValue(value.split('__')[1]);
                     setOpen(false);
                   }}
                   disabled={
                     type === 'Producto'
-                      ? aplicaciones?.find((a) => a.producto_id === c.id)
+                      ? aplicaciones?.find((a) => a.producto_id === i.id)
                         ? true
                         : false
                       : false
                   }
                 >
-                  {c.nombre}
-                  {type === 'Ubicación'
-                    ? ` (${(c as Campo).Lote?.reduce((acc, lote) => acc + (lote?.hectareas as number), 0).toFixed(2)})`
-                    : ''}
+                  {type === 'Cultivo' && (
+                    <div
+                      className='size-4 rounded-sm'
+                      style={{
+                        backgroundColor: (i as Cultivo).color ?? 'transparent',
+                      }}
+                    />
+                  )}
+                  <span>
+                    {i.nombre}
+                    {type === 'Ubicación'
+                      ? ` (${(i as Campo).Lote?.reduce((acc, lote) => acc + (lote?.hectareas as number), 0).toFixed(2)})`
+                      : ''}
+                  </span>
                 </CommandItem>
               ))}
             </CommandGroup>

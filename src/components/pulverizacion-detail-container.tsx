@@ -85,7 +85,7 @@ export default function PulverizacionDetailContainer({ data }: Props) {
         description: `${l.nombre} (${l.hectareas?.toFixed(2)}ha)`,
         area: l.hectareas,
         nombre: l.nombre,
-        color: l.color,
+        color: data.detalle.cultivo?.color ?? '#000000',
         opacity: data?.detalle.lotes.includes(l.nombre as string) ? 1 : 0.35,
       },
     } as PolygonFeature;
@@ -137,8 +137,8 @@ export default function PulverizacionDetailContainer({ data }: Props) {
                 <li
                   key={`badge-${lote.nombre}`}
                   style={{
-                    backgroundColor: `${lote.color as string}75`,
-                    borderColor: lote.color as string,
+                    backgroundColor: `${data.detalle.cultivo?.color ?? '#000000'}75`,
+                    borderColor: data.detalle.cultivo?.color ?? '#000000',
                   }}
                   className={cn(
                     'inline-flex space-x-1 rounded-md border-2 px-3 py-1 text-xs font-semibold',

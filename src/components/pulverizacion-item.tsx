@@ -65,17 +65,24 @@ export default function PulverizacionItem({ pulverizacion }: Props) {
                     <LoteItem
                       key={`lote-${loteData.id ?? 'empty'}`}
                       lote={loteData}
+                      color={detalle.cultivo?.color ?? '#000000'}
                     />
                   );
                 })}
               </ul>
             </div>
             <div className='flex flex-wrap gap-2'>
-              <Badge variant={'secondary'} className='space-x-1'>
+              <Badge variant={'secondary'} className='space-x-2'>
                 <Leaf size={14} />
                 <h6>{detalle.cultivo?.nombre}</h6>
+                <div
+                  className='size-2.5 rounded-sm'
+                  style={{
+                    backgroundColor: detalle?.cultivo?.color ?? 'transparent',
+                  }}
+                />
               </Badge>
-              <Badge variant={'secondary'} className='space-x-1'>
+              <Badge variant={'secondary'} className='space-x-2'>
                 <ListCheckIcon size={14} />
                 <h6>{detalle.tratamiento?.nombre}</h6>
               </Badge>

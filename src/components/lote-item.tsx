@@ -13,6 +13,7 @@ interface Props {
   deleteLote?: () => void;
   isEditting?: boolean;
   storedLotesQuantity?: number;
+  color?: string;
 }
 export default function LoteItem({
   lote,
@@ -22,6 +23,7 @@ export default function LoteItem({
   deleteLote,
   isEditting,
   storedLotesQuantity,
+  color,
 }: Props) {
   const hasMinimumLotesQuantity =
     storedLotesQuantity && storedLotesQuantity > 1;
@@ -45,8 +47,8 @@ export default function LoteItem({
         <div
           style={
             customStyle ?? {
-              backgroundColor: `${lote.color as string}75`,
-              borderColor: lote.color as string,
+              backgroundColor: `${color as string}75`,
+              borderColor: color as string,
             }
           }
           className={cn(

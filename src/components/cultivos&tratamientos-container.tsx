@@ -1,10 +1,10 @@
 import { RedirectType, redirect } from 'next/navigation';
 
+import { APIError } from '@/types/error.types';
 import CultivosTratamientosTabs from './cultivos&tratamientos-tabs';
 import { cookies } from 'next/headers';
 import { getCultivos } from '@/services/cultivos.service';
 import { getTratamientos } from '@/services/tratamientos.service';
-import { APIError } from '@/types/error.types';
 
 interface Props {
   nombre: string;

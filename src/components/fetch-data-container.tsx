@@ -1,14 +1,15 @@
+import { RedirectType, redirect } from 'next/navigation';
+
+import { AddOrEditPulverizacionDialog } from './pulverizaciones-dialog';
+import { AllData } from '@/types/root.types';
+import { Button } from './ui/button';
+import { ReloadIcon } from '@radix-ui/react-icons';
+import { Suspense } from 'react';
+import { cookies } from 'next/headers';
 import { getCampos } from '@/services/campos.service';
 import { getCultivos } from '@/services/cultivos.service';
 import { getProductos } from '@/services/productos.service';
 import { getTratamientos } from '@/services/tratamientos.service';
-import { cookies } from 'next/headers';
-import { redirect, RedirectType } from 'next/navigation';
-import { Suspense } from 'react';
-import { Button } from './ui/button';
-import { AllData } from '@/types/root.types';
-import { ReloadIcon } from '@radix-ui/react-icons';
-import { AddOrEditPulverizacionDialog } from './pulverizaciones-dialog';
 
 export default async function FetchDataContainerForAddPulverizacionForm() {
   const access_token = (await cookies()).get('access_token');
@@ -32,7 +33,12 @@ export default async function FetchDataContainerForAddPulverizacionForm() {
       </Button>
     );
 
-  const data: AllData = { campos, cultivos, tratamientos, productos };
+  const data: AllData = {
+    campos,
+    cultivos,
+    tratamientos,
+    productos,
+  };
 
   return (
     <Suspense

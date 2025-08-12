@@ -17,12 +17,12 @@ export default function ColorPicker({ color, onChange }: Props) {
       <PopoverTrigger asChild>
         <Button
           type='button'
-          className='col-span-2 h-full'
+          className='size-full'
           style={{ backgroundColor: color }}
         ></Button>
       </PopoverTrigger>
       <PopoverContent
-        className='z-[99999] mt-1 w-auto p-0'
+        className='z-[99999] mt-1 w-full p-0'
         align='end'
         side='bottom'
       >

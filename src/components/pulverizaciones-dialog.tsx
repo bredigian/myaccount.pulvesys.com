@@ -176,6 +176,7 @@ export const AddOrEditPulverizacionDialog = ({ data }: Props) => {
           addCampoDialog.handleOpen();
           if (!open) setTimeout(() => handleOpen(), 250);
         }}
+        storedData={data.campos}
       />
       <AddOrEditCultivoDialog
         hidden

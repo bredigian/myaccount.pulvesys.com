@@ -54,7 +54,7 @@ export default function CampoItem({ data }: Props) {
         description: `${l.nombre} (${l.hectareas?.toFixed(2)}ha)`,
         area: l.hectareas,
         nombre: l.nombre,
-        color: l.color,
+        color: '#000000',
         opacity: 0.65,
       },
     } as PolygonFeature;

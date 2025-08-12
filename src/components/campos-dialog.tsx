@@ -38,18 +38,7 @@ import { useDialog } from '@/hooks/use-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 
-export const AddOrEditCampoDialog = ({
-  isEdit,
-  data,
-  storedData,
-  variant,
-  className,
-  onlyIcon,
-  hidden,
-  customOpen,
-  customSetOpen,
-  customHandleOpen,
-}: {
+interface Props {
   isEdit?: boolean;
   data?: Campo;
   storedData?: Campo[];
@@ -66,7 +55,20 @@ export const AddOrEditCampoDialog = ({
   customOpen?: boolean;
   customSetOpen?: Dispatch<SetStateAction<boolean>>;
   customHandleOpen?: () => void;
-}) => {
+}
+
+export const AddOrEditCampoDialog = ({
+  isEdit,
+  data,
+  storedData,
+  variant,
+  className,
+  onlyIcon,
+  hidden,
+  customOpen,
+  customSetOpen,
+  customHandleOpen,
+}: Props) => {
   const { open, setOpen, handleOpen } = useDialog();
 
   const isMobile = useIsMobile();
