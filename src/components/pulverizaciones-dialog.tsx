@@ -97,6 +97,8 @@ export const AddOrEditPulverizacionDialog = ({ data }: Props) => {
           if (!open) setTimeout(() => handleOpen(), 250);
         }}
         storedData={data.campos}
+        cultivos={data.cultivos}
+        pulverizaciones={data.pulverizaciones}
       />
       <AddOrEditCultivoDialog
         hidden
@@ -177,6 +179,8 @@ export const AddOrEditPulverizacionDialog = ({ data }: Props) => {
           if (!open) setTimeout(() => handleOpen(), 250);
         }}
         storedData={data.campos}
+        cultivos={data.cultivos}
+        pulverizaciones={data.pulverizaciones}
       />
       <AddOrEditCultivoDialog
         hidden

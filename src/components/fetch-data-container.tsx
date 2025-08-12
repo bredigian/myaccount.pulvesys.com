@@ -9,6 +9,7 @@ import { cookies } from 'next/headers';
 import { getCampos } from '@/services/campos.service';
 import { getCultivos } from '@/services/cultivos.service';
 import { getProductos } from '@/services/productos.service';
+import { getPulverizaciones } from '@/services/pulverizaciones.service';
 import { getTratamientos } from '@/services/tratamientos.service';
 
 export default async function FetchDataContainerForAddPulverizacionForm() {
@@ -20,12 +21,17 @@ export default async function FetchDataContainerForAddPulverizacionForm() {
   const cultivos = await getCultivos(access_token.value, refresh_token);
   const tratamientos = await getTratamientos(access_token.value, refresh_token);
   const productos = await getProductos(access_token.value, refresh_token);
+  const pulverizaciones = await getPulverizaciones(
+    access_token.value,
+    refresh_token,
+  );
 
   if (
     'error' in campos ||
     'error' in cultivos ||
     'error' in tratamientos ||
-    'error' in productos
+    'error' in productos ||
+    'error' in pulverizaciones
   )
     return (
       <Button type='button' disabled>
@@ -38,6 +44,7 @@ export default async function FetchDataContainerForAddPulverizacionForm() {
     cultivos,
     tratamientos,
     productos,
+    pulverizaciones,
   };
 
   return (

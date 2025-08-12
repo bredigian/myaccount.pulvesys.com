@@ -5,20 +5,24 @@ import { Campo, Coordinada, Lote } from '@/types/campos.types';
 import { Card, CardContent } from './ui/card';
 
 import { Badge } from './ui/badge';
+import { Cultivo } from '@/types/cultivos.types';
 import { Label } from './ui/label';
 import LoteItem from './lote-item';
 import MapboxMap from './map';
 import { PolygonFeature } from './campos-form';
 import { Position } from 'geojson';
+import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { Switch } from './ui/switch';
 import { UUID } from 'crypto';
 import { useState } from 'react';
 
 interface Props {
   data: Campo;
+  cultivos: Cultivo[];
+  pulverizaciones: Pulverizacion[];
 }
 
-export default function CampoItem({ data }: Props) {
+export default function CampoItem({ data, cultivos, pulverizaciones }: Props) {
   const totalHectareas = data.Lote?.reduce(
     (acc, lote) => acc + (lote?.hectareas as number),
     0,
@@ -43,6 +47,10 @@ export default function CampoItem({ data }: Props) {
       {} as Record<string, Position[]>,
     );
 
+    const lastPulverizacionAppliedToThisCampo = pulverizaciones?.find(
+      (p) => p.detalle.campo_id === data.id,
+    );
+
     return {
       id: l.id as UUID,
       type: 'Feature',
@@ -54,7 +62,12 @@ export default function CampoItem({ data }: Props) {
         description: `${l.nombre} (${l.hectareas?.toFixed(2)}ha)`,
         area: l.hectareas,
         nombre: l.nombre,
-        color: '#000000',
+        color: !lastPulverizacionAppliedToThisCampo
+          ? '#000000'
+          : cultivos?.find(
+              (c) =>
+                c.id === lastPulverizacionAppliedToThisCampo.detalle.cultivo_id,
+            )?.color,
         opacity: 0.65,
       },
     } as PolygonFeature;
@@ -69,7 +82,12 @@ export default function CampoItem({ data }: Props) {
               {data.nombre}
             </h3>
             <aside className='producto-settings flex items-center gap-2'>
-              <AddOrEditCampoDialog isEdit data={data} />
+              <AddOrEditCampoDialog
+                isEdit
+                data={data}
+                cultivos={cultivos}
+                pulverizaciones={pulverizaciones}
+              />
               <DeleteCampoDialog id={data.id as UUID} />
             </aside>
           </div>

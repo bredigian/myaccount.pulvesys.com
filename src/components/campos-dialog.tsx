@@ -28,6 +28,8 @@ import AddOrEditCampoForm from './campos-form';
 import { Button } from './ui/button';
 import { Campo } from '@/types/campos.types';
 import Cookies from 'js-cookie';
+import { Cultivo } from '@/types/cultivos.types';
+import { Pulverizacion } from '@/types/pulverizaciones.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { UUID } from 'crypto';
 import { cn } from '@/lib/utils';
@@ -55,6 +57,9 @@ interface Props {
   customOpen?: boolean;
   customSetOpen?: Dispatch<SetStateAction<boolean>>;
   customHandleOpen?: () => void;
+
+  cultivos: Cultivo[];
+  pulverizaciones: Pulverizacion[];
 }
 
 export const AddOrEditCampoDialog = ({
@@ -68,6 +73,8 @@ export const AddOrEditCampoDialog = ({
   customOpen,
   customSetOpen,
   customHandleOpen,
+  cultivos,
+  pulverizaciones,
 }: Props) => {
   const { open, setOpen, handleOpen } = useDialog();
 
@@ -107,6 +114,8 @@ export const AddOrEditCampoDialog = ({
           data={data}
           storedData={storedData}
           handleOpen={customHandleOpen ?? handleOpen}
+          cultivos={cultivos}
+          pulverizaciones={pulverizaciones}
         />
       </DrawerContent>
     </Drawer>
@@ -144,6 +153,8 @@ export const AddOrEditCampoDialog = ({
           data={data}
           storedData={storedData}
           handleOpen={customHandleOpen ?? handleOpen}
+          cultivos={cultivos}
+          pulverizaciones={pulverizaciones}
         />
       </DialogContent>
     </Dialog>
