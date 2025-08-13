@@ -4,14 +4,16 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { Input } from './ui/input';
 import { Search } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { useDebouncedCallback } from 'use-debounce';
 
 interface Props {
   param?: string;
   placeholder?: string;
+  className?: string;
 }
 
-export default function Finder({ param, placeholder }: Props) {
+export default function Finder({ param, placeholder, className }: Props) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { replace } = useRouter();
@@ -26,7 +28,9 @@ export default function Finder({ param, placeholder }: Props) {
   }, 300);
 
   return (
-    <div className='relative flex w-full items-center md:max-w-sm'>
+    <div
+      className={cn('relative flex w-full items-center md:max-w-sm', className)}
+    >
       <Search className='absolute pl-2 opacity-50' />
       <Input
         defaultValue={searchParams?.get(param || 'nombre')?.toString()}

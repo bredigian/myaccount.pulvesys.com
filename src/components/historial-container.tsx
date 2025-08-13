@@ -1,5 +1,6 @@
 import { RedirectType, redirect } from 'next/navigation';
 
+import { DateTime } from 'luxon';
 import HistorialTable from './historial-table';
 import { cookies } from 'next/headers';
 import { getHistorial } from '@/services/historial.service';
@@ -24,7 +25,18 @@ export default async function HistorialContainer({ filter }: Props) {
           item?.usuario?.nombre
             ?.concat(item?.usuario?.apellido as string)
             .toLowerCase()
-            .includes(filter.replaceAll(' ', '').toLowerCase()),
+            .includes(filter.replaceAll(' ', '').toLowerCase()) ||
+          item.description.toLowerCase().includes(filter) ||
+          DateTime.fromISO(item.createdAt as string)
+            .toFormat('dd/M/yyyy')
+            ?.includes(filter) ||
+          DateTime.fromISO(item.createdAt as string)
+            .toFormat('dd/MM/yyyy')
+            ?.includes(filter) ||
+          DateTime.fromISO(item.createdAt as string)
+            .setLocale('es-AR')
+            .monthLong?.toLowerCase()
+            ?.includes(filter.toLowerCase()),
       );
 
   return <HistorialTable data={filteredData} />;

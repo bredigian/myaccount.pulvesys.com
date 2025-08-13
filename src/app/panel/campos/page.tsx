@@ -35,7 +35,7 @@ export default async function Campos({ searchParams }: Props) {
         relacionado al cultivo utilizado el la última órden de pulverización
         generada para el campo en particular.
       </p>
-      <Suspense fallback={<CamposMasonrySkeleton />}>
+      <Suspense fallback={<CamposMasonrySkeleton />} key={nombre}>
         <CamposContainer query={nombre} />
       </Suspense>
     </main>

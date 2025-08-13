@@ -18,7 +18,7 @@ export default async function Pulverizaciones({ searchParams }: Props) {
         <Finder param='filter' placeholder='Buscar' />
         <FetchDataContainerForAddPulverizacionForm />
       </aside>
-      <Suspense fallback={<PulverizacionesMasonrySkeleton />}>
+      <Suspense fallback={<PulverizacionesMasonrySkeleton />} key={filter}>
         <PulverizacionesContainer query={filter} />
       </Suspense>
     </main>

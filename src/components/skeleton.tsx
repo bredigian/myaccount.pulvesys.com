@@ -135,9 +135,6 @@ export const HistorialItemSkeleton = () => {
         <Skeleton className='h-3 w-72' />
         <Skeleton className='h-3 w-48' />
       </TableCell>
-      <TableCell>
-        <Skeleton className='h-3 w-48' />
-      </TableCell>
     </TableRow>
   );
 };

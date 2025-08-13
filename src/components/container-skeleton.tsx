@@ -129,7 +129,6 @@ export const HistorialContainerSkeleton = () => {
           <TableHead>Fecha</TableHead>
           <TableHead>Tipo</TableHead>
           <TableHead>Descripción</TableHead>
-          <TableHead>ID</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

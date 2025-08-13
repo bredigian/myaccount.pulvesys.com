@@ -25,7 +25,14 @@ export default function HistorialItem({ data }: Props) {
       <TableCell>
         {DateTime.fromJSDate(new Date(createdAt))
           .setLocale('es-AR')
-          .toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS)}
+          .toLocaleString(
+            {
+              dateStyle: 'short',
+              hourCycle: 'h23',
+              timeStyle: 'medium',
+            },
+            DateTime.DATETIME_SHORT_WITH_SECONDS,
+          )}
       </TableCell>
       <TableCell>{LOG_NOMBRE[type]}</TableCell>
       {isEnterprise && <TableCell>{nombreCompleto}</TableCell>}
