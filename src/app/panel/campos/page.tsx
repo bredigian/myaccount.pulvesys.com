@@ -30,6 +30,11 @@ export default async function Campos({ searchParams }: Props) {
           <AddCampoContainer />
         </Suspense>
       </aside>
+      <p className='text-sm opacity-75'>
+        Tené en cuenta que el color del lote en los diferentes campos está
+        relacionado al cultivo utilizado el la última órden de pulverización
+        generada para el campo en particular.
+      </p>
       <Suspense fallback={<CamposMasonrySkeleton />}>
         <CamposContainer query={nombre} />
       </Suspense>

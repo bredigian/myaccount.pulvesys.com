@@ -159,6 +159,7 @@ export default function AddOrEditPulverizacionForm({
       setPolygons(
         (selectedCampo?.Lote as Lote[]).map((l) => {
           const points = l.Coordinada as Coordinada[];
+          console.log(points);
 
           const groupedByLoteId = points.reduce(
             (acc, coord) => {
@@ -171,6 +172,10 @@ export default function AddOrEditPulverizacionForm({
             {} as Record<string, Position[]>,
           );
 
+          const loteIsPulverizado = data.pulverizaciones
+            .filter((p) => p.detalle.campo_id === selectedCampo.id)
+            ?.find((p) => p.detalle.lotes.includes(l.nombre as string));
+
           return {
             id: l.id as UUID,
             type: 'Feature',
@@ -181,8 +186,14 @@ export default function AddOrEditPulverizacionForm({
             properties: {
               description: `${l.nombre} (${l.hectareas?.toFixed(2)}ha)`,
               area: l.hectareas,
-              nombre: l.nombre,
-              color: selectedCultivoColor as string,
+              color:
+                loteIsPulverizado && selectedLotes.includes(l.nombre as string)
+                  ? selectedCultivoColor
+                  : loteIsPulverizado
+                    ? loteIsPulverizado.detalle.cultivo?.color
+                    : selectedLotes.includes(l.nombre as string)
+                      ? selectedCultivoColor
+                      : '#000000',
               opacity: selectedLotes.includes(l.nombre as string) ? 1 : 0.5,
             },
           } as PolygonFeature;

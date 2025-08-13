@@ -193,7 +193,10 @@ export default function AddOrEditCampoForm({
               description: `${l.nombre} (${l.hectareas?.toFixed(2)}ha)`,
               area: l.hectareas,
               nombre: l.nombre,
-              color: l.color,
+              color:
+                pulverizaciones?.find((p) =>
+                  p.detalle.lotes.includes(l.nombre as string),
+                )?.detalle.cultivo?.color ?? '#000000',
               opacity: 0.65,
             },
           } as PolygonFeature;
@@ -216,10 +219,6 @@ export default function AddOrEditCampoForm({
           {} as Record<string, Position[]>,
         );
 
-        const lastPulverizacionAppliedToThisCampo = pulverizaciones?.find(
-          (p) => p.detalle.campo_id === c.id,
-        );
-
         return {
           id: l.id as UUID,
           type: 'Feature',
@@ -231,13 +230,10 @@ export default function AddOrEditCampoForm({
             description: `${l.nombre} (${l.hectareas?.toFixed(2)}ha)\n${c.nombre}`,
             area: l.hectareas,
             nombre: l.nombre,
-            color: !lastPulverizacionAppliedToThisCampo
-              ? '#000000'
-              : cultivos?.find(
-                  (c) =>
-                    c.id ===
-                    lastPulverizacionAppliedToThisCampo.detalle.cultivo_id,
-                )?.color,
+            color:
+              pulverizaciones?.find((p) =>
+                p.detalle.lotes.includes(l.nombre as string),
+              )?.detalle.cultivo?.color ?? '#000000',
             opacity: 0.65,
           },
         } as PolygonFeature;
@@ -450,7 +446,10 @@ export default function AddOrEditCampoForm({
       {cultivos && (
         <ul className='flex flex-wrap gap-2'>
           {cultivos?.map((c) => (
-            <li className='flex items-center gap-2' key={c.id}>
+            <li
+              className='flex items-center gap-2'
+              key={'cultivo_helper_' + c.id}
+            >
               <div
                 className='size-4 rounded-sm'
                 style={{ backgroundColor: c.color ?? '#000000' }}
@@ -458,6 +457,16 @@ export default function AddOrEditCampoForm({
               <p className='text-sm'>{c.nombre}</p>
             </li>
           ))}
+          <li
+            className='flex items-center gap-2'
+            key={'cultivo_helper_sin_aplicacion'}
+          >
+            <div
+              className='size-4 rounded-sm dark:border-2 dark:border-white'
+              style={{ backgroundColor: '#000000' }}
+            />
+            <p className='text-sm'>Sin aplicación</p>
+          </li>
         </ul>
       )}
       <div className='flex flex-col items-center gap-2 md:flex-row-reverse md:items-end'>

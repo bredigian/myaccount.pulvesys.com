@@ -44,9 +44,13 @@ import { usuarioStore } from '@/store/usuario.store';
 
 interface Props {
   data: Pulverizacion;
+  pulverizaciones: Pulverizacion[];
 }
 
-export default function PulverizacionDetailContainer({ data }: Props) {
+export default function PulverizacionDetailContainer({
+  data,
+  pulverizaciones,
+}: Props) {
   const selectedHectareas = data?.detalle?.campo?.Lote?.filter((lote) =>
     data.detalle.lotes.includes(lote.nombre as string),
   ).reduce((acc, lote) => acc + (lote?.hectareas as number), 0);
@@ -59,6 +63,14 @@ export default function PulverizacionDetailContainer({ data }: Props) {
 
   const isFromEmployer =
     data.usuario?.rol === 'INDIVIDUAL' && data.usuario.empresa_id;
+
+  const filteredPulverizaciones = pulverizaciones
+    .filter((p) => p.detalle.campo_id === data.detalle.campo_id)
+    .filter(
+      (p) =>
+        new Date(p.createdAt as Date).getTime() <=
+        new Date(data.createdAt as Date).getTime(),
+    );
 
   const polygons = data?.detalle?.campo?.Lote?.map((l) => {
     const points = l.Coordinada as Coordinada[];
@@ -85,7 +97,10 @@ export default function PulverizacionDetailContainer({ data }: Props) {
         description: `${l.nombre} (${l.hectareas?.toFixed(2)}ha)`,
         area: l.hectareas,
         nombre: l.nombre,
-        color: data.detalle.cultivo?.color ?? '#000000',
+        color:
+          filteredPulverizaciones?.find((p) =>
+            p.detalle.lotes.includes(l.nombre as string),
+          )?.detalle.cultivo?.color ?? '#000000',
         opacity: data?.detalle.lotes.includes(l.nombre as string) ? 1 : 0.35,
       },
     } as PolygonFeature;

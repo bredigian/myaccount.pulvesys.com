@@ -115,7 +115,9 @@ export const AddOrEditCampoDialog = ({
           storedData={storedData}
           handleOpen={customHandleOpen ?? handleOpen}
           cultivos={cultivos}
-          pulverizaciones={pulverizaciones}
+          pulverizaciones={pulverizaciones.filter(
+            (p) => p.detalle.campo_id === data?.id,
+          )}
         />
       </DrawerContent>
     </Drawer>
@@ -154,7 +156,9 @@ export const AddOrEditCampoDialog = ({
           storedData={storedData}
           handleOpen={customHandleOpen ?? handleOpen}
           cultivos={cultivos}
-          pulverizaciones={pulverizaciones}
+          pulverizaciones={pulverizaciones.filter(
+            (p) => p.detalle.campo_id === data?.id,
+          )}
         />
       </DialogContent>
     </Dialog>

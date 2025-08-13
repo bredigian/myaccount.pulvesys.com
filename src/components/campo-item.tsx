@@ -33,6 +33,10 @@ export default function CampoItem({ data, cultivos, pulverizaciones }: Props) {
 
   const { Lote } = data;
 
+  const filteredPulverizaciones = pulverizaciones.filter(
+    (p) => p.detalle.campo_id === data.id,
+  );
+
   const polygonsData: PolygonFeature[] = (Lote as Lote[]).map((l) => {
     const points = l.Coordinada as Coordinada[];
 
@@ -47,10 +51,6 @@ export default function CampoItem({ data, cultivos, pulverizaciones }: Props) {
       {} as Record<string, Position[]>,
     );
 
-    const lastPulverizacionAppliedToThisCampo = pulverizaciones?.find(
-      (p) => p.detalle.campo_id === data.id,
-    );
-
     return {
       id: l.id as UUID,
       type: 'Feature',
@@ -62,12 +62,10 @@ export default function CampoItem({ data, cultivos, pulverizaciones }: Props) {
         description: `${l.nombre} (${l.hectareas?.toFixed(2)}ha)`,
         area: l.hectareas,
         nombre: l.nombre,
-        color: !lastPulverizacionAppliedToThisCampo
-          ? '#000000'
-          : cultivos?.find(
-              (c) =>
-                c.id === lastPulverizacionAppliedToThisCampo.detalle.cultivo_id,
-            )?.color,
+        color:
+          filteredPulverizaciones?.find((p) =>
+            p.detalle.lotes.includes(l.nombre as string),
+          )?.detalle.cultivo?.color ?? '#000000',
         opacity: 0.65,
       },
     } as PolygonFeature;
@@ -86,7 +84,7 @@ export default function CampoItem({ data, cultivos, pulverizaciones }: Props) {
                 isEdit
                 data={data}
                 cultivos={cultivos}
-                pulverizaciones={pulverizaciones}
+                pulverizaciones={filteredPulverizaciones}
               />
               <DeleteCampoDialog id={data.id as UUID} />
             </aside>
