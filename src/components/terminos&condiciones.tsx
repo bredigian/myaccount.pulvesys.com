@@ -178,7 +178,7 @@ export default function TerminosCondiciones({ hideTitle }: Props) {
             <h4>10. Contacto</h4>
             <p>
               Si tenés dudas, querés ejercer tus derechos sobre tus datos o
-              necesitás soporte, escribinos a soporte@pulvesys.com.
+              necesitás soporte, escribinos a bredicegian@gmail.com.
             </p>
           </li>
         </ul>
