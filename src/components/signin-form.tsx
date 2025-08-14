@@ -15,14 +15,14 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import Link from 'next/link';
 import { ReloadIcon } from '@radix-ui/react-icons';
-import { UsuarioToSignin } from '@/types/usuario.types';
+import { UsuarioToSignin } from '@/types/users.types';
 import { cn } from '@/lib/utils';
 import { signin } from '@/services/auth.service';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export default function SigninForm() {
+export const SigninForm = () => {
   const {
     register,
     handleSubmit,
@@ -50,7 +50,10 @@ export default function SigninForm() {
       const { rol } = userdata;
 
       setSuccess(true);
-      setTimeout(() => push(rol === 'EMPRESA' ? '/empresa' : '/panel'), 1000);
+      setTimeout(
+        () => push(rol === 'EMPRESA' ? '/enterprise' : '/dashboard'),
+        1000,
+      );
     } catch (error) {
       const { message } = error as APIError;
       toast.error(message);
@@ -127,7 +130,7 @@ export default function SigninForm() {
             </>
           )}
         </Button>
-        <Link href={'/registrarse'} className='w-full'>
+        <Link href={'/signup'} className='w-full'>
           <Button
             type='button'
             variant={'outline'}
@@ -139,4 +142,4 @@ export default function SigninForm() {
       </div>
     </form>
   );
-}
+};

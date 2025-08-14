@@ -7,16 +7,16 @@ import {
   CardTitle,
 } from './ui/card';
 import {
-  CultivoTratamientoItemSkeleton,
-  HistorialItemSkeleton,
-  ProductoItemSkeleton,
-  UsuarioItemSkeleton,
+  CropTratamientoItemSkeleton,
+  LogItemSkeleton,
+  ProductItemSkeleton,
+  UserItemSkeleton,
 } from './skeleton';
 import { Table, TableBody, TableHead, TableHeader, TableRow } from './ui/table';
 
 import { Skeleton } from './ui/skeleton';
 
-export const ProductosContainerSkeleton = () => {
+export const ProductsContainerSkeleton = () => {
   return (
     <Table>
       <TableHeader>
@@ -28,14 +28,14 @@ export const ProductosContainerSkeleton = () => {
       </TableHeader>
       <TableBody>
         {Array.from({ length: 20 }, (_, i) => (
-          <ProductoItemSkeleton key={`producto-item-skeleton-${i}`} />
+          <ProductItemSkeleton key={`producto-item-skeleton-${i}`} />
         ))}
       </TableBody>
     </Table>
   );
 };
 
-export const UsuariosContainerSkeleton = () => {
+export const UsersContainerSkeleton = () => {
   return (
     <Table>
       <TableHeader>
@@ -51,14 +51,14 @@ export const UsuariosContainerSkeleton = () => {
       </TableHeader>
       <TableBody>
         {Array.from({ length: 20 }, (_, i) => (
-          <UsuarioItemSkeleton key={`usuario-item-skeleton-${i}`} />
+          <UserItemSkeleton key={`usuario-item-skeleton-${i}`} />
         ))}
       </TableBody>
     </Table>
   );
 };
 
-export const CultivosTratamientosContainerSkeleton = () => {
+export const CropsTreatmentsContainerSkeleton = () => {
   return (
     <div className='flex w-full flex-col gap-4'>
       <div className='w-full space-y-2'>
@@ -77,7 +77,7 @@ export const CultivosTratamientosContainerSkeleton = () => {
         </TableHeader>
         <TableBody>
           {Array.from({ length: 20 }, (_, i) => (
-            <CultivoTratamientoItemSkeleton
+            <CropTratamientoItemSkeleton
               key={`cultivo&tratamiento-item-skeleton-${i}`}
             />
           ))}
@@ -87,7 +87,7 @@ export const CultivosTratamientosContainerSkeleton = () => {
   );
 };
 
-export const SuscripcionContainerSkeleton = () => {
+export const SubscriptionContainerSkeleton = () => {
   return (
     <Card className='md:max-w-lg'>
       <CardHeader>
@@ -121,7 +121,7 @@ export const SuscripcionContainerSkeleton = () => {
   );
 };
 
-export const HistorialContainerSkeleton = () => {
+export const LogsContainerSkeleton = () => {
   return (
     <Table>
       <TableHeader>
@@ -133,7 +133,7 @@ export const HistorialContainerSkeleton = () => {
       </TableHeader>
       <TableBody>
         {Array.from({ length: 20 }, (_, i) => (
-          <HistorialItemSkeleton key={`historial-item-skeleton-${i}`} />
+          <LogItemSkeleton key={`historial-item-skeleton-${i}`} />
         ))}
       </TableBody>
     </Table>

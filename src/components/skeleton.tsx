@@ -3,7 +3,7 @@ import { TableCell, TableRow } from './ui/table';
 
 import { Skeleton } from './ui/skeleton';
 
-export const PulverizacionItemSkeleton = () => {
+export const SprayItemSkeleton = () => {
   return (
     <li className='col-span-full flex items-start justify-between md:col-span-3 xl:col-span-2'>
       <Card className='size-full duration-200 ease-in-out hover:bg-secondary'>
@@ -16,7 +16,7 @@ export const PulverizacionItemSkeleton = () => {
         <CardContent className='space-y-4'>
           <ul className='flex flex-wrap items-start gap-2 overflow-hidden'>
             {Array.from({ length: 2 }, (_, i) => (
-              <LoteItemSkeleton key={`lote-skeleton-${i}`} />
+              <LotItemSkeleton key={`lote-skeleton-${i}`} />
             ))}
           </ul>
           <div className='flex flex-wrap gap-2'>
@@ -34,7 +34,7 @@ export const PulverizacionItemSkeleton = () => {
   );
 };
 
-export const CampoItemSkeleton = () => {
+export const LocationItemSkeleton = () => {
   return (
     <li className='col-span-full flex items-start justify-between md:col-span-3 xl:col-span-2'>
       <Card className='size-full'>
@@ -52,7 +52,7 @@ export const CampoItemSkeleton = () => {
           <Skeleton className='h-48 w-full' />
           <ul className='flex flex-wrap items-start gap-2 overflow-hidden'>
             {Array.from({ length: 3 }, (_, i) => (
-              <LoteItemSkeleton key={`lote-skeleton-${i}`} />
+              <LotItemSkeleton key={`lote-skeleton-${i}`} />
             ))}
           </ul>
         </CardContent>
@@ -61,11 +61,11 @@ export const CampoItemSkeleton = () => {
   );
 };
 
-export const LoteItemSkeleton = () => {
+export const LotItemSkeleton = () => {
   return <Skeleton className='h-6 w-20' />;
 };
 
-export const ProductoItemSkeleton = () => {
+export const ProductItemSkeleton = () => {
   return (
     <TableRow className='h-12'>
       <TableCell>
@@ -81,7 +81,7 @@ export const ProductoItemSkeleton = () => {
   );
 };
 
-export const CultivoTratamientoItemSkeleton = () => {
+export const CropTratamientoItemSkeleton = () => {
   return (
     <TableRow className='h-12'>
       <TableCell>
@@ -94,7 +94,7 @@ export const CultivoTratamientoItemSkeleton = () => {
   );
 };
 
-export const UsuarioItemSkeleton = () => {
+export const UserItemSkeleton = () => {
   return (
     <TableRow className='h-12'>
       <TableCell>
@@ -122,7 +122,7 @@ export const UsuarioItemSkeleton = () => {
   );
 };
 
-export const HistorialItemSkeleton = () => {
+export const LogItemSkeleton = () => {
   return (
     <TableRow className='h-12'>
       <TableCell>

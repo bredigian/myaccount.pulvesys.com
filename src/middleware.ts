@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { verifySesion } from './services/auth.service';
+import { verifySession } from './services/auth.service';
 
 export async function middleware(req: NextRequest) {
   const access_token_from_request = req.cookies.get('access_token');
@@ -11,20 +11,20 @@ export async function middleware(req: NextRequest) {
   if (access_token_from_request && refresh_token_from_request) {
     // Hay token de acceso en las cookies y verifica la sesión
 
-    const sesion = await verifySesion(
+    const session = await verifySession(
       access_token_from_request.value,
       refresh_token_from_request,
     );
 
-    if ('error' in sesion) {
+    if ('error' in session) {
       // Se produce un error en la verificación de la sesión y hace las redirecciones en base al 'pathname'
-      const { extras } = sesion;
+      const { extras } = session;
 
       if (
-        pathname.includes('/panel') ||
-        pathname.includes('/empresa') ||
-        pathname.includes('/facturacion') ||
-        pathname.includes('/historial')
+        pathname.includes('/dashboard') ||
+        pathname.includes('/enterprise') ||
+        pathname.includes('/billing') ||
+        pathname.includes('/logs')
       ) {
         return NextResponse.redirect(new URL('/', req.url), {
           headers: {
@@ -52,13 +52,13 @@ export async function middleware(req: NextRequest) {
 
     // La verificación de la sesión se hizo exitosamente y continua con la ejecución del middleware
 
-    const { access_token, refresh_token, expireIn, userdata, domain } = sesion;
+    const { access_token, refresh_token, expireIn, userdata, domain } = session;
 
     const { isEmployer, suscripcion } = userdata;
 
-    if (pathname.includes('/suscripcion-expirada') && !isEmployer)
-      // Está en la ruta 'suscripcion-expirada' y NO es un empleado, entonces redirige hacia /facturación
-      return NextResponse.redirect(new URL('/facturacion', req.url));
+    if (pathname.includes('/subscription-expired') && !isEmployer)
+      // Está en la ruta 'suscription-expired' y NO es un empleado, entonces redirige hacia /billing
+      return NextResponse.redirect(new URL('/billing', req.url));
 
     const { free_trial, next_payment_date, status } = suscripcion;
 
@@ -67,30 +67,24 @@ export async function middleware(req: NextRequest) {
 
     const isFreeTrialExpired = !free_trial && now > endDate;
 
-    if (
-      !pathname.includes('/facturacion') &&
-      pathname !== '/suscripcion-expirada'
-    )
+    if (!pathname.includes('/billing') && pathname !== '/subscription-expired')
       if (
         status !== 'authorized' &&
         (isFreeTrialExpired || status === 'paused')
       )
-        // La ruta es DISTINTA a /facturación y a /suscripcion-expirada
-        // status es DISTINTO a 'authorized' y el free trial expiró o el status es igual a 'paused', entonces redirijo si NO es empleado a /facturación y si no a /suscripción-expirada
+        // La ruta es DISTINTA a /billing y a /suscription-expired
+        // status es DISTINTO a 'authorized' y el free trial expiró o el status es igual a 'paused', entonces redirijo si NO es empleado a /billing y si no a /suscription-expired
         return NextResponse.redirect(
-          new URL(
-            !isEmployer ? '/facturacion' : '/suscripcion-expirada',
-            req.url,
-          ),
+          new URL(!isEmployer ? '/billing' : '/subscription-expired', req.url),
         );
 
-    if (pathname.includes('/facturacion') || pathname.includes('/empresa'))
+    if (pathname.includes('/billing') || pathname.includes('/enterprise'))
       if (isEmployer)
-        // La ruta es /facturación o /empresa
+        // La ruta es /billing o /enterprise
         // El usuario es EMPLEADO
         return NextResponse.redirect(new URL('/', req.url));
 
-    if (pathname.includes('/empresa')) {
+    if (pathname.includes('/enterpise')) {
       const { rol, empresa_id } = userdata;
 
       if (rol !== 'EMPRESA' && !empresa_id)
@@ -100,11 +94,11 @@ export async function middleware(req: NextRequest) {
     const expireDate = new Date(expireIn);
 
     if (
-      pathname.includes('/panel') ||
-      pathname.includes('/empresa') ||
-      pathname.includes('/facturacion') ||
-      pathname.includes('/historial') ||
-      pathname.includes('/suscripcion-expirada')
+      pathname.includes('/dashboard') ||
+      pathname.includes('/enterprise') ||
+      pathname.includes('/billing') ||
+      pathname.includes('/logs') ||
+      pathname.includes('/subscription-expired')
     ) {
       const res = NextResponse.next();
       res.cookies.set('access_token', access_token, {
@@ -126,7 +120,7 @@ export async function middleware(req: NextRequest) {
       return res;
     }
 
-    return NextResponse.redirect(new URL('/panel', req.url), {
+    return NextResponse.redirect(new URL('/dashboard', req.url), {
       headers: {
         'Set-Cookie': [
           `access_token=${access_token}; Expires=${expireDate}; Domain=${domain};`,
@@ -138,11 +132,11 @@ export async function middleware(req: NextRequest) {
   }
 
   if (
-    pathname.includes('/panel') ||
-    pathname.includes('/empresa') ||
-    pathname.includes('/facturacion') ||
-    pathname.includes('/historial') ||
-    pathname.includes('/suscripcion-expirada')
+    pathname.includes('/dashboard') ||
+    pathname.includes('/enterpise') ||
+    pathname.includes('/billing') ||
+    pathname.includes('/logs') ||
+    pathname.includes('/subscription-expired')
   )
     return NextResponse.redirect(new URL('/', req.url));
 
@@ -152,16 +146,16 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     '/',
-    '/panel',
-    '/panel/pulverizacion',
-    '/panel/pulverizacion/:id',
-    '/panel/productos',
-    '/panel/campos',
-    '/panel/cultivos&tratamientos',
-    '/empresa',
-    '/empresa/usuarios',
-    '/facturacion',
-    '/historial',
-    '/suscripcion-expirada',
+    '/dashboard',
+    '/dashboard/spray',
+    '/dashboard/pulverizacion/:id',
+    '/dashboard/products',
+    '/dashboard/locations',
+    '/dashboard/crops&treatments',
+    '/enterprise',
+    '/enterprise/users',
+    '/billing',
+    '/logs',
+    '/subscription-expired',
   ],
 };

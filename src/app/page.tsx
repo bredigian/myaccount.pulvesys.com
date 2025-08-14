@@ -11,14 +11,14 @@ import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import Link from 'next/link';
 import { RecoverPasswordDialog } from '@/components/auth-dialog';
-import SigninForm from '@/components/signin-form';
+import { SigninForm } from '@/components/signin-form';
 import original from '../../public/logo_dalle.webp';
 
 interface Props {
   searchParams: Promise<{ session: string; expired: boolean }>;
 }
 
-export default async function Home({ searchParams }: Props) {
+export default async function HomePage({ searchParams }: Props) {
   const { session, expired } = await searchParams;
 
   return (
@@ -45,7 +45,7 @@ export default async function Home({ searchParams }: Props) {
           </CardFooter>
         </Card>
       </div>
-      <Link href={'/terminos&condiciones'} className='mb-12 text-xs underline'>
+      <Link href={'/terms&conditions'} className='mb-12 text-xs underline'>
         Términos y Condiciones
       </Link>
     </main>

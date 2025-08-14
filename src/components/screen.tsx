@@ -20,11 +20,11 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 
-import { AppSidebar } from '@/components/app-sidebar';
+import AppSidebar from '@/components/app-sidebar';
 import Link from 'next/link';
 import ScreenDialog from './screen-dialog';
 import { Separator } from '@/components/ui/separator';
-import { Usuario } from '@/types/usuario.types';
+import { Usuario } from '@/types/users.types';
 import { usePathname } from 'next/navigation';
 import { usuarioStore } from '@/store/usuario.store';
 
@@ -35,10 +35,10 @@ interface Props {
 
 export default function Screen({ children, userdata }: Props) {
   const pathname = usePathname();
-  const isPulverizacionDetail = pathname === '/panel/pulverizacion';
-  const isEnterpriseRoute = pathname.includes('empresa');
-  const isSubscriptionRoute = pathname.includes('facturacion');
-  const isExtraRoute = pathname.includes('historial');
+  const isPulverizacionDetail = pathname === '/dashboard/spray';
+  const isEnterpriseRoute = pathname.includes('enterprise');
+  const isSubscriptionRoute = pathname.includes('billing');
+  const isExtraRoute = pathname.includes('logs');
   const HEADER_TITLE = (
     isEnterpriseRoute
       ? ENTERPRISE_ROUTES
@@ -71,13 +71,13 @@ export default function Screen({ children, userdata }: Props) {
                 <BreadcrumbList>
                   <BreadcrumbItem className='hidden md:block'>
                     {isEnterpriseRoute ? (
-                      <Link href='/panel'>Empresa</Link>
+                      <Link href='/dashboard'>Empresa</Link>
                     ) : isSubscriptionRoute ? (
-                      <Link href={'/facturacion'}>Suscripción</Link>
+                      <Link href={'/billing'}>Suscripción</Link>
                     ) : isExtraRoute ? (
-                      <Link href={'/historial'}>Extra</Link>
+                      <Link href={'/logs'}>Extra</Link>
                     ) : (
-                      <Link href={'/panel'}>Administración</Link>
+                      <Link href={'/dashboard'}>Dashboard</Link>
                     )}
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className='hidden md:block' />
@@ -88,7 +88,7 @@ export default function Screen({ children, userdata }: Props) {
                   ) : (
                     <>
                       <BreadcrumbItem className='hidden md:block'>
-                        <Link href='/panel'>Pulverizaciones</Link>
+                        <Link href='/dashboard'>Pulverizaciones</Link>
                       </BreadcrumbItem>
                       <BreadcrumbSeparator className='hidden md:block' />
                       <BreadcrumbItem>

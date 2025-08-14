@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
-export function NavSection({
+export default function NavSection({
   title,
   items,
   isDisabled,
@@ -41,23 +41,28 @@ export function NavSection({
       <SidebarMenu>
         {items.map((item) => {
           const isActive = item.url === pathname;
+          const isEnterpriseHomePage = item.title === 'Inicio';
 
           return (
             <SidebarMenuItem
               key={item.title}
-              className={cn(isDisabled && 'cursor-not-allowed opacity-35')}
+              className={cn(
+                (isDisabled || isEnterpriseHomePage) &&
+                  'cursor-not-allowed opacity-35',
+              )}
             >
               <SidebarMenuButton
                 asChild
                 tooltip={item.title}
                 isActive={isActive}
-                disabled={isDisabled}
+                disabled={isDisabled || isEnterpriseHomePage}
                 className={cn(
-                  isDisabled &&
-                    'hover:bg-inherit hover:text-inherit active:bg-inherit active:text-inherit',
+                  isDisabled ||
+                    (isEnterpriseHomePage &&
+                      'hover:bg-inherit hover:text-inherit active:bg-inherit active:text-inherit'),
                 )}
               >
-                {!isDisabled ? (
+                {!isDisabled && !isEnterpriseHomePage ? (
                   <Link
                     href={item.url}
                     onClick={() => {

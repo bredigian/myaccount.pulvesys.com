@@ -3,7 +3,7 @@
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
-import { Campo, Coordinada } from '@/types/campos.types';
+import { Campo, Coordinada } from '@/types/locations.types';
 import { Layer, Map, Source, useControl, useMap } from 'react-map-gl/mapbox';
 import MapboxDraw, {
   DrawCreateEvent,
@@ -18,7 +18,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Check } from 'lucide-react';
 import { FeatureCollection } from 'geojson';
 import { MAPBOX_DEFAULT_STYLES } from '@/assets/mapbox-styles';
-import { PolygonFeature } from './campos-form';
+import { PolygonFeature } from './locations-form';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;

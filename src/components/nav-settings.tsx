@@ -12,7 +12,7 @@ import { SidebarMenu, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Button } from './ui/button';
 import { useTheme } from 'next-themes';
 
-export function NavSettings() {
+export default function NavSettings() {
   const { setTheme } = useTheme();
 
   return (

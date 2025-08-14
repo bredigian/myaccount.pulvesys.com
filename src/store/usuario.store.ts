@@ -1,20 +1,20 @@
-import { ROLES, Usuario } from '@/types/usuario.types';
+import { ROLES, User } from '@/types/users.types';
 
-import { Suscripcion } from '@/types/suscripciones.types';
+import { Subscription } from '@/types/subscriptions.types';
 import { create } from 'zustand';
 
-interface UsuarioStore {
+interface UserStore {
   nombre_usuario: string | null;
   nombre: string | null;
   apellido: string | null;
   rol: keyof typeof ROLES | null;
   isEmployer: boolean | null;
-  suscripcion: Partial<Suscripcion> | null;
-  setUserdata: (userdata: Usuario) => void;
+  suscripcion: Partial<Subscription> | null;
+  setUserdata: (userdata: User) => void;
   clearUserdata: () => void;
 }
 
-export const usuarioStore = create<UsuarioStore>((set) => ({
+export const usuarioStore = create<UserStore>((set) => ({
   nombre_usuario: null,
   nombre: null,
   apellido: null,
@@ -22,7 +22,7 @@ export const usuarioStore = create<UsuarioStore>((set) => ({
   isEmployer: null,
   suscripcion: null,
 
-  setUserdata(userdata: Partial<Usuario>) {
+  setUserdata(userdata: Partial<User>) {
     set({
       nombre_usuario: userdata.nombre_usuario,
       nombre: userdata.nombre,

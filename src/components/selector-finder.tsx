@@ -9,13 +9,13 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { ReactNode, useState } from 'react';
 
-import { Aplicacion } from '@/types/aplicaciones.types';
+import { Aplicacion } from '@/types/applications.types';
 import { Button } from './ui/button';
-import { Campo } from '@/types/campos.types';
+import { Campo } from '@/types/locations.types';
 import { ChevronsUpDown } from 'lucide-react';
-import { Cultivo } from '@/types/cultivos.types';
-import { Producto } from '@/types/productos.types';
-import { Tratamiento } from '@/types/tratamientos.types';
+import { Cultivo } from '@/types/crops.types';
+import { Producto } from '@/types/products.types';
+import { Tratamiento } from '@/types/treatments.types';
 import { normalize } from '@/lib/utils';
 
 type SelectorType = 'Ubicación' | 'Cultivo' | 'Tratamiento' | 'Producto';
@@ -65,7 +65,7 @@ export default function SelectorFinder({
               <span className='truncate'>{selectedValue}</span>
             </div>
           ) : (
-            selectedValue || type
+            <p className='truncate'>{selectedValue || type}</p>
           )}
           <ChevronsUpDown className='opacity-50' />
         </Button>

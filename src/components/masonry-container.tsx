@@ -1,22 +1,18 @@
 'use client';
 
 import {
-  CamposMasonrySkeleton,
-  PulverizacionesMasonrySkeleton,
+  LocationsMasonrySkeleton,
+  SpraysMasonrySkeleton,
 } from './masonry-skeleton';
 
-import { Campo } from '@/types/campos.types';
-import CampoItem from './campo-item';
-import { Cultivo } from '@/types/cultivos.types';
+import { Campo } from '@/types/locations.types';
+import { Cultivo } from '@/types/crops.types';
+import LocationItem from './location-item';
 import { Masonry } from './masonry';
-import { Pulverizacion } from '@/types/pulverizaciones.types';
-import PulverizacionItem from './pulverizacion-item';
+import { Pulverizacion } from '@/types/sprays.types';
+import PulverizacionItem from './spray-item';
 
-export const PulverizacionesGridContainer = ({
-  data,
-}: {
-  data: Pulverizacion[];
-}) => {
+export const SpraysGridContainer = ({ data }: { data: Pulverizacion[] }) => {
   return (
     <Masonry
       items={data}
@@ -31,12 +27,12 @@ export const PulverizacionesGridContainer = ({
           pulverizacion={pulverizacion}
         />
       )}
-      placeholder={<PulverizacionesMasonrySkeleton />}
+      placeholder={<SpraysMasonrySkeleton />}
     />
   );
 };
 
-export const CamposGridContainer = ({
+export const LocationsGridContainer = ({
   data,
   cultivos,
   pulverizaciones,
@@ -54,14 +50,14 @@ export const CamposGridContainer = ({
         media: [768, 1280, 1400, 1536],
       }}
       render={(pulverizacion) => (
-        <CampoItem
+        <LocationItem
           key={pulverizacion.id}
           data={pulverizacion}
           cultivos={cultivos}
           pulverizaciones={pulverizaciones}
         />
       )}
-      placeholder={<CamposMasonrySkeleton />}
+      placeholder={<LocationsMasonrySkeleton />}
     />
   );
 };

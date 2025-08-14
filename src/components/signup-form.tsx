@@ -39,11 +39,11 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import Link from 'next/link';
 import PhoneNumberInput from './phone-number-input';
-import { Plan } from '@/types/planes.types';
+import { Plan } from '@/types/plans.types';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import { SelectValue } from '@radix-ui/react-select';
-import TerminosCondiciones from './terminos&condiciones';
-import { UsuarioToSignup } from '@/types/usuario.types';
+import TerminosCondiciones from './terms&conditions-container';
+import { UserToSignup } from '@/types/users.types';
 import { cn } from '@/lib/utils';
 import { signup } from '@/services/auth.service';
 import { toast } from 'sonner';
@@ -55,11 +55,11 @@ interface Props {
   planes: Plan[];
 }
 
-interface SignupFormProps extends UsuarioToSignup {
+interface SignupFormProps extends UserToSignup {
   terminos_condiciones?: boolean;
 }
 
-export default function SignupForm({ planes }: Props) {
+export const SignupForm = ({ planes }: Props) => {
   const {
     register,
     handleSubmit,
@@ -112,7 +112,7 @@ export default function SignupForm({ planes }: Props) {
       await signup(PAYLOAD);
 
       setSuccess(true);
-      setTimeout(() => push('/panel'), 1000);
+      setTimeout(() => push('/dashboard'), 1000);
     } catch (error) {
       const { message } = error as APIError;
       toast.error(message, { position: 'top-center' });
@@ -434,4 +434,4 @@ export default function SignupForm({ planes }: Props) {
       </CardContent>
     </Card>
   );
-}
+};

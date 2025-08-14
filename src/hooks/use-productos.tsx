@@ -1,4 +1,4 @@
-import { Aplicacion } from '@/types/aplicaciones.types';
+import { Aplicacion } from '@/types/applications.types';
 import { UUID } from 'crypto';
 import { useDebouncedCallback } from 'use-debounce';
 import { useState } from 'react';

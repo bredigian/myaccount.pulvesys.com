@@ -41,7 +41,7 @@ interface Props {
   showText?: boolean;
 }
 
-export default function LogoutDialog({ showText }: Props) {
+export const LogoutDialog = ({ showText }: Props) => {
   const { open, setOpen } = useDialog();
   const { push, refresh } = useRouter();
   const { clearUserdata } = usuarioStore();
@@ -174,4 +174,4 @@ export default function LogoutDialog({ showText }: Props) {
       </DialogContent>
     </Dialog>
   );
-}
+};

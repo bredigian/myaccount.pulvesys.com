@@ -23,36 +23,36 @@ type Route = {
 export const ROUTES: Route[] = [
   {
     title: 'Pulverizaciones',
-    url: '/panel',
+    url: '/dashboard',
     icon: Droplets,
     isActive: true,
   },
   {
     title: 'Productos',
-    url: '/panel/productos',
+    url: '/dashboard/products',
     icon: Package,
   },
   {
     title: 'Cultivos & Tratamientos',
-    url: '/panel/cultivos&tratamientos',
+    url: '/dashboard/crops&treatments',
     icon: Leaf,
   },
   {
     title: 'Ubicaciones',
-    url: '/panel/campos',
+    url: '/dashboard/locations',
     icon: MapIcon,
   },
 ];
 
 export const ENTERPRISE_ROUTES: Route[] = [
   {
-    title: 'Panel',
-    url: '/empresa',
+    title: 'Inicio',
+    url: '/enterprise',
     icon: LayoutDashboard,
   },
   {
     title: 'Usuarios',
-    url: '/empresa/usuarios',
+    url: '/enterprise/users',
     icon: Users,
   },
 ];
@@ -60,7 +60,7 @@ export const ENTERPRISE_ROUTES: Route[] = [
 export const SUBSCRIPTION_ROUTES: Route[] = [
   {
     title: 'Pagos & Facturación',
-    url: '/facturacion',
+    url: '/billing',
     icon: CreditCard,
   },
 ];
@@ -68,7 +68,7 @@ export const SUBSCRIPTION_ROUTES: Route[] = [
 export const EXTRAS_ROUTES: Route[] = [
   {
     title: 'Historial',
-    url: '/historial',
+    url: '/logs',
     icon: History,
   },
 ];

@@ -1,4 +1,4 @@
-import { ROLES } from '@/types/usuario.types';
+import { ROLES } from '@/types/users.types';
 
 interface PlanData {
   value: keyof typeof ROLES;

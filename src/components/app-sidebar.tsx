@@ -20,14 +20,16 @@ import {
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { NavSection } from '@/components/nav-section';
-import { NavSettings } from './nav-settings';
-import { NavUser } from '@/components/nav-user';
-import { ROLES } from '@/types/usuario.types';
+import NavSection from '@/components/nav-section';
+import NavSettings from './nav-settings';
+import NavUser from '@/components/nav-user';
+import { ROLES } from '@/types/users.types';
 import original from '../../public/logo_dalle.webp';
 import { usuarioStore } from '@/store/usuario.store';
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export default function AppSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   const { rol, isEmployer, suscripcion } = usuarioStore();
 
   const { free_trial, next_payment_date, status } = suscripcion || {};
@@ -69,7 +71,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         {rol === 'EMPRESA' && (
           <NavSection
-            title='Inicio'
+            title='Empresa'
             items={ENTERPRISE_ROUTES}
             isDisabled={
               status !== 'authorized' &&
@@ -78,7 +80,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           />
         )}
         <NavSection
-          title='Administración'
+          title='Dashboard'
           items={ROUTES}
           isDisabled={
             status !== 'authorized' &&

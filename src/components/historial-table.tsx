@@ -10,7 +10,7 @@ import {
 } from './ui/table';
 
 import HistorialItem from './historial-item';
-import { Log } from '@/types/historial.types';
+import { Log } from '@/types/logs.types';
 import { usuarioStore } from '@/store/usuario.store';
 
 interface Props {

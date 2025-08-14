@@ -1,9 +1,4 @@
-import {
-  Sesion,
-  Usuario,
-  UsuarioToSignin,
-  UsuarioToSignup,
-} from '@/types/usuario.types';
+import { Session, User, UserToSignin, UserToSignup } from '@/types/users.types';
 
 import { APIError } from '@/types/error.types';
 import { API_URL } from '@/config/api';
@@ -11,7 +6,7 @@ import { Token } from '@/types/auth.types';
 
 // Servicio utilizado tanto para signup como para agregar un nuevo usuario como EMPRESA
 export const signup = async (
-  payload: UsuarioToSignup,
+  payload: UserToSignup,
   customPath?: string,
   access_token?: string,
 ) => {
@@ -31,13 +26,13 @@ export const signup = async (
   const PATH = `${API_URL}/v1/${customPath ?? 'auth/signup'}`;
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Sesion | Usuario | APIError = await res.json();
+  const data: Session | User | APIError = await res.json();
   if (!res.ok) throw data as APIError;
 
-  return customPath ? (data as Usuario) : (data as Sesion);
+  return customPath ? (data as User) : (data as Session);
 };
 
-export const signin = async (payload: UsuarioToSignin) => {
+export const signin = async (payload: UserToSignin) => {
   const OPTIONS: RequestInit = {
     method: 'POST',
     body: JSON.stringify(payload),
@@ -47,13 +42,13 @@ export const signin = async (payload: UsuarioToSignin) => {
   const PATH = `${API_URL}/v1/auth/signin`;
 
   const res = await fetch(PATH, OPTIONS);
-  const data: Sesion | APIError = await res.json();
+  const data: Session | APIError = await res.json();
   if (!res.ok) throw data as APIError;
 
-  return data as Sesion;
+  return data as Session;
 };
 
-export const verifySesion = async (
+export const verifySession = async (
   access_token: string,
   refresh_token: Token,
 ) => {
@@ -69,10 +64,10 @@ export const verifySesion = async (
   const PATH = `${API_URL}/v1/auth/sesion`;
 
   const res = await fetch(PATH, options);
-  const data: Sesion | APIError = await res.json();
+  const data: Session | APIError = await res.json();
   if (!res.ok) return data as APIError;
 
-  return data as Sesion;
+  return data as Session;
 };
 
 interface OKResponse {
@@ -94,7 +89,7 @@ export const signout = async (token: string) => {
   return { ok: true } as OKResponse;
 };
 
-export const generateRecoverPassword = async (email: Usuario['email']) => {
+export const generateRecoverPassword = async (email: User['email']) => {
   const options: RequestInit = {
     method: 'POST',
     credentials: 'include',
@@ -128,7 +123,7 @@ export const verifyRecoverToken = async (token: string) => {
 export const resetPassword = async (
   token: string,
   payload: {
-    contrasena: Usuario['contrasena'];
+    contrasena: User['contrasena'];
   },
 ) => {
   const options: RequestInit = {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { Coordinada } from '@/types/campos.types';
+import { Coordinada } from '@/types/locations.types';
 import { toast } from 'sonner';
 
 export const useGeoLocation = () => {

@@ -20,8 +20,8 @@ import {
 import { Button } from './ui/button';
 import Cookies from 'js-cookie';
 import { DateTime } from 'luxon';
-import { SUBSCRIPTION_MESSAGE } from '@/types/suscripciones.types';
-import { handleInformationMessage } from '@/services/suscripciones.service';
+import { SUBSCRIPTION_MESSAGE } from '@/types/subscriptions.types';
+import { handleInformationMessage } from '@/services/subscriptions.service';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
 import { useDialog } from '@/hooks/use-dialog';

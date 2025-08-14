@@ -1,8 +1,8 @@
-import { Campo } from './campos.types';
-import { Cultivo } from './cultivos.types';
-import { Producto } from './productos.types';
-import { Pulverizacion } from './pulverizaciones.types';
-import { Tratamiento } from './tratamientos.types';
+import { Campo } from './locations.types';
+import { Cultivo } from './crops.types';
+import { Producto } from './products.types';
+import { Pulverizacion } from './sprays.types';
+import { Tratamiento } from './treatments.types';
 
 export interface AllData {
   campos: Campo[];

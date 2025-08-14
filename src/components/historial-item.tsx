@@ -1,6 +1,6 @@
 'use client';
 
-import { LOG_NOMBRE, Log } from '@/types/historial.types';
+import { LOG_NOMBRE, Log } from '@/types/logs.types';
 import { TableCell, TableRow } from './ui/table';
 
 import { DateTime } from 'luxon';
