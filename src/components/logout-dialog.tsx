@@ -62,7 +62,11 @@ export const LogoutDialog = ({ showText }: Props) => {
       clearUserdata();
 
       setState('success');
-      refresh();
+
+      setTimeout(() => {
+        setOpen(false);
+        refresh();
+      }, 300);
     } catch (error) {
       setState('error');
       const { statusCode, message } = error as APIError;
@@ -78,14 +82,10 @@ export const LogoutDialog = ({ showText }: Props) => {
   return isMobile ? (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button
-          variant={'outline'}
-          size={!showText ? 'icon' : 'default'}
-          className='shrink-0'
-        >
-          {showText && 'Salir'}
+        <button className="outline-hidden relative flex w-full cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm hover:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[inset]:pl-8 data-[disabled]:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0">
           <LogOut />
-        </Button>
+          Cerrar sesión
+        </button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
@@ -127,14 +127,10 @@ export const LogoutDialog = ({ showText }: Props) => {
   ) : (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant={'outline'}
-          size={!showText ? 'icon' : 'default'}
-          className='shrink-0'
-        >
-          {showText && 'Salir'}
+        <button className="outline-hidden relative flex w-full cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm hover:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[inset]:pl-8 data-[disabled]:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0">
           <LogOut />
-        </Button>
+          Cerrar sesión
+        </button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
