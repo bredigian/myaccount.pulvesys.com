@@ -10,11 +10,11 @@ import {
 import { TableCell, TableRow } from './ui/table';
 
 import { Button } from './ui/button';
-import { Cultivo } from '@/types/crops.types';
+import { Crop } from '@/types/crops.types';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { UUID } from 'crypto';
 
-const ColorItem = ({ color }: { color: Cultivo['color'] }) => {
+const ColorItem = ({ color }: { color: Crop['color'] }) => {
   return (
     <div className='flex items-center gap-2'>
       <div className='size-4 rounded-sm' style={{ backgroundColor: color }} />
@@ -24,7 +24,7 @@ const ColorItem = ({ color }: { color: Cultivo['color'] }) => {
 };
 
 interface Props {
-  data: Cultivo;
+  data: Crop;
 }
 
 export default function CropItem({ data }: Props) {

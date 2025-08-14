@@ -5,14 +5,14 @@ import {
   SpraysMasonrySkeleton,
 } from './masonry-skeleton';
 
-import { Campo } from '@/types/locations.types';
-import { Cultivo } from '@/types/crops.types';
+import { Crop } from '@/types/crops.types';
+import { Location } from '@/types/locations.types';
 import LocationItem from './location-item';
 import { Masonry } from './masonry';
-import { Pulverizacion } from '@/types/sprays.types';
-import PulverizacionItem from './spray-item';
+import { Spray } from '@/types/sprays.types';
+import SprayItem from './spray-item';
 
-export const SpraysGridContainer = ({ data }: { data: Pulverizacion[] }) => {
+export const SpraysGridContainer = ({ data }: { data: Spray[] }) => {
   return (
     <Masonry
       items={data}
@@ -22,10 +22,7 @@ export const SpraysGridContainer = ({ data }: { data: Pulverizacion[] }) => {
         media: [768, 1024, 1280, 1400, 1536],
       }}
       render={(pulverizacion) => (
-        <PulverizacionItem
-          key={pulverizacion.id}
-          pulverizacion={pulverizacion}
-        />
+        <SprayItem key={pulverizacion.id} pulverizacion={pulverizacion} />
       )}
       placeholder={<SpraysMasonrySkeleton />}
     />
@@ -37,9 +34,9 @@ export const LocationsGridContainer = ({
   cultivos,
   pulverizaciones,
 }: {
-  data: Campo[];
-  cultivos: Cultivo[];
-  pulverizaciones: Pulverizacion[];
+  data: Location[];
+  cultivos: Crop[];
+  pulverizaciones: Spray[];
 }) => {
   return (
     <Masonry

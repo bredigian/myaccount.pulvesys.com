@@ -24,12 +24,12 @@ import AppSidebar from '@/components/app-sidebar';
 import Link from 'next/link';
 import ScreenDialog from './screen-dialog';
 import { Separator } from '@/components/ui/separator';
-import { Usuario } from '@/types/users.types';
+import { User } from '@/types/users.types';
 import { usePathname } from 'next/navigation';
-import { usuarioStore } from '@/store/usuario.store';
+import { userStore } from '@/store/user.store';
 
 interface Props {
-  userdata: Usuario;
+  userdata: User;
   children: ReactNode;
 }
 
@@ -49,7 +49,7 @@ export default function Screen({ children, userdata }: Props) {
           : ROUTES
   ).find((route) => route.url === pathname);
 
-  const { suscripcion, setUserdata } = usuarioStore();
+  const { suscripcion, setUserdata } = userStore();
 
   useEffect(() => {
     if (userdata) setUserdata(userdata);

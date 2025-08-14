@@ -3,7 +3,7 @@
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 
-import { Campo, Coordinada } from '@/types/locations.types';
+import { Coordinate, Location } from '@/types/locations.types';
 import { Layer, Map, Source, useControl, useMap } from 'react-map-gl/mapbox';
 import MapboxDraw, {
   DrawCreateEvent,
@@ -101,13 +101,13 @@ const DrawControl = ({
   return null;
 };
 
-const FlyTo = ({ selectedCampo }: { selectedCampo: Campo }) => {
+const FlyTo = ({ selectedCampo }: { selectedCampo: Location }) => {
   const { current } = useMap();
 
   useEffect(() => {
     if (selectedCampo) {
       const { lat, lng } = selectedCampo.Lote?.[0]
-        ?.Coordinada?.[0] as Coordinada;
+        ?.Coordinada?.[0] as Coordinate;
       current?.flyTo({ animate: true, center: [lng, lat] });
     }
   }, [selectedCampo]);
@@ -120,7 +120,7 @@ interface Props {
   customCenter?: boolean;
   className?: string;
   customZoom?: number;
-  selectedCampo?: Campo;
+  selectedCampo?: Location;
 
   onCreate?: (e: DrawCreateEvent) => void;
   onUpdate?: (e: DrawUpdateEvent) => void;
@@ -132,7 +132,7 @@ interface Props {
 
   isPulverizacionDetail?: boolean;
 
-  currentGeolocation?: Coordinada | { error: string };
+  currentGeolocation?: Coordinate | { error: string };
 }
 
 export default function MapboxMap({
@@ -301,10 +301,10 @@ export default function MapboxMap({
           zoom: customZoom ?? 14,
           latitude:
             polygons?.[0]?.geometry?.coordinates?.[0]?.[0]?.[1] ||
-            ((currentGeolocation as Coordinada)?.lat ?? -37.31587),
+            ((currentGeolocation as Coordinate)?.lat ?? -37.31587),
           longitude:
             polygons?.[0]?.geometry?.coordinates?.[0]?.[0]?.[0] ||
-            ((currentGeolocation as Coordinada)?.lng ?? -59.98368),
+            ((currentGeolocation as Coordinate)?.lng ?? -59.98368),
         }}
         mapboxAccessToken={MAPBOX_TOKEN}
         mapStyle={MAP_STYLE}

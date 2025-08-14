@@ -2,11 +2,11 @@ import { Cloud, Tag, Trash } from 'lucide-react';
 
 import { CSSProperties } from 'react';
 import { DeleteStoredLotDialog } from './lots-dialog';
-import { Lote } from '@/types/locations.types';
+import { Lot } from '@/types/locations.types';
 import { cn } from '@/lib/utils';
 
 interface Props {
-  lote: Lote;
+  lote: Lot;
   customStyle?: CSSProperties;
   onClick?: () => void;
   showButtonClear?: boolean;

@@ -37,7 +37,7 @@ import { useDialog } from '@/hooks/use-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { usuarioStore } from '@/store/usuario.store';
+import { userStore } from '@/store/user.store';
 
 export const ManageBillingDialog = () => {
   const isMobile = useIsMobile();
@@ -45,7 +45,7 @@ export const ManageBillingDialog = () => {
 
   const { push } = useRouter();
 
-  const { suscripcion, rol } = usuarioStore();
+  const { suscripcion, rol } = userStore();
 
   const [state, setState] = useState<
     'pending' | 'processing' | 'success' | 'failure'

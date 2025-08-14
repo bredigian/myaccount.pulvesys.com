@@ -12,18 +12,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 import { AddOrEditCropDialog } from './crops-dialog';
 import { AddOrEditTreatmentDialog } from './treatments-dialog';
-import { Cultivo } from '@/types/crops.types';
-import CultivoItem from './crop-item';
+import { Crop } from '@/types/crops.types';
+import CropItem from './crop-item';
 import Finder from './finder';
-import { Tratamiento } from '@/types/treatments.types';
-import TratamientoItem from './treatment-item';
+import { Treatment } from '@/types/treatments.types';
+import TreatmentItem from './treatment-item';
 import { useState } from 'react';
 
 type DataTabs = 'cultivos' | 'tratamientos';
 
 interface Props {
-  cultivos: Cultivo[];
-  tratamientos: Tratamiento[];
+  cultivos: Crop[];
+  tratamientos: Treatment[];
 }
 
 export const CropsTreatmentsTabs = ({ cultivos, tratamientos }: Props) => {
@@ -72,7 +72,7 @@ export const CropsTreatmentsTabs = ({ cultivos, tratamientos }: Props) => {
               </TableRow>
             ) : (
               cultivos.map((cultivo) => (
-                <CultivoItem key={cultivo.id} data={cultivo} />
+                <CropItem key={cultivo.id} data={cultivo} />
               ))
             )}
           </TableBody>
@@ -96,7 +96,7 @@ export const CropsTreatmentsTabs = ({ cultivos, tratamientos }: Props) => {
               </TableRow>
             ) : (
               tratamientos.map((tratamiento) => (
-                <TratamientoItem key={tratamiento.id} data={tratamiento} />
+                <TreatmentItem key={tratamiento.id} data={tratamiento} />
               ))
             )}
           </TableBody>

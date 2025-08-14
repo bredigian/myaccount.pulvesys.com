@@ -25,12 +25,12 @@ import NavSettings from './nav-settings';
 import NavUser from '@/components/nav-user';
 import { ROLES } from '@/types/users.types';
 import original from '../../public/logo_dalle.webp';
-import { usuarioStore } from '@/store/usuario.store';
+import { userStore } from '@/store/user.store';
 
 export default function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-  const { rol, isEmployer, suscripcion } = usuarioStore();
+  const { rol, isEmployer, suscripcion } = userStore();
 
   const { free_trial, next_payment_date, status } = suscripcion || {};
 

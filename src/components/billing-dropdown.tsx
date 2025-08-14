@@ -13,10 +13,10 @@ import {
 import { Button } from './ui/button';
 import { ManageBillingDialog } from './billing-dialog';
 import { Settings2 } from 'lucide-react';
-import { usuarioStore } from '@/store/usuario.store';
+import { userStore } from '@/store/user.store';
 
 export const ManageBillingDropdown = () => {
-  const { rol } = usuarioStore();
+  const { rol } = userStore();
   if (rol === 'ADMIN') return null;
 
   return (

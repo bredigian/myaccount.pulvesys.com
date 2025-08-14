@@ -9,19 +9,19 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { ReactNode, useState } from 'react';
 
-import { Aplicacion } from '@/types/applications.types';
+import { Application } from '@/types/applications.types';
 import { Button } from './ui/button';
-import { Campo } from '@/types/locations.types';
 import { ChevronsUpDown } from 'lucide-react';
-import { Cultivo } from '@/types/crops.types';
-import { Producto } from '@/types/products.types';
-import { Tratamiento } from '@/types/treatments.types';
+import { Crop } from '@/types/crops.types';
+import { Location } from '@/types/locations.types';
+import { Product } from '@/types/products.types';
+import { Treatment } from '@/types/treatments.types';
 import { normalize } from '@/lib/utils';
 
 type SelectorType = 'Ubicación' | 'Cultivo' | 'Tratamiento' | 'Producto';
 
 interface Props {
-  data: Campo[] | Cultivo[] | Tratamiento[] | Producto[];
+  data: Location[] | Crop[] | Treatment[] | Product[];
   selectedValue: string;
   selectedColor?: string | null;
   onSelectValue: (value: string) => void;
@@ -29,7 +29,7 @@ interface Props {
   type: SelectorType;
   placeholder: string;
   customAlign?: 'center' | 'start' | 'end' | undefined;
-  aplicaciones?: Aplicacion[];
+  aplicaciones?: Application[];
   externalModalTrigger?: ReactNode;
 }
 
@@ -98,14 +98,14 @@ export default function SelectorFinder({
                     <div
                       className='size-4 rounded-sm'
                       style={{
-                        backgroundColor: (i as Cultivo).color ?? 'transparent',
+                        backgroundColor: (i as Crop).color ?? 'transparent',
                       }}
                     />
                   )}
                   <span>
                     {i.nombre}
                     {type === 'Ubicación'
-                      ? ` (${(i as Campo).Lote?.reduce((acc, lote) => acc + (lote?.hectareas as number), 0).toFixed(2)})`
+                      ? ` (${(i as Location).Lote?.reduce((acc, lote) => acc + (lote?.hectareas as number), 0).toFixed(2)})`
                       : ''}
                   </span>
                 </CommandItem>

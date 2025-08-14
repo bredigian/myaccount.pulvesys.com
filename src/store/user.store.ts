@@ -14,7 +14,7 @@ interface UserStore {
   clearUserdata: () => void;
 }
 
-export const usuarioStore = create<UserStore>((set) => ({
+export const userStore = create<UserStore>((set) => ({
   nombre_usuario: null,
   nombre: null,
   apellido: null,

@@ -1,7 +1,7 @@
 import { UUID } from 'crypto';
-import { Usuario } from './users.types';
+import { User } from './users.types';
 
-export enum LOG_NOMBRE {
+export enum LOG_NAME {
   PULVERIZACION = 'Pulverización',
   PRODUCTO = 'Producto',
   CULTIVO = 'Cultivo',
@@ -13,9 +13,9 @@ export enum LOG_NOMBRE {
 
 export interface Log {
   id: UUID;
-  type: keyof typeof LOG_NOMBRE;
+  type: keyof typeof LOG_NAME;
   description: string;
-  usuario_id?: Usuario['id'];
-  usuario?: Partial<Usuario>;
+  usuario_id?: User['id'];
+  usuario?: Partial<User>;
   createdAt: Date | string;
 }

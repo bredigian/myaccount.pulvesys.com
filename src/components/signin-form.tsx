@@ -15,7 +15,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import Link from 'next/link';
 import { ReloadIcon } from '@radix-ui/react-icons';
-import { UsuarioToSignin } from '@/types/users.types';
+import { UserToSignin } from '@/types/users.types';
 import { cn } from '@/lib/utils';
 import { signin } from '@/services/auth.service';
 import { toast } from 'sonner';
@@ -27,11 +27,11 @@ export const SigninForm = () => {
     register,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<UsuarioToSignin>();
+  } = useForm<UserToSignin>();
 
   const { push } = useRouter();
 
-  const onInvalidSubmit = async (errors: FieldErrors<UsuarioToSignin>) => {
+  const onInvalidSubmit = async (errors: FieldErrors<UserToSignin>) => {
     if (errors?.nombre_usuario)
       toast.error(errors.nombre_usuario?.message, { position: 'top-center' });
     else if (errors?.contrasena)
@@ -40,7 +40,7 @@ export const SigninForm = () => {
 
   const [success, setSuccess] = useState(false);
 
-  const onSubmit = async (values: UsuarioToSignin) => {
+  const onSubmit = async (values: UserToSignin) => {
     try {
       const { userdata } = await signin({
         ...values,

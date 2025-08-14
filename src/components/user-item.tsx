@@ -14,10 +14,10 @@ import { TableCell, TableRow } from './ui/table';
 import { Button } from './ui/button';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { UUID } from 'crypto';
-import { Usuario } from '@/types/users.types';
+import { User } from '@/types/users.types';
 
 interface Props {
-  data: Usuario;
+  data: User;
 }
 
 export default function UserItem({ data }: Props) {

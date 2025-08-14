@@ -40,7 +40,7 @@ import { Position } from 'geojson';
 import { Spray } from '@/types/sprays.types';
 import { UUID } from 'crypto';
 import { cn } from '@/lib/utils';
-import { usuarioStore } from '@/store/usuario.store';
+import { userStore } from '@/store/user.store';
 
 interface Props {
   data: Spray;
@@ -52,7 +52,7 @@ export default function SprayDetailContainer({ data, pulverizaciones }: Props) {
     data.detalle.lotes.includes(lote.nombre as string),
   ).reduce((acc, lote) => acc + (lote?.hectareas as number), 0);
 
-  const { nombre, apellido } = usuarioStore();
+  const { nombre, apellido } = userStore();
 
   const lotesPulverizados = data?.detalle?.campo?.Lote?.filter((lote) =>
     data.detalle.lotes.includes(lote?.nombre as string),

@@ -11,14 +11,14 @@ import {
 
 import HistorialItem from './historial-item';
 import { Log } from '@/types/logs.types';
-import { usuarioStore } from '@/store/usuario.store';
+import { userStore } from '@/store/user.store';
 
 interface Props {
   data: Log[];
 }
 
 export default function HistorialTable({ data }: Props) {
-  const { rol } = usuarioStore();
+  const { rol } = userStore();
   const isEnterprise = rol === 'EMPRESA';
 
   return (

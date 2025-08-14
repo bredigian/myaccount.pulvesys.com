@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 
-import { Coordinada } from '@/types/locations.types';
+import { Coordinate } from '@/types/locations.types';
 import { toast } from 'sonner';
 
 export const useGeoLocation = () => {
   const [geoLocation, setGeoLocation] = useState<
-    Coordinada | null | { error: string }
+    Coordinate | null | { error: string }
   >(null);
 
   const getGeolocation = () => {
@@ -14,7 +14,7 @@ export const useGeoLocation = () => {
         setGeoLocation({
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
-        } as Coordinada),
+        } as Coordinate),
       (e) => {
         toast.warning(
           'Necesitamos de tus permisos para obtener la ubicación.',

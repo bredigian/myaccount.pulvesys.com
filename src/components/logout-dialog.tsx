@@ -33,7 +33,7 @@ import { useDialog } from '@/hooks/use-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { usuarioStore } from '@/store/usuario.store';
+import { userStore } from '@/store/user.store';
 
 type State = 'pending' | 'success' | 'error';
 
@@ -44,7 +44,7 @@ interface Props {
 export const LogoutDialog = ({ showText }: Props) => {
   const { open, setOpen } = useDialog();
   const { push, refresh } = useRouter();
-  const { clearUserdata } = usuarioStore();
+  const { clearUserdata } = userStore();
 
   const [state, setState] = useState<undefined | State>(undefined);
 

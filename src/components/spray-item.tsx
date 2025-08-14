@@ -10,12 +10,12 @@ import { Leaf, ListCheckIcon, Tag, User } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
+import { Lot } from '@/types/locations.types';
 import LotItem from './lot-item';
-import { Lote } from '@/types/locations.types';
-import { Pulverizacion } from '@/types/sprays.types';
+import { Spray } from '@/types/sprays.types';
 
 interface Props {
-  pulverizacion: Pulverizacion;
+  pulverizacion: Spray;
 }
 
 export default function SprayItem({ pulverizacion }: Props) {
@@ -47,7 +47,7 @@ export default function SprayItem({ pulverizacion }: Props) {
                 {detalle?.lotes?.map((lote, index) => {
                   const loteData = detalle.campo?.Lote?.find(
                     (item) => item.nombre === lote,
-                  ) as Lote;
+                  ) as Lot;
 
                   return !loteData ? (
                     <div

@@ -4,25 +4,25 @@ import {
   AddOrEditLocationDialog,
   DeleteLocationDialog,
 } from './locations-dialog';
-import { Campo, Coordinada, Lote } from '@/types/locations.types';
 import { Card, CardContent } from './ui/card';
+import { Coordinate, Location, Lot } from '@/types/locations.types';
 
 import { Badge } from './ui/badge';
-import { Cultivo } from '@/types/crops.types';
+import { Crop } from '@/types/crops.types';
 import { Label } from './ui/label';
-import LoteItem from './lot-item';
+import LotItem from './lot-item';
 import MapboxMap from './map';
 import { PolygonFeature } from './locations-form';
 import { Position } from 'geojson';
-import { Pulverizacion } from '@/types/sprays.types';
+import { Spray } from '@/types/sprays.types';
 import { Switch } from './ui/switch';
 import { UUID } from 'crypto';
 import { useState } from 'react';
 
 interface Props {
-  data: Campo;
-  cultivos: Cultivo[];
-  pulverizaciones: Pulverizacion[];
+  data: Location;
+  cultivos: Crop[];
+  pulverizaciones: Spray[];
 }
 
 export default function LocationItem({
@@ -44,12 +44,12 @@ export default function LocationItem({
     (p) => p.detalle.campo_id === data.id,
   );
 
-  const polygonsData: PolygonFeature[] = (Lote as Lote[]).map((l) => {
-    const points = l.Coordinada as Coordinada[];
+  const polygonsData: PolygonFeature[] = (Lote as Lot[]).map((l) => {
+    const points = l.Coordinada as Coordinate[];
 
     const groupedByLoteId = points.reduce(
       (acc, coord) => {
-        const { lng, lat, lote_id } = coord as Required<Coordinada>;
+        const { lng, lat, lote_id } = coord as Required<Coordinate>;
         if (!acc[lote_id]) acc[lote_id] = [];
 
         acc[lote_id].push([lng, lat]);
@@ -117,7 +117,7 @@ export default function LocationItem({
           )}
           <ul className='flex flex-wrap items-start gap-2'>
             {data.Lote?.map((lote) => (
-              <LoteItem key={`lote-${lote.id}`} lote={lote} />
+              <LotItem key={`lote-${lote.id}`} lote={lote} />
             ))}
           </ul>
         </CardContent>

@@ -4,10 +4,10 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { SidebarMenu, SidebarMenuItem } from '@/components/ui/sidebar';
 
 import { LogoutDialog } from './logout-dialog';
-import { usuarioStore } from '@/store/usuario.store';
+import { userStore } from '@/store/user.store';
 
 export default function NavUser() {
-  const { nombre_usuario, nombre, apellido } = usuarioStore();
+  const { nombre_usuario, nombre, apellido } = userStore();
   const avatar = nombre
     ?.charAt(0)
     .concat(apellido?.charAt(0) as string)

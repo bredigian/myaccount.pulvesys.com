@@ -36,7 +36,7 @@ import { addSpray } from '@/services/sprays.service';
 import { cn } from '@/lib/utils';
 import revalidate from '@/lib/actions';
 import { toast } from 'sonner';
-import { useControllerAplicaciones } from '@/hooks/use-productos';
+import { useControllerApplications } from '@/hooks/use-products';
 import { useDebouncedCallback } from 'use-debounce';
 import { useRouter } from 'next/navigation';
 
@@ -208,7 +208,7 @@ export const AddOrEditSprayForm = ({
     handleChangeSelectValue,
     handleUpdateAplicacionesOnLocalStorage,
     clearAll,
-  } = useControllerAplicaciones();
+  } = useControllerApplications();
 
   const [isSubmitSuccessful, setIsSubmitSuccessful] = useState<
     boolean | undefined

@@ -1,10 +1,10 @@
 'use client';
 
-import { LOG_NOMBRE, Log } from '@/types/logs.types';
+import { LOG_NAME, Log } from '@/types/logs.types';
 import { TableCell, TableRow } from './ui/table';
 
 import { DateTime } from 'luxon';
-import { usuarioStore } from '@/store/usuario.store';
+import { userStore } from '@/store/user.store';
 
 interface Props {
   data: Log;
@@ -16,7 +16,7 @@ export default function HistorialItem({ data }: Props) {
     ? usuario?.nombre?.concat(' ').concat(usuario?.apellido as string)
     : 'No disponible';
 
-  const { rol } = usuarioStore();
+  const { rol } = userStore();
 
   const isEnterprise = rol === 'EMPRESA';
 
@@ -34,7 +34,7 @@ export default function HistorialItem({ data }: Props) {
             DateTime.DATETIME_SHORT_WITH_SECONDS,
           )}
       </TableCell>
-      <TableCell>{LOG_NOMBRE[type]}</TableCell>
+      <TableCell>{LOG_NAME[type]}</TableCell>
       {isEnterprise && <TableCell>{nombreCompleto}</TableCell>}
       <TableCell>{description}</TableCell>
     </TableRow>

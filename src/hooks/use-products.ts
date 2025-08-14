@@ -1,22 +1,22 @@
-import { Aplicacion } from '@/types/applications.types';
+import { Application } from '@/types/applications.types';
 import { UUID } from 'crypto';
 import { useDebouncedCallback } from 'use-debounce';
 import { useState } from 'react';
 
-export const useControllerAplicaciones = () => {
+export const useControllerApplications = () => {
   const storedAplicaciones = localStorage.getItem('aplicaciones_temporal');
 
-  const [aplicaciones, setAplicaciones] = useState<Aplicacion[]>(
-    !storedAplicaciones ? [{} as Aplicacion] : JSON.parse(storedAplicaciones),
+  const [aplicaciones, setAplicaciones] = useState<Application[]>(
+    !storedAplicaciones ? [{} as Application] : JSON.parse(storedAplicaciones),
   );
 
   const addAplicacion = () =>
-    setAplicaciones((prev) => [...prev, {} as Aplicacion]);
+    setAplicaciones((prev) => [...prev, {} as Application]);
 
   const deleteAplicacion = () => setAplicaciones((prev) => prev.slice(0, -1));
 
   const handleChangeSelectValue = (value: string, index: number) => {
-    const updatedItems: Aplicacion[] = aplicaciones.map((item, i) => ({
+    const updatedItems: Application[] = aplicaciones.map((item, i) => ({
       producto_id: index === i ? (value as UUID) : item.producto_id,
       dosis: item.dosis,
     }));
@@ -45,7 +45,7 @@ export const useControllerAplicaciones = () => {
     !aplicacion.producto_id || !aplicacion.dosis ? true : false,
   );
 
-  const clearAll = () => setAplicaciones([{} as Aplicacion]);
+  const clearAll = () => setAplicaciones([{} as Application]);
 
   return {
     aplicaciones,
