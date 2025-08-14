@@ -1,36 +1,30 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+![PulveSys Screenshot](./public/logo.png)
 
-## Getting Started
+# PulveSys
 
-First, run the development server:
+PulveSys es una plataforma web para la gestión de órdenes de pulverización agrícola, administración de lotes, cultivos, tratamientos y usuarios. Incluye funcionalidades de historial, facturación y reportes PDF, con integración de mapas y suscripciones gestionadas por Mercado Pago.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Características principales
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Gestión de órdenes de pulverización**: Crea, edita y administra órdenes con detalles de productos, lotes y observaciones.
+- **Administración de lotes y cultivos**: Utiliza mapas interactivos (MapBox) para marcar coordenadas y gestionar cultivos y tratamientos.
+- **Historial de cambios**: Visualiza el historial de actividades y modificaciones recientes.
+- **Reportes PDF**: Exporta órdenes y mapas en formato PDF para compartir.
+- **Suscripciones**: Prueba gratuita de 30 días y gestión de pagos a través de Mercado Pago.
+- **Planes Individual y Empresa**: El plan Empresa permite administrar usuarios y acceder a historial extendido.
+- **Política de privacidad**: Protección de datos personales y opciones de contacto.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Recursos útiles
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Learn Next.js](https://nextjs.org/learn)
+- [MapBox](https://www.mapbox.com/)
+- [Mercado Pago](https://www.mercadopago.com.ar/)
 
-## Learn More
+## Contacto
 
-To learn more about Next.js, take a look at the following resources:
+Para soporte o consultas, escribí a bredicegian@gmail.com.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> Proyecto desarrollado por Gianluca Bredice y Matías Rodríguez.
