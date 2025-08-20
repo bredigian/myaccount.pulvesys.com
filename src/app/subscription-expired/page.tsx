@@ -16,7 +16,7 @@ export default async function SubscriptionExpiredPage() {
         <br />
         Contactate con tu administrador.
       </h1>
-      <LogoutDialog showText />
+      <LogoutDialog />
     </main>
   );
 }

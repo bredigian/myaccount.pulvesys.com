@@ -37,11 +37,7 @@ import { userStore } from '@/store/user.store';
 
 type State = 'pending' | 'success' | 'error';
 
-interface Props {
-  showText?: boolean;
-}
-
-export const LogoutDialog = ({ showText }: Props) => {
+export const LogoutDialog = () => {
   const { open, setOpen } = useDialog();
   const { push, refresh } = useRouter();
   const { clearUserdata } = userStore();
