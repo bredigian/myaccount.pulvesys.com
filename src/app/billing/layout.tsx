@@ -12,7 +12,7 @@ export default async function Layout({
   children: React.ReactNode;
 }>) {
   const userdata = JSON.parse(
-    (await cookies()).get('userdata')?.value as string,
+    ((await cookies()).get('userdata')?.value as string) || '{}',
   );
 
   return <Screen userdata={userdata}>{children}</Screen>;
